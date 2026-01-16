@@ -11,3 +11,79 @@ body {
     //   color: black;
     //  }
 }
+### 配套 CSS（建议添加到你的仓库 src/site/styles/custom-style.scss）
+
+```scss
+/* 深色基调 + gemma.com 风格卡片画廊 */
+body {
+  background: #0a0a0f;
+  color: #e0e0ff;
+}
+
+.gallery-home {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.hero-banner img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* Dataview 表格转卡片网格 */
+.gallery-home .dataview table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 1.5rem 2rem;
+  background: transparent;
+}
+
+.gallery-home .dataview td {
+  background: #121225;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.gallery-home .dataview td:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+}
+
+.gallery-home .dataview td:first-child {
+  padding: 0;
+}
+
+.gallery-home .dataview td:first-child img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+  display: block;
+}
+
+.gallery-home .dataview td:not(:first-child) {
+  padding: 1.2rem;
+  font-size: 0.95rem;
+  color: #c0c0ff;
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+  .gallery-home .dataview td {
+    width: 48% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .gallery-home .dataview td {
+    width: 100% !important;
+  }
+}
