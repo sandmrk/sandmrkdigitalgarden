@@ -1,87 +1,110 @@
-body {
-    /***
-      ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
-      IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
-   ***/
-    //  background-color: white;
-    //  .content {
-    //   font-size: 14px;
-    //  }
-    //  h1 {
-    //   color: black;
-    //  }
+/* gemma.com 风格深度复刻：深黑背景 + 大圆角卡片 + hover 光效 + 毛玻璃 */
+
+/* 全局基础 */
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-card: rgba(18, 18, 37, 0.6);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --text-primary: #e0e0ff;
+  --accent: #c084fc;          /* 荧光紫，gemma 常用强调色 */
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* 深色基调 + gemma.com 风格卡片画廊 */
-body {
-  background: #0a0a0f;
-  color: #e0e0ff;
+body, html {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
 }
 
+/* 首页容器 */
 .gallery-home {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
 }
 
+/* 英雄横幅（顶部大图） */
 .hero-banner img {
   width: 100%;
-  height: 400px;
+  height: 420px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
   margin-bottom: 3rem;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-/* Dataview 表格转卡片网格 */
+/* Dataview 表格转卡片网格（最接近 gemma 的部分） */
 .gallery-home .dataview table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 1.5rem 2rem;
+  border-spacing: 1.5rem;
   background: transparent;
 }
 
 .gallery-home .dataview td {
-  background: #121225;
-  border-radius: 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);           /* 毛玻璃效果 */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;                   /* 大圆角，gemma 标志性 */
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
   padding: 0;
+  position: relative;
 }
 
+/* hover 悬浮 + 光效 */
 .gallery-home .dataview td:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7),
+              0 0 0 2px rgba(192, 132, 252, 0.2);  /* 轻微荧光边框 */
 }
 
-.gallery-home .dataview td:first-child {
-  padding: 0;
-}
-
+/* 预览图（大图优先） */
 .gallery-home .dataview td:first-child img {
   width: 100%;
-  height: 280px;
+  height: 300px;
   object-fit: cover;
-  border-radius: 16px 16px 0 0;
+  border-radius: 24px 24px 0 0;
+  transition: transform 0.4s ease;
   display: block;
 }
 
+.gallery-home .dataview td:hover .dataview td:first-child img {
+  transform: scale(1.08);
+}
+
+/* 文字区域 */
 .gallery-home .dataview td:not(:first-child) {
-  padding: 1.2rem;
+  padding: 1.5rem;
   font-size: 0.95rem;
   color: #c0c0ff;
 }
 
-/* 响应式调整 */
+/* 响应式：手机/平板自动适配 */
 @media (max-width: 1200px) {
-  .gallery-home .dataview td {
-    width: 48% !important;
-  }
+  .gallery-home .dataview td { width: 48% !important; }
 }
 
 @media (max-width: 800px) {
-  .gallery-home .dataview td {
-    width: 100% !important;
-  }
+  .gallery-home .dataview td { width: 100% !important; }
+}
+
+/* 额外优化：搜索框、标签云、footer */
+.search-input, .tag-cloud a {
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  color: var(--text-primary);
+}
+
+.footer-credit {
+  text-align: center;
+  margin-top: 6rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-card);
+  font-size: 0.9rem;
+  color: #aaa;
 }
