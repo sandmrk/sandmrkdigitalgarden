@@ -3,40 +3,123 @@ body {
       ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
       IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
    ***/
-    /* 1. 强制重置紫色为中性色或自定义色 */
-/* 1. 全局颜色强力重置 */
+/* gemnana.com 风格深度还原：深黑毛玻璃 + 大圆角卡片 + 荧光 hover + 未来科技感 */
+
+/* 全局变量 - 方便后期微调 */
 :root {
-  /* 将紫色 (#8b5cf6 等) 统一替换为你想要的颜色，比如你之前提到的荧光紫或深蓝色 */
-  --accent: #c084fc !important;       /* 强调色 */
-  --text-accent: #c084fc !important;  /* 链接/强调文字 */
-  --link-color: #c084fc !important;   /* 链接颜色 */
-  --link-external-color: #c084fc !important;
-  --tag-color: #c084fc !important;    /* 标签文字颜色 */
-  --tag-background: rgba(192, 132, 252, 0.1) !important; /* 标签背景 */
-  --callout-color: 192, 132, 252 !important; /* Callout 边框颜色 (RGB格式) */
+  --bg-primary: #0d0d12;           /* 极深背景，接近 gemnana 的 #121212 */
+  --bg-card: rgba(20, 20, 40, 0.65); /* 半透明卡片底色 + 毛玻璃 */
+  --border-card: rgba(192, 132, 252, 0.15); /* 荧光紫边框 */
+  --text-primary: #e0e0ff;         /* 浅紫白文字 */
+  --accent: #c084fc;               /* 主荧光紫，gemnana 常用强调色 */
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  --glow: 0 0 12px rgba(192, 132, 252, 0.4);
+  --radius: 20px;                  /* 大圆角，gemnana 常见 16-24px */
+  --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* 2. 针对标签（Tag）的专项美化 */
-.tag, a.tag {
-  color: var(--accent) !important;
-  background-color: var(--tag-background) !important;
-  border: 1px solid rgba(192, 132, 252, 0.3) !important;
-  border-radius: 8px !important;
-  padding: 2px 8px !important;
-  text-decoration: none !important;
+body, html {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
 }
 
-/* 3. 针对正文中紫色链接的修正 */
-.markdown-rendered a, 
-.external-link {
-  color: var(--accent) !important;
-  text-decoration-color: rgba(192, 132, 252, 0.4) !important;
+/* 首页容器 - 居中宽屏 */
+.gallery-home {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-/* 4. 针对 Callout (紫色边框块) 的深度修正 */
-.callout[data-callout] {
-  border-left: 4px solid var(--accent) !important;
-  background-color: rgba(192, 132, 252, 0.05) !important;
+/* 英雄横幅（可选顶部大图） */
+.hero-banner img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 3rem;
+}
+
+/* Dataview 表格转卡片网格（核心还原 gemnana 卡片） */
+.gallery-home .dataview table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 1.5rem;
+  background: transparent;
+}
+
+.gallery-home .dataview td {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);           /* 毛玻璃 - gemnana 核心效果 */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  padding: 0;
+  position: relative;
+}
+
+/* hover 悬浮 + 荧光辉光（gemnana 标志性交互） */
+.gallery-home .dataview td:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: var(--shadow), var(--glow);
+  border-color: var(--accent);
+}
+
+/* 预览图 - 大图 + hover 缩放 */
+.gallery-home .dataview td:first-child img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition: transform 0.45s ease;
+  display: block;
+}
+
+.gallery-home .dataview td:hover img {
+  transform: scale(1.08);
+}
+
+/* 文字区域 - 轻微渐变或强调 */
+.gallery-home .dataview td:not(:first-child) {
+  padding: 1.5rem;
+  font-size: 0.95rem;
+  background: linear-gradient(to bottom, rgba(192, 132, 252, 0.05), transparent); /* 轻微荧光渐变 */
+}
+
+/* 响应式 - 自动列数 */
+@media (max-width: 1200px) {
+  .gallery-home .dataview td { width: 48% !important; }
+}
+
+@media (max-width: 800px) {
+  .gallery-home .dataview td { width: 100% !important; }
+}
+
+/* 额外优化：搜索框、标签云、footer */
+.search-input, .tag-cloud a {
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.search-input:focus, .tag-cloud a:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+.footer-credit {
+  text-align: center;
+  margin-top: 6rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-card);
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
     //  background-color: white;
