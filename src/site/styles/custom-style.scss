@@ -1,71 +1,13 @@
-:root {
-  --bg-primary: #0a0a0f;           /* 极深背景 */
-  --bg-card: rgba(18, 18, 37, 0.65); /* 半透明卡片 */
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #e0e0ff;
-  --accent: #c084fc;               /* 荧光紫强调 */
-  --shadow: 0 8px 32px rgba(0,0,0,0.6);
-  --radius: 24px;                  /* 大圆角 */
-  --transition: all 0.3s ease;
+body {
+    /***
+      ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
+      IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
+   ***/
+    //  background-color: white;
+    //  .content {
+    //   font-size: 14px;
+    //  }
+    //  h1 {
+    //   color: black;
+    //  }
 }
-
-body, html {
-  background: var(--bg-primary) !important;
-  color: var(--text) !important;
-}
-
-/* 首页容器 */
-.gallery-home {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-/* Dataview 表格变圆角卡片网格 */
-.gallery-home .dataview table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 1.5rem;
-  background: transparent;
-}
-
-.gallery-home .dataview td {
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);     /* 毛玻璃 */
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  padding: 0;
-}
-
-.gallery-home .dataview td:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 25px 70px rgba(0,0,0,0.7),
-              0 0 0 2px rgba(192, 132, 252, 0.25); /* 轻荧光边 */
-}
-
-/* 图片区域 - 大图 + hover 缩放 */
-.gallery-home .dataview td:first-child img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: var(--radius) var(--radius) 0 0;
-  transition: transform 0.4s ease;
-}
-
-.gallery-home .dataview td:hover img {
-  transform: scale(1.08);
-}
-
-/* 文字区 */
-.gallery-home .dataview td:not(:first-child) {
-  padding: 1.5rem;
-  font-size: 0.95rem;
-}
-
-/* 响应式 - 自动适配 */
-@media (max-width: 1200px) { .gallery-home .dataview td { width: 48% !important; } }
-@media (max-width: 800px)  { .gallery-home .dataview td { width: 100% !important; } }
