@@ -1,252 +1,202 @@
 /* ==========================================================================
-   CGfan x Gemnana 风格 - 统一绿色主题与排版修复 (2026 最终版)
-   完全参考 CGfan 图片配色及 Gemnana 极简风格
+   CGfan x Gemnana 终极整合版 (2026-01-19)
+   修复：Header高度、Banner美化、网格溢出、字体精致化、全站去紫变绿
    ========================================================================== */
 
-/* --- 1. 核心变量与主题设置 --- */
+/* --- 1. 核心变量定义 --- */
 :root {
-  /* --- 核心配色 (提取自 CGfan Logo 图片) --- */
-  --cg-green-vivid: #4CAF50;  /* 核心鲜绿色 */
-  --cg-green-light: #e8f5e9;  /* 极浅绿色，用于背景和装饰 */
-  --cg-text-dark: #2d3748;    /* 深灰色，用于正文 */
-  --cg-text-muted: #718096;   /* 浅灰色，用于次要文字 */
-  --cg-border: #e2e8f0;       /* 细微的边框颜色 */
-  --cg-bg-body: #ffffff;      /* 纯白背景 */
+  /* CGfan 图片配色提取 */
+  --cg-green-vivid: #4CAF50;
+  --cg-green-light: #e8f5e9;
+  --cg-text-dark: #2d3748;
+  --cg-text-muted: #94a3b8; /* 精致灰色，用于作者和日期 */
+  --cg-border: #e2e8f0;
 
-  /* 映射至插件标准变量，确保全局兼容性 */
+  /* 插件底层变量覆盖 */
   --accent: var(--cg-green-vivid) !important;
   --text-accent: var(--cg-green-vivid) !important;
-  --interactive-accent: var(--cg-green-vivid) !important;
-  --link-color: var(--cg-green-vivid) !important;
-  --background-primary: var(--cg-bg-body) !important;
+  --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
-  --text-normal: var(--cg-text-dark) !important;
-  --text-muted: var(--cg-text-muted) !important;
-  --border-color: var(--cg-border) !important;
-  
-  /* --- 布局冲突修复 (解决开启搜索后的排版问题) --- */
-  /* 覆盖插件默认值，防止搜索框撑开页面导致横向拖动 */
   --dg-content-max-width: 900px !important;
-  --dg-search-box-width: 700px !important; 
-  --dg-search-box-max-width: 92vw !important; /* 确保手机端不溢出 */
+  --dg-navbar-height: 48px !important; /* 压缩导航栏高度变量 */
+  --dg-search-box-width: 700px !important;
   --dg-search-highlight-bg: rgba(76, 175, 80, 0.25) !important;
 }
 
-/* --- 2. 全局基础样式修复 --- */
+/* --- 2. 全局布局锁定 (解决溢出与拖动) --- */
 html, body {
-  overflow-x: hidden !important; /* 物理禁止横向滚动，消除拖动条 */
+  overflow-x: hidden !important; 
   width: 100% !important;
   margin: 0; padding: 0;
-  background-color: var(--cg-bg-body) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  -webkit-font-smoothing: antialiased; /* 让字体在 iOS/Mac 上更精致 */
+  background-color: #ffffff !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
 }
 
-/* 链接全局去紫变绿 */
+/* 全局链接去紫 */
 a, .internal-link, .external-link {
   color: var(--cg-green-vivid) !important;
   text-decoration: none !important;
-  transition: opacity 0.2s ease;
 }
-a:hover { opacity: 0.8; }
 
-/* --- 3. 网页头部 (参考 Gemnana 纯净风格) --- */
+/* --- 3. Header 压缩与导航适配 (解决遮挡问题) --- */
 .header, .navbar {
-  background-color: var(--cg-green-light) !important; /* 浅绿底色 */
-  border-bottom: 1px solid rgba(76, 175, 80, 0.2) !important;
-  padding: 0.8rem 1.5rem !important;
+  background-color: rgba(232, 245, 233, 0.96) !important; /* 极浅绿带磨砂 */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(76, 175, 80, 0.15) !important;
+  padding: 0.3rem 1.2rem !important; /* 极致压缩高度 */
+  height: 48px !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .header-title {
+  font-size: 1.05rem !important;
   font-weight: 800 !important;
   color: var(--cg-green-vivid) !important;
   letter-spacing: -0.02em;
+  margin: 0 !important;
 }
 
-/* 顶部搜索按钮图标 */
-.search-button { color: var(--cg-green-vivid) !important; }
-.search-button svg, .search-icon svg { fill: var(--cg-green-vivid) !important; }
+.search-button svg { fill: var(--cg-green-vivid) !important; }
 
-
-/* --- 4. 统一搜索体验 (弹出层、输入框、结果列表) --- */
-
-/* 搜索全屏遮罩背景 */
-.search-view-container, .search-container {
-  background-color: rgba(255, 255, 255, 0.96) !important; /* 高透明度白 */
-  backdrop-filter: blur(8px) !important; /* 现代磨砂玻璃效果 */
-  padding-top: 80px !important;
-}
-
-/* 搜索输入框：胶囊形状 (参考 Gemnana) */
-.search-box {
-  background-color: #fff !important;
-  border: 2px solid var(--cg-green-vivid) !important;
-  border-radius: 50px !important; 
-  box-shadow: 0 10px 25px -5px rgba(76, 175, 80, 0.2) !important;
-  overflow: hidden;
-}
-
-.search-box input {
-  font-size: 1.1rem !important;
-  padding: 12px 24px !important;
-  background: transparent !important;
-  color: var(--cg-text-dark) !important;
-}
-
-/* 搜索结果项：转化为精致的卡片 */
-.searchresult {
-  background-color: #fff !important;
-  border: 1px solid var(--cg-border) !important;
-  border-left: 5px solid var(--cg-green-vivid) !important; /* 侧边绿色装饰条 */
-  border-radius: 12px !important;
-  padding: 16px !important;
-  margin-bottom: 12px !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
-}
-
-/* 结果项悬停效果 */
-.searchresult:hover, .searchresult.active {
-  background-color: var(--cg-green-light) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.15) !important;
-}
-
-.result-title {
-  font-weight: 700 !important;
-  font-size: 1.05rem !important;
-  color: var(--cg-green-vivid) !important;
-  margin-bottom: 8px !important;
+/* --- 4. 首页 Banner 视觉还原 --- */
+.content > .markdown-rendered > p:first-child img,
+img[src*="banner"] {
+  width: 100% !important;
+  max-height: 300px !important;
+  object-fit: cover !important;
+  border-radius: 16px !important; /* 还原大圆角 */
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1) !important; /* 增加柔和阴影 */
+  margin-top: 1rem !important;
+  margin-bottom: 2rem !important;
   display: block;
 }
 
-.result-excerpt {
-  color: var(--cg-text-muted) !important;
-  font-size: 0.9rem !important;
-  line-height: 1.5;
-}
-
-/* 搜索词匹配高亮 */
-.search-highlight {
-  background-color: rgba(76, 175, 80, 0.25) !important;
-  color: #2e7d32 !important; /* 深绿色文字，提升对比度 */
-  padding: 0 4px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-
-/* --- 5. 首页网格系统 (修复右侧切断，锁定 4 列) --- */
+/* --- 5. 首页网格系统 (解决右侧显示全、作者时间美化) --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 20px !important;
-  width: 100% !important; 
-  margin: 0 !important;
-  border: none !important;
-  padding: 4px !important; /* 防止阴影被切断 */
+  gap: 16px !important;
+  width: 100% !important;
   box-sizing: border-box !important;
+  border: none !important;
+  padding: 4px !important;
+  margin: 0 !important;
 }
 
 .grid-view table tbody { display: contents !important; }
 
-/* 首页卡片样式 */
+/* 卡片外观 */
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
   background: #fff !important;
-  border: 1px solid var(--cg-border) !important;
+  border: 1px solid #edf2f7 !important;
   border-radius: 16px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04) !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  margin: 0 !important;
 }
 
 .grid-view table tr:hover {
-  transform: translateY(-5px) !important;
-  box-shadow: 0 15px 30px -5px rgba(76, 175, 80, 0.2) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--cg-green-vivid) !important;
 }
 
-/* 图片区域设置 */
-.grid-view table td:first-child { height: 180px !important; }
-.grid-view table td:first-child img { 
-  width: 100% !important; 
-  height: 100% !important; 
-  object-fit: cover !important; 
-  transition: transform 0.5s ease; 
-}
-.grid-view table tr:hover td:first-child img { transform: scale(1.05); }
+/* 图片区域 */
+.grid-view table td:first-child { height: 170px !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
-/* 标题区域设置 */
-.grid-view table td:nth-child(2) { padding: 16px 16px 8px !important; }
+/* 卡片标题字体精致化 */
+.grid-view table td:nth-child(2) { padding: 14px 14px 4px !important; }
 .grid-view table td:nth-child(2) a {
-  font-size: 1rem !important;
+  font-size: 0.95rem !important;
   font-weight: 700 !important;
-  color: var(--cg-text-dark) !important;
-  line-height: 1.4;
+  color: #1a202c !important;
+  line-height: 1.4 !important;
 }
 
+/* 作者与日期字体精致化：更小、更淡 */
+.grid-view table td:nth-child(3),
+.grid-view table td:nth-child(4) {
+  padding: 0 14px !important;
+  font-size: 0.75rem !important;
+  color: var(--cg-text-muted) !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}
 
-/* --- 6. 内容页适配 (锁定居中宽度) --- */
+/* 标签样式 (首页 & 内容页) */
+.tag, .note-tag, a.tag {
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 4px !important;
+  padding: 2px 8px !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(76, 175, 80, 0.1) !important;
+}
+
+/* --- 6. 搜索界面深度美化 (配色统一) --- */
+.search-view-container {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.search-box {
+  border: 2px solid var(--cg-green-vivid) !important;
+  border-radius: 50px !important; /* 胶囊形状 */
+  box-shadow: 0 10px 25px -5px rgba(76, 175, 80, 0.2) !important;
+}
+
+.searchresult {
+  background-color: #fff !important;
+  border-left: 5px solid var(--cg-green-vivid) !important;
+  border-radius: 12px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.search-highlight {
+  background-color: rgba(76, 175, 80, 0.2) !important;
+  color: #1b5e20 !important;
+}
+
+/* --- 7. 内容页 (锁定居中、去紫变绿) --- */
 .content, .content-container, #content-container {
-  max-width: 900px !important;
-  margin: 0 auto !important; /* 强制居中 */
-  padding: 3rem 2rem !important;
+  max-width: 850px !important;
+  margin: 0 auto !important; /* 彻底锁定居中，解决偏移 */
+  padding: 2rem 1.5rem !important;
   width: 100% !important;
 }
 
 h1, .note-title {
-  font-size: 2rem !important;
-  font-weight: 800 !important;
   color: var(--cg-green-vivid) !important;
-  letter-spacing: -0.03em;
+  font-weight: 800 !important;
 }
 
-/* 内容页 Callouts / 引用块 - 彻底去紫变绿 */
+/* 内容页组件去紫补丁 */
 .callout, blockquote, [data-callout] {
   background-color: var(--cg-green-light) !important;
   border: none !important;
   border-left: 5px solid var(--cg-green-vivid) !important;
   border-radius: 12px !important;
-  padding: 1rem 1.5rem !important;
-  color: var(--cg-text-dark) !important;
-}
-.callout-title { color: var(--cg-green-vivid) !important; }
-blockquote:before { display: none !important; } /* 隐藏 style.css 自带的巨大引号图标 */
-
-/* 标签样式统一 */
-.tag, .note-tag, a.tag {
-  background-color: var(--cg-green-light) !important;
-  color: var(--cg-green-vivid) !important;
-  border: 1px solid rgba(76,175,80, 0.1) !important;
-  padding: 4px 12px !important;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.8rem !important;
 }
 
-
-/* --- 7. 响应式布局修正 --- */
-@media (max-width: 1024px) {
-  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
-}
-
+/* --- 8. 响应式与全站去紫安全网 --- */
+@media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
-  .header, .content { padding: 1rem !important; }
-  .grid-view table { grid-template-columns: 1fr !important; gap: 15px !important; }
-  /* 确保搜索框在手机端不溢出 */
-  .search-view-container .search-input { width: 90% !important; margin: 0 auto; }
-  h1, .note-title { font-size: 1.75rem !important; }
+  .grid-view table { grid-template-columns: 1fr !important; }
+  .content { padding: 1rem !important; }
+  .header { height: 44px !important; min-height: 44px !important; }
 }
 
-
-/* --- 8. 终极去紫补丁 (安全网) --- */
-/* 强制任何残留的默认紫色文字或边框变绿 */
-[style*="color: purple"], 
-[style*="rgb(107, 79, 187)"],
-.internal-link {
+/* 强制清除任何残留紫色 */
+[style*="color: purple"], [style*="rgb(107, 79, 187)"], [style*="color: rgb(107, 79, 187)"] {
   color: var(--cg-green-vivid) !important;
 }
 [style*="border-left-color: rgb(107, 79, 187)"] {
