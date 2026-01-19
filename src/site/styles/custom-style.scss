@@ -1,46 +1,53 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极显色版 (2026-01-19 Fix Invisible Text)
-   修复：强制侧边栏文字变黑、修复“隐身”的导航、保持全站绿色风格
+   CGfan x Gemnana 终极完美版 (2026-01-19 Final Polish V4)
+   修复：清除丑陋装饰引号、侧边栏强制显色、全站字体统一、绿色风格
    ========================================================================== */
 
 /* --- 1. 核心变量与强制亮色模式 --- */
 :root {
-  /* [核心修复] 强制告诉浏览器和插件：这是亮色模式 */
-  color-scheme: light !important;
+  color-scheme: light !important; /* 强制亮色模式 */
   
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
   --cg-text-black: #2d3748; 
   --cg-text-muted: #5e6c84;
   
-  /* 插件底层变量覆盖 */
+  /* 插件变量覆盖 */
   --accent: var(--cg-green-vivid) !important;
   --text-normal: var(--cg-text-black) !important;
   --text-muted: var(--cg-text-muted) !important;
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  /* [关键] 强制重置侧边栏专用变量，防止它们变成白色 */
+  /* 侧边栏专用变量重置 */
   --nav-item-color: #2d3748 !important;
   --nav-text-color: #2d3748 !important;
-  --nav-icon-color: #2d3748 !important;
   
   --dg-content-max-width: 900px !important;
   --dg-navbar-height: 52px !important;
   --dg-search-box-width: 700px !important;
+  --dg-sidebar-top: 60px !important; 
 }
 
-/* --- 2. 全局布局与字体 --- */
+/* --- 2. 全局字体与排版 (修复丑陋标点) --- */
 html, body {
   overflow-x: hidden !important; 
   width: 100% !important;
   margin: 0; padding: 0;
   background-color: #ffffff !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  
+  /* [核心修复] 字体栈优化：优先使用系统无衬线字体，确保标点符号不回退到衬线体 */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif !important;
+  
   font-size: 15px !important; 
   line-height: 1.7 !important;
   color: var(--cg-text-black) !important;
   -webkit-font-smoothing: antialiased;
+}
+
+/* [关键] 强制所有标点符号不使用特殊字体 */
+* {
+  font-feature-settings: "palt" 1 !important; /* 优化标点间距 */
 }
 
 /* 链接样式 */
@@ -68,10 +75,9 @@ a:hover { opacity: 0.8; }
 .header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. [核心修复] 侧边栏 (主题探索/快速导航) --- */
-/* 4.1 容器层级与背景 */
+/* --- 4. 侧边栏修复 (强制显色) --- */
 .filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
-  z-index: 500 !important; /* 确保在最上层 */
+  z-index: 500 !important;
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -79,32 +85,24 @@ a:hover { opacity: 0.8; }
   pointer-events: auto !important;
 }
 
-/* 4.2 [暴力显色] 强制所有子元素变为深灰色 */
-/* 包含 a标签, div, span, svg图标, list item */
+/* 强制深灰色 */
 .filetree-sidebar a, .filetree-sidebar div, .filetree-sidebar span, 
 .toc-container a, .toc-container div, .toc-container span,
 .filetree-item, .filetree-folder-name, .filetree-file-name {
-  color: #2d3748 !important; /* 强制深灰 */
-  fill: #2d3748 !important;  /* 强制图标深灰 */
-  text-shadow: none !important; /* 去除可能存在的文字阴影 */
+  color: #2d3748 !important; 
+  fill: #2d3748 !important;  
+  text-shadow: none !important;
 }
 
-/* 4.3 鼠标悬停变绿 */
-.filetree-sidebar a:hover, .filetree-sidebar div:hover, 
-.filetree-item:hover, .filetree-folder-name:hover,
-.filetree-file-name:hover {
+/* 悬停变绿 */
+.filetree-sidebar a:hover, .filetree-item:hover, .filetree-folder-name:hover, .filetree-file-name:hover {
   color: var(--cg-green-vivid) !important;
   fill: var(--cg-green-vivid) !important;
   cursor: pointer !important;
 }
+.filetree-sidebar svg, .filetree-folder-icon { color: #2d3748 !important; fill: #2d3748 !important; }
 
-/* 4.4 文件夹图标与箭头修正 */
-.filetree-sidebar svg, .filetree-folder-icon {
-  color: #2d3748 !important;
-  fill: #2d3748 !important;
-}
-
-/* --- 5. 首页 Banner 美化 (带倒影) --- */
+/* --- 5. 首页 Banner 美化 --- */
 .content > .markdown-rendered > p:first-child img,
 img[src*="banner"] {
   width: 100% !important;
@@ -131,7 +129,6 @@ img[src*="banner"] {
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 卡片容器 */
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
@@ -162,14 +159,14 @@ img[src*="banner"] {
 /* 标签 */
 .grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
 
-/* --- 7. 内容页布局 --- */
+/* --- 7. 内容页正文美化 (核心修复：去除装饰引号) --- */
 .content, #content-container {
   max-width: 900px !important;
-  padding: 90px 1.5rem 3rem 1.5rem !important; /* 不强制margin-left，允许侧边栏共存 */
+  padding: 90px 1.5rem 3rem 1.5rem !important;
 }
 
 .markdown-rendered {
-  font-family: 'Inter', -apple-system, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
   font-size: 0.95rem !important;
   line-height: 1.75 !important;
   color: var(--cg-text-black) !important;
@@ -184,7 +181,22 @@ h1, .note-title {
 }
 
 .markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
-.callout, blockquote { background-color: #f9fbf9 !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; color: #2d3748 !important; }
+
+/* [核心修复] 清除所有装饰性引号 */
+blockquote::before, blockquote::after, 
+q::before, q::after {
+  content: none !important;
+  display: none !important;
+}
+
+.callout, blockquote {
+  background-color: #f9fbf9 !important;
+  border-left: 4px solid var(--cg-green-vivid) !important;
+  border-radius: 10px !important;
+  color: #2d3748 !important;
+  /* 确保引用块内文字也是无衬线 */
+  font-family: inherit !important; 
+}
 
 /* --- 8. 标签样式 --- */
 .tag, .note-tag, a.tag {
@@ -213,5 +225,6 @@ h1, .note-title {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
+
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
