@@ -1,128 +1,153 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极适配优化版 (2026-01-19 最终锁定)
-   解决溢出拖动、字体精致化、搜索视觉增强
+   CGfan x Gemnana 紧急修复版 (2026-01-19 救火版)
+   核心目标：消灭横向滚动、修复单元格切断、强制美化字体与搜索
    ========================================================================== */
 
-/* --- 1. 全局变量重定义 --- */
+/* --- 1. 底层变量强力接管 (核心：切断插件的默认计算) --- */
 :root {
-  --accent: #4CAF50 !important;
-  --bg-primary: #ffffff !important;
-  --bg-secondary: #f4f9f4 !important; /* 网页头浅绿背景 */
-  --text-normal: #2d3748 !important;
-  --radius-lg: 16px !important;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !important;
+  /* 强制覆盖插件的布局变量，防止撑开页面 */
+  --dg-content-max-width: 850px !important; 
+  --dg-search-box-width: 600px !important;    /* 搜索框缩小，防止手机端溢出 */
+  --dg-search-box-max-width: 90vw !important; /* 视口宽度限制 */
+  --dg-search-input-size: 1rem !important;
   
-  /* 修正插件搜索变量 */
-  --dg-search-box-width: 750px !important;
-  --dg-search-box-radius: 16px !important;
-  --dg-search-input-padding: 12px 20px !important;
-  --dg-search-results-width: 100% !important; /* 强制单栏显示更清晰 */
+  /* 强制覆盖配色变量 */
+  --accent: #4CAF50 !important;
+  --text-accent: #4CAF50 !important;
+  --bg-primary: #ffffff !important;
+  --bg-secondary: #f4f9f4 !important;
+  --text-normal: #2d3748 !important;
+  --text-muted: #718096 !important;
+  --border-color: #e2e8f0 !important;
+  
+  /* 字体优化变量 */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* --- 2. 布局锁定 (彻底解决拖动与溢出) --- */
+/* --- 2. 全局布局锁定 (消灭拖动条) --- */
 html, body {
-  overflow-x: hidden !important; /* 严禁横向滚动 */
+  overflow-x: hidden !important; /* 物理禁止横向滚动 */
   width: 100% !important;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-normal) !important;
+  font-family: var(--font-family-sans) !important;
+  -webkit-font-smoothing: antialiased !important; /* 让字体更清晰 */
 }
 
-/* 强制居中并修正插件的外边距偏移公式 */
+/* --- 3. 内容区强制居中 (修复布局偏移) --- */
+/* 这里使用了 !important 来对抗插件的 margin-left: calc(...) */
 .content, .content-container, #content-container, .dg-stack {
-  max-width: 850px !important; /* 稍微放宽一点，让 4 列更舒展 */
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 15px !important;
-  padding-right: 15px !important;
+  margin: 0 auto !important;
+  max-width: 850px !important;
+  padding: 2rem 1rem !important; /* 给左右留出呼吸空间 */
   width: 100% !important;
+  float: none !important;
+  left: auto !important;
 }
 
-/* --- 3. 首页字体与网格美化 (修复单元格显示不全) --- */
+/* --- 4. 首页网格修复 (修复单元格右侧不显示) --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 1rem !important;
-  width: 100% !important; /* 确保不超出父容器 */
-  border: none !important;
+  gap: 1.25rem !important;
+  width: 100% !important;
   margin: 0 !important;
-  padding: 0 !important;
+  border: none !important;
+  padding: 2px !important; /* 防止阴影被切 */
 }
 
-/* 标题字体精致化 */
-.grid-view table td:nth-child(2) a {
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.015em !important; /* 增加细微字间距 */
-  line-height: 1.4 !important;
-  color: #1a202c !important;
-  transition: color 0.2s ease;
-}
-
-/* 卡片外观优化 */
+.grid-view table tbody { display: contents !important; }
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
   background: #fff !important;
-  border: 1px solid rgba(0,0,0,0.08) !important;
-  border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-sm) !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+  overflow: hidden !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
-
 .grid-view table tr:hover {
-  transform: translateY(-5px) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 20px -5px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--accent) !important;
-  box-shadow: 0 10px 15px -3px rgba(76, 175, 80, 0.2) !important;
 }
 
-/* --- 4. 搜索框与结果配色优化 (目视增强) --- */
-/* 背景变亮，对比度拉高 */
-.search-view-container {
-  background-color: rgba(255, 255, 255, 0.99) !important;
+/* 单元格内容修正 */
+.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
+.grid-view table td:first-child { height: 160px !important; width: 100% !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+
+/* 字体美化：标题 */
+.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
+.grid-view table td:nth-child(2) a {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1a202c !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.01em !important;
 }
 
-/* 输入框：加深边框色，提升存在感 */
-.search-view-container .search-input {
-  border: 2px solid #388e3c !important; /* 更深的绿色边框 */
-  background-color: #ffffff !important;
+/* 标签修正 */
+.grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
+.tag, .note-tag, a.tag {
+  background-color: rgba(76, 175, 80, 0.08) !important;
+  color: var(--accent) !important;
+  border-radius: 4px !important; /* 改回微圆角，更整齐 */
+  padding: 2px 8px !important;
+  font-size: 0.75rem !important;
   font-weight: 500 !important;
+  text-decoration: none !important;
 }
 
-/* 搜索结果卡片：白底深字，极易阅读 */
-.search-view-container .search-result-item {
-  background: #ffffff !important;
-  border: 1px solid #d1d5db !important;
-  border-left: 5px solid var(--accent) !important;
-  padding: 1.2rem !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
-}
-
-/* 搜索高亮匹配词：高亮色更鲜明 */
-.search-view-container mark {
-  background-color: #fff9c4 !important; /* 暖黄色高亮，更醒目 */
-  color: #d32f2f !important;           /* 匹配字设为深红，对比度最高 */
-  padding: 0 2px;
-  border-radius: 2px;
-}
-
-/* --- 5. 网页头 (Header) 修正 --- */
+/* --- 5. 网页头与搜索修复 (修复配色差、样式丑) --- */
 .header, .navbar {
   background-color: var(--bg-secondary) !important;
   border-bottom: 2px solid rgba(76, 175, 80, 0.15) !important;
-  padding: 0.5rem 1rem !important;
+  padding: 0.8rem 1rem !important;
+  max-width: 100% !important;
+  margin: 0 !important;
 }
 
-/* --- 6. 响应式与去紫补丁 --- */
+/* 搜索框：白底绿边，清晰可见 */
+.search-view-container {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(5px) !important;
+}
+.search-view-container .search-input {
+  border: 2px solid var(--accent) !important;
+  border-radius: 12px !important; /* 统一圆角 */
+  background: #fff !important;
+  color: #333 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  font-size: 1rem !important;
+}
+
+/* 搜索结果：卡片式，高对比度 */
+.search-view-container .search-result-item {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 4px solid var(--accent) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.search-result-title { font-weight: 700 !important; color: #2d3748 !important; }
+.search-view-container mark { background: #fff9c4 !important; color: #c53030 !important; } /* 黄底红字高亮 */
+
+/* --- 6. 响应式保底 (手机端不乱跑) --- */
+@media (max-width: 850px) {
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
+}
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .content, .header { padding: 0.8rem !important; }
-  .search-view-container .search-input { width: 92% !important; }
+  .content { padding: 1rem !important; }
+  .search-view-container .search-input { width: 90% !important; }
 }
 
-[style*="color: purple"], 
-[style*="border-left-color: rgb(107, 79, 187)"],
-.callout, .internal-link {
-  color: var(--accent) !important;
-  border-left-color: var(--accent) !important;
-}
+/* --- 7. 强效去紫 (最后的补丁) --- */
+a, .internal-link, .callout { color: var(--accent) !important; }
+.callout { border-left-color: var(--accent) !important; background: #f7faf7 !important; }
+[style*="rgb(107, 79, 187)"] { color: var(--accent) !important; border-color: var(--accent) !important; }
