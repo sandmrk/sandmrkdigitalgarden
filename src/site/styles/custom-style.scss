@@ -1,4 +1,3 @@
-
 /* ==========================================================================
    CGfan x Gemnana 终极优化版 (绿色清新风格 - 2026修复版)
    ========================================================================== */
@@ -11,7 +10,6 @@
   --interactive-accent: #4CAF50 !important;
   --link-color: #4CAF50 !important;
   --link-external-color: #4CAF50 !important;
-  --tag-background: rgba(76, 175, 80, 0.08) !important;
   
   /* 标签配色 */
   --tag-color: #4CAF50 !important;
@@ -33,11 +31,6 @@
 }
 
 /* --- 2. 基础全局样式 --- */
-html, body {
-  overflow-x: hidden !important; 
-  width: 100% !important;
-  box-sizing: border-box;
-}
 body {
   background-color: var(--bg-primary) !important;
   color: var(--text-normal) !important;
@@ -234,70 +227,4 @@ a:hover { opacity: 0.8; }
 [style*="border-left-color: rgb(107, 79, 187)"] {
   color: var(--accent) !important;
   border-left-color: var(--accent) !important;
-}
-.header {
-  background-color: var(--bg-secondary) !important; /* 改为浅绿色底色 */
-  border-bottom: 2px solid rgba(76, 175, 80, 0.2) !important;
-  padding: 0.6rem 1rem !important;
-  width: 100% !important;
-  max-width: 100% !important; /* 确保不溢出 */
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
-}
-
-/* 头部站点标题文字 */
-.header-title {
-  color: var(--accent) !important;
-  font-weight: 800 !important;
-  font-size: 1.1rem !important;
-  margin: 0 !important;
-}
-
-/* 搜索按钮适配 */
-.search-button {
-  color: var(--accent) !important;
-  padding: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* --- 4. 搜索界面 (Search Modal) 深度定制 --- */
-.search-view-container {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-/* 搜索输入框：胶囊绿色风格 */
-.search-view-container .search-input {
-  border: 2px solid var(--accent) !important;
-  border-radius: 50px !important;
-  padding: 12px 24px !important;
-  background: var(--bg-secondary) !important;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1) !important;
-  color: var(--text-normal) !important;
-}
-
-/* 搜索结果项：卡片化排版 (适配截图样式) */
-.search-view-container .search-result-item {
-  background: #f8f9fa !important;
-  border: 1px solid #edf2f7 !important;
-  border-radius: 12px !important;
-  padding: 1rem !important;
-  margin-bottom: 0.8rem !important;
-  transition: all 0.2s ease !important;
-}
-
-.search-view-container .search-result-item:hover {
-  border-color: var(--accent) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.1) !important;
-}
-
-/* 搜索高亮匹配词 */
-.search-view-container mark {
-  background-color: rgba(76, 175, 80, 0.3) !important;
-  color: #1b5e20 !important;
-  border-radius: 3px;
 }
