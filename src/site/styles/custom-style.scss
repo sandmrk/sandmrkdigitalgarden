@@ -15,6 +15,13 @@
   --radius-lg: 16px !important;            /* 大圆角 */
   --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
   --font-family-sans: 'Inter', system-ui, sans-serif !important;
+       /* ... 现有变量 ... */
+    --text-accent: var(--accent) !important;
+    --interactive-accent: var(--accent) !important;
+    --link-color: var(--accent) !important;
+    --link-external-color: var(--accent) !important;
+    --tag-color: var(--accent) !important;
+
 }
 
 /* --- 2. 基础重置 --- */
@@ -165,4 +172,66 @@ h1 { color: var(--accent) !important; }
   .content, #content-container { padding: 1rem !important; width: 100% !important; }
   .grid-view table { grid-template-columns: 1fr !important; } /* 手机 1 列 */
   .grid-view table td:first-child { height: 200px !important; }
+}
+/* ==========================================================================
+   内容页风格适配 (Note Page Adaptation)
+   ========================================================================== */
+
+/* 1. 统一内容区宽度与首页一致 */
+.content-container {
+    max-width: 900px !important; /* 内容页保持略窄，提升阅读舒适度 */
+    margin: 0 auto !important;
+    padding: 2rem 1.5rem !important;
+}
+
+/* 2. 标题与元数据美化 */
+.note-title {
+    font-size: 2.5rem !important;
+    color: var(--accent) !important; /* 统一使用主绿色 */
+    margin-bottom: 0.5rem !important;
+    line-height: 1.2 !important;
+}
+
+/* 移除默认的紫色边框和链接颜色 */
+.markdown-rendered {
+    color: var(--text-normal) !important;
+    line-height: 1.8 !important;
+}
+
+/* 3. 正文内的图片适配 */
+.markdown-rendered img {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    margin: 1.5rem auto !important;
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* 4. 内容页标签 (Tags) 统一风格 */
+.note-tag {
+    background-color: rgba(76, 175, 80, 0.1) !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(76, 175, 80, 0.2) !important;
+    border-radius: 50px !important;
+    padding: 3px 12px !important;
+    font-size: 0.85em !important;
+    text-decoration: none !important;
+}
+
+/* 5. 侧边栏与页脚适配 (如果是官方模板自带的) */
+.sidebar, .footer {
+    border-top: 1px solid var(--border-color) !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-muted) !important;
+}
+
+/* 6. 响应式：手机端内容页边距缩小 */
+@media (max-width: 768px) {
+    .content-container {
+        padding: 1.5rem 1rem !important;
+    }
+    .note-title {
+        font-size: 1.8rem !important;
+    }
 }
