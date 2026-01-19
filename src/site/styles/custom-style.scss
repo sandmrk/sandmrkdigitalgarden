@@ -76,10 +76,10 @@ a:hover { opacity: 0.8; }
 
 /* 强制侧边栏文字颜色可见 */
 .filetree-sidebar a, .toc-container a, .filetree-item {
-  color: var(--cg-text-muted) !important;
+  color: #333333 !important; /* <--- 在这里改，确保颜色足够深 */
 }
 .filetree-sidebar a:hover, .toc-container a:hover {
-  color: var(--cg-green-vivid) !important;
+  color: var(--cg-green-vivid) !important; /* <--- 这里是鼠标划过时的绿色 */
 }
 
 /* --- 4. 首页 Banner 美化 (带倒影) --- */
