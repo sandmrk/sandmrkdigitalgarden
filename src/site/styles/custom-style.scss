@@ -116,42 +116,48 @@ img[src*="banner"] {
 }
 
 /* --- 6. 首页网格系统 --- */
-/* --- 6. 首页网格系统标签修正 --- */
-
-/* 1. 强制首页标签容器为 Flex 布局，防止错位 */
-.grid-view table td:last-child {
-  padding: 10px 14px 20px !important; /* 增加底部间距，防止遮挡 */
-  margin-top: auto !important;
-  display: flex !important;
-  flex-wrap: wrap !important; /* 允许标签整体换行，但不允许内部断开 */
-  gap: 8px !important;        /* 标签之间的间距 */
+.grid-view table {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 16px !important;
+  width: 100% !important; 
+  margin: 0 !important;
   border: none !important;
+  padding: 4px !important;
 }
 
-/* 2. 首页标签本体：锁定不换行、统一绿色 */
-.grid-view table td:last-child a.tag,
-.grid-view table td:last-child .tag {
-  display: inline-flex !important;
-  align-items: center !important;
-  white-space: nowrap !important;   /* [核心修复] 禁止标签内空格导致断行 */
-  word-break: keep-all !important;  /* 禁止单词内断字 */
-  
-  /* 视觉风格：CGfan 绿色 */
-  background-color: var(--cg-green-light) !important;
-  color: var(--cg-green-vivid) !important;
-  border-radius: 6px !important;
-  padding: 3px 10px !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
-  text-decoration: none !important;
+.grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
+.grid-view table tbody { display: contents !important; }
+
+.grid-view table tr {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
+  overflow: hidden !important;
+  transition: transform 0.2s ease !important;
+  margin: 0 !important;
+}
+.grid-view table tr:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
+  border-color: var(--cg-green-vivid) !important;
 }
 
-/* 3. 彻底清除首页标签自动生成的 # 号（如果存在） */
-.grid-view table td:last-child a.tag::before {
-  content: none !important;
-  display: none !important;
-}
+.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
+.grid-view table td:first-child { height: 160px !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+
+/* 标题 */
+.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
+.grid-view table td:nth-child(2) a { font-size: 0.9rem !important; font-weight: 700 !important; color: #2d3748 !important; line-height: 1.4 !important; }
+
+/* 元数据 */
+.grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
+/* 标签 */
+.grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
 
 /* --- 7. 内容页正文美化 (核心修复：去除装饰引号) --- */
 .content, #content-container {
