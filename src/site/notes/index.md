@@ -2,7 +2,7 @@
 {"dg-publish":true,"permalink":"/index/","title":"CGfan 的 AI Art Gallery","tags":["gardenEntry"]}
 ---
 
-![](banner.jpg)
+![[banner.jpg\|banner.jpg]]
 # CGfan 的 AI Art Gallery
 
 欢迎来到我的个人 AI 艺术与提示词收藏库  
