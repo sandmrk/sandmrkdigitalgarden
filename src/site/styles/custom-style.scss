@@ -1,39 +1,258 @@
-body {
-    /***
-      ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
-      IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
-   ***/
-/* gemnana.com 风格深度还原：深黑毛玻璃 + 大圆角卡片 + 荧光 hover + 未来科技感 */
+/* ==========================================================================
+   CGfan x Gemnana 风格主题 - Custom CSS
+   ========================================================================== */
 
-/* 全局变量 - 方便后期微调 */
+/* --- 1. 全局变量定义 (核心配色方案) --- */
 :root {
-  --bg-primary: #0d0d12;           /* 极深背景，接近 gemnana 的 #121212 */
-  --bg-card: rgba(20, 20, 40, 0.65); /* 半透明卡片底色 + 毛玻璃 */
-  --border-card: rgba(192, 132, 252, 0.15); /* 荧光紫边框 */
-  --text-primary: #e0e0ff;         /* 浅紫白文字 */
-  --accent: #c084fc;               /* 主荧光紫，gemnana 常用强调色 */
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
-  --glow: 0 0 12px rgba(192, 132, 252, 0.4);
-  --radius: 20px;                  /* 大圆角，gemnana 常见 16-24px */
-  --transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* 主色调 - 提取自 CGfan Logo 的鲜绿色 */
+  --accent: #4CAF50 !important;
+  /* 强调文字颜色 - 在深色背景上使用白色 */
+  --text-accent: #ffffff !important;
+
+  /* 背景色体系 - Gemnana 风格的干净明亮 */
+  --bg-primary: #ffffff !important;       /* 页面主背景：纯白 */
+  --bg-secondary: #f8f9fa !important;     /* 次级背景/卡片背景：极浅灰 */
+  --bg-tertiary: #e9ecef !important;      /* 边框或分隔线 */
+
+  /* 文字颜色 */
+  --text-normal: #2d3748 !important;      /* 正文：深灰，非纯黑更柔和 */
+  --text-muted: #718096 !important;       /* 辅助信息/日期：中灰 */
+  --text-faint: #a0aec0 !important;       /* 非常淡的文字 */
+
+  /* 链接颜色 */
+  --link-color: var(--accent) !important; /* 链接使用主绿色 */
+  --link-hover-color: #388E3C !important; /* 悬停时加深绿色 */
+  --link-external-color: var(--accent) !important;
+
+  /* 边框与阴影 */
+  --border-color: #e2e8f0 !important;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  
+  /* 圆角 */
+  --radius-sm: 0.375rem !important;
+  --radius-md: 0.75rem !important;        /* 卡片标准圆角 (12px) */
+  --radius-lg: 1rem !important;           /* 大圆角 (16px) */
+
+  /* 字体栈 - 现代无衬线字体 */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  --default-font: var(--font-family-sans) !important;
 }
 
-body, html {
-  background: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  font-family: 'Inter', system-ui, sans-serif !important;
+/* --- 2. 全局基础样式重置 --- */
+body {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-normal) !important;
+  font-family: var(--default-font) !important;
 }
 
-/* 首页容器 - 居中宽屏 */
-.gallery-home {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+a {
+  color: var(--link-color) !important;
+  transition: color 0.2s ease-in-out;
+  text-decoration: none;
 }
 
-/* 英雄横幅（可选顶部大图） */
-.hero-banner img {
+a:hover {
+  color: var(--link-hover-color) !important;
+}
+
+/* 标题样式 */
+h1, h2, h3, h4, h5, h6 {
+  color: #1a202c !important; /* 更深的黑色用于标题 */
+  font-weight: 700 !important;
+  letter-spacing: -0.025em;
+}
+
+h1 { color: var(--accent) !important; } /* 首页大标题使用主绿色 */
+
+/* --- 3. 组件样式化 --- */
+
+/* -> 3.1 标签 (Tags) - 替换掉紫色 */
+.tag, a.tag {
+  background-color: rgba(76, 175, 80, 0.1) !important; /* 浅绿色背景 */
+  color: var(--accent) !important;                     /* 绿色文字 */
+  border: 1px solid rgba(76, 175, 80, 0.2) !important; /* 浅绿色边框 */
+  border-radius: 9999px !important;                    /* 胶囊形状 */
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease;
+}
+
+.tag:hover, a.tag:hover {
+  background-color: var(--accent) !important;
+  color: var(--text-accent) !important; /* 悬停变实心绿底白字 */
+  text-decoration: none !important;
+}
+
+/* -> 3.2 Callout 区块 (引用/提示框) - 替换掉紫色 */
+.callout {
+  background-color: var(--bg-secondary) !important; /* 浅灰背景 */
+  border: 1px solid var(--border-color) !important;
+  border-left-width: 4px !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  color: var(--text-normal) !important;
+}
+
+/* 默认 Callout 使用主绿色 */
+.callout[data-callout] {
+  border-left-color: var(--accent) !important;
+  background-color: rgba(76, 175, 80, 0.05) !important; /* 极浅的绿色背景色调 */
+}
+
+.callout-title {
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+}
+
+.callout-icon {
+  color: var(--accent) !important;
+}
+
+/* -> 3.3 Dataview 画廊卡片化 (Gemnana 风格核心) */
+/* 将表格转换为 Grid 布局 */
+.dataview.table-view-table {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 1.5rem !important;
+  border-collapse: separate !important;
+  border: none !important;
+}
+
+.dataview.table-view-table thead {
+  display: none !important; /* 隐藏表头 */
+}
+
+.dataview.table-view-table tbody {
+  display: contents !important;
+}
+
+.dataview.table-view-table tr {
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+  height: 100%;
+}
+
+.dataview.table-view-table tr:hover {
+  transform: translateY(-5px) !important; /* 悬停上浮效果 */
+  box-shadow: var(--shadow-lg) !important;
+  border-color: var(--accent) !important;
+}
+
+/* 单元格样式重置 */
+.dataview.table-view-table td {
+  display: block !important;
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+/* -> 图片单元格 (第一列) */
+.dataview.table-view-table td:first-child {
   width: 100%;
+  height: 180px !important; /* 固定图片高度 */
+}
+
+.dataview.table-view-table td:first-child img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+  margin: 0 !important;
+}
+
+/* -> 内容单元格 (后续列) */
+.dataview.table-view-table td:not(:first-child) {
+  padding: 0.5rem 1.25rem !important; /* 内容区域内边距 */
+  font-size: 0.95rem !important;
+  color: var(--text-muted) !important;
+}
+
+/* 标题列 (第二列) */
+.dataview.table-view-table td:nth-child(2) {
+  padding-top: 1.25rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+}
+.dataview.table-view-table td:nth-child(2) a {
+  color: #1a202c !important; /* 卡片标题默认黑色 */
+}
+.dataview.table-view-table td:nth-child(2) a:hover {
+  color: var(--accent) !important; /* 悬停变绿 */
+}
+
+/* 标签列 (最后一列) */
+.dataview.table-view-table td:last-child {
+  padding-bottom: 1.25rem !important;
+  margin-top: auto !important; /* 将标签推到底部 */
+}
+
+/* -> 3.4 局部关系图 (Local Graph) - 尝试覆盖紫色 */
+/* 注意：关系图的颜色可能由 canvas 内部绘制，CSS 不一定能完全覆盖。
+   这里尝试通过 CSS 变量和滤镜进行调整。 */
+.local-graph-container {
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  background-color: var(--bg-secondary) !important;
+}
+
+/* 尝试将图中的紫色节点和连线变为绿色 */
+.local-graph-container canvas {
+  /* 使用滤镜将紫色色相旋转到绿色区间。效果可能因原始紫色值而异。 */
+  /* 这里的 260deg 是一个估计值，旨在将紫/蓝色调转为绿色调 */
+  filter: hue-rotate(260deg) saturate(1.2) !important;
+}
+
+/* --- 4. 布局与响应式适配 --- */
+
+/* 首页横幅图片 */
+.markdown-rendered img[src*="banner"],
+p > img:first-child {
+  width: 100% !important;
+  max-height: 320px !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+  margin-bottom: 2rem !important;
+}
+
+/* 内容容器宽度限制，保持在大屏上的阅读体验 */
+.content, #content-container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
+}
+
+/* 移动端适配 (小于 768px) */
+@media (max-width: 768px) {
+  /* 强制满宽 */
+  .gallery-home, .content, #content-container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* 移动端卡片改为单列 */
+  .dataview.table-view-table {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 调整横幅高度 */
+  .markdown-rendered img[src*="banner"],
+  p > img:first-child {
+    max-height: 200px !important;
+  }
+}
   height: 420px;
   object-fit: cover;
   border-radius: var(--radius);
