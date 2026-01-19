@@ -208,6 +208,7 @@ q::before, q::after {
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
   display: inline-block !important;
+  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
 }
