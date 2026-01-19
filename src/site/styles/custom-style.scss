@@ -48,38 +48,67 @@ html, body {
   -webkit-text-fill-color: #000000 !important;
 }
 
-/* --- 3. [暴力显色] 侧边栏/导航/主题探索 --- */
-/* 给侧边栏加一个极淡的背景，确保能看见它在哪 */
-.filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container, nav, aside {
-  z-index: 500 !important;
+/* 3.2 [终极显色修复] 侧边栏 (文件树 & 目录) */
+.filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
+  z-index: 9999 !important; /* 提到最高层级，防止被任何图层遮挡 */
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
-  background-color: #fcfcfc !important; /* [调试] 极淡灰色背景 */
-  border-right: 1px solid #f0f0f0 !important; /* [调试] 右侧边框 */
+  background-color: transparent !important;
+  pointer-events: auto !important;
 }
 
-/* 暴力针对所有可能包含文字的类名 */
+/* [核弹级显色] 强制所有层级的文字显色 */
 .filetree-sidebar *, 
 .toc-container *,
-.nav-file-title, .nav-folder-title, .nav-text,
-.tree-item-self, .tree-item-inner, .tree-item-text {
-  color: #2d3748 !important;  
-  fill: #2d3748 !important;
-  
-  /* [关键] 强制重置文字填充色，防止被设为透明 */
-  -webkit-text-fill-color: #2d3748 !important; 
-  background: none !important; /* 去除可能存在的遮罩背景 */
-  text-shadow: none !important;
+.sidebar *,
+.filetree-item, 
+.filetree-folder-name, 
+.filetree-file-name,
+a.nav-file-title, 
+a.nav-folder-title {
+  color: #2d3748 !important;         /* 强制设定为深灰色 */
+  -webkit-text-fill-color: #2d3748 !important; /* [关键] 强制填充文字颜色，防止被透明度覆盖 */
+  fill: #2d3748 !important;          /* 强制图标颜色 */
+  text-shadow: none !important;      /* 去除可能导致模糊的阴影 */
 }
 
-/* 悬停效果 */
-.filetree-sidebar a:hover *, 
-.nav-file-title:hover, .nav-folder-title:hover {
+/* 修复点击时的“蓝色框” (Outline)，改为绿色柔和样式 */
+.filetree-sidebar a:focus,
+.filetree-item:focus,
+.filetree-folder-name:focus {
+  outline: none !important;          /* 去除默认蓝色框 */
+  border: 1px solid var(--cg-green-vivid) !important; /* 改为绿色细边框 */
+  background-color: rgba(76, 175, 80, 0.05) !important;
+}
+
+/* 鼠标悬停交互 */
+.filetree-sidebar a:hover, 
+.filetree-sidebar div:hover,
+.filetree-item:hover,
+.filetree-folder-name:hover,
+.filetree-file-name:hover {
   color: var(--cg-green-vivid) !important;
-  fill: var(--cg-green-vivid) !important;
   -webkit-text-fill-color: var(--cg-green-vivid) !important;
+  fill: var(--cg-green-vivid) !important;
+  background-color: transparent !important; /* 防止背景色突变 */
   cursor: pointer !important;
+}
+
+/* 文件夹图标与箭头修正 */
+.filetree-sidebar svg, 
+.filetree-folder-icon,
+.nav-folder-collapse-indicator {
+  color: #2d3748 !important;
+  fill: #2d3748 !important;
+  opacity: 1 !important; /* 防止被设置为透明 */
+}
+
+/* 选中时的文字高亮 */
+.active, .is-active, .nav-file-title.active {
+  color: var(--cg-green-vivid) !important;
+  -webkit-text-fill-color: var(--cg-green-vivid) !important;
+  font-weight: 700 !important;
 }
 
 /* --- 4. 导航栏 (Header) --- */
