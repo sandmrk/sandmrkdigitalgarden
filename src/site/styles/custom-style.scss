@@ -1,11 +1,11 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极完美版 (2026-01-19 Final Polish V4)
-   修复：清除丑陋装饰引号、侧边栏强制显色、全站字体统一、绿色风格
+   CGfan x Gemnana 终极完美整合版 (2026-01-19)
+   修复：首页标签断开、侧边栏文字隐身、丑陋引号、Banner倒影、全站精致化
    ========================================================================== */
 
 /* --- 1. 核心变量与强制亮色模式 --- */
 :root {
-  color-scheme: light !important; /* 强制亮色模式 */
+  color-scheme: light !important; /* 强制浏览器识别为亮色模式 */
   
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
@@ -19,7 +19,7 @@
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  /* 侧边栏专用变量重置 */
+  /* 侧边栏显色变量重置 */
   --nav-item-color: #2d3748 !important;
   --nav-text-color: #2d3748 !important;
   
@@ -29,15 +29,15 @@
   --dg-sidebar-top: 60px !important; 
 }
 
-/* --- 2. 全局字体与排版 (修复丑陋标点) --- */
+/* --- 2. 全局字体与排版优化 --- */
 html, body {
   overflow-x: hidden !important; 
   width: 100% !important;
   margin: 0; padding: 0;
   background-color: #ffffff !important;
   
-  /* [核心修复] 字体栈优化：优先使用系统无衬线字体，确保标点符号不回退到衬线体 */
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif !important;
+  /* 统一首页与内容页字体，解决标点符号丑陋问题 */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif !important;
   
   font-size: 15px !important; 
   line-height: 1.7 !important;
@@ -45,12 +45,10 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* [关键] 强制所有标点符号不使用特殊字体 */
-* {
-  font-feature-settings: "palt" 1 !important; /* 优化标点间距 */
-}
+/* 优化标点间距 */
+* { font-feature-settings: "palt" 1 !important; }
 
-/* 链接样式 */
+/* 链接样式：防止破格 */
 a, .internal-link, .external-link {
   color: var(--cg-green-vivid) !important;
   text-decoration: none !important;
@@ -75,7 +73,7 @@ a:hover { opacity: 0.8; }
 .header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. 侧边栏修复 (强制显色) --- */
+/* --- 4. 侧边栏修复 (强制显色补丁) --- */
 .filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
   z-index: 500 !important;
   display: flex !important;
@@ -85,37 +83,32 @@ a:hover { opacity: 0.8; }
   pointer-events: auto !important;
 }
 
-/* 强制深灰色 */
-.filetree-sidebar a, .filetree-sidebar div, .filetree-sidebar span, 
-.toc-container a, .toc-container div, .toc-container span,
-.filetree-item, .filetree-folder-name, .filetree-file-name {
+.filetree-sidebar *, .toc-container *, .sidebar * {
   color: #2d3748 !important; 
   fill: #2d3748 !important;  
   text-shadow: none !important;
 }
 
-/* 悬停变绿 */
-.filetree-sidebar a:hover, .filetree-item:hover, .filetree-folder-name:hover, .filetree-file-name:hover {
+.filetree-sidebar a:hover, .filetree-item:hover {
   color: var(--cg-green-vivid) !important;
   fill: var(--cg-green-vivid) !important;
-  cursor: pointer !important;
 }
-.filetree-sidebar svg, .filetree-folder-icon { color: #2d3748 !important; fill: #2d3748 !important; }
 
-/* --- 5. 首页 Banner 美化 --- */
+/* --- 5. 首页 Banner 视觉美化 (带倒影) --- */
 .content > .markdown-rendered > p:first-child img,
 img[src*="banner"] {
   width: 100% !important;
   max-height: 300px !important;
   object-fit: cover !important;
   border-radius: 16px !important;
+  /* 增加高级浅绿模糊倒影效果 */
   box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 25px 50px -12px rgba(76, 175, 80, 0.35) !important;
   margin-top: 0.5rem !important;
   margin-bottom: 3rem !important;
   display: block;
 }
 
-/* --- 6. 首页网格系统 --- */
+/* --- 6. 首页网格系统与标签修正 --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
@@ -126,7 +119,7 @@ img[src*="banner"] {
   padding: 4px !important;
 }
 
-.grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
+.grid-view table thead, .grid-view table td::before { display: none !important; }
 .grid-view table tbody { display: contents !important; }
 
 .grid-view table tr {
@@ -137,94 +130,69 @@ img[src*="banner"] {
   border-radius: 12px !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
   overflow: hidden !important;
-  transition: transform 0.2s ease !important;
   margin: 0 !important;
 }
-.grid-view table tr:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
-  border-color: var(--cg-green-vivid) !important;
+
+/* 首页卡片标签容器修复：防止空格断开 */
+.grid-view table td:last-child {
+  padding: 10px 14px 20px !important;
+  margin-top: auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
 }
 
-.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
-.grid-view table td:first-child { height: 160px !important; }
-.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+.grid-view table td:last-child a.tag,
+.grid-view table td:last-child .tag {
+  display: inline-flex !important;
+  white-space: nowrap !important; /* [核心] 强制标签内容不换行 */
+  word-break: keep-all !important;
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 6px !important;
+  padding: 3px 10px !important;
+  font-size: 0.75rem !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+}
 
-/* 标题 */
-.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
-.grid-view table td:nth-child(2) a { font-size: 0.9rem !important; font-weight: 700 !important; color: #2d3748 !important; line-height: 1.4 !important; }
-
-/* 元数据 */
-.grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
-/* 标签 */
-.grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
-
-/* --- 7. 内容页正文美化 (核心修复：去除装饰引号) --- */
+/* --- 7. 内容页正文美化 (去除装饰引号) --- */
 .content, #content-container {
   max-width: 900px !important;
   padding: 90px 1.5rem 3rem 1.5rem !important;
 }
 
-.markdown-rendered {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
-  font-size: 0.95rem !important;
-  line-height: 1.75 !important;
-  color: var(--cg-text-black) !important;
-}
-
-h1, .note-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important;
-  font-size: 1.8rem !important;
-  letter-spacing: -0.02em !important;
-  margin-bottom: 1.5rem !important;
-}
-
-.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
-
-/* [核心修复] 清除所有装饰性引号 */
-blockquote::before, blockquote::after, 
-q::before, q::after {
+/* 清除所有装饰性引号 */
+blockquote::before, blockquote::after, q::before, q::after {
   content: none !important;
   display: none !important;
 }
 
-.callout, blockquote {
-  background-color: #f9fbf9 !important;
-  border-left: 4px solid var(--cg-green-vivid) !important;
-  border-radius: 10px !important;
-  color: #2d3748 !important;
-  /* 确保引用块内文字也是无衬线 */
-  font-family: inherit !important; 
-}
+.markdown-rendered { font-size: 0.95rem !important; }
+h1, .note-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; }
+.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
 
-/* --- 8. 标签样式 --- */
+/* --- 8. 标签样式 (通用间距) --- */
 .tag, .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
   padding: 2px 8px !important;
   font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  display: inline-block !important;
-  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
 }
 
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
-.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 50px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
-.search-box input { color: #333 !important; font-size: 1rem !important; }
-.searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
+.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 50px !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
 
-/* --- 10. 响应式与去紫 --- */
+/* --- 10. 响应式适配与去紫补丁 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
-  .search-box { width: 92% !important; margin: 0 auto !important; }
+  .content { padding-top: 80px !important; margin: 0 auto !important; }
 }
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
