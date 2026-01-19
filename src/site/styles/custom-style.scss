@@ -128,7 +128,13 @@ img[src*="banner"] {
 
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
-
+/* 1. 首页卡片标签：强制内部元素不换行 */
+.grid-view table td:last-child {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  white-space: nowrap !important; /* 禁止换行 */
+}
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
@@ -209,10 +215,17 @@ q::before, q::after {
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
   display: inline-block !important;
   white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
+  word-break: keep-all !important; /* 禁止单词内断开 */
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
 }
-
+.markdown-rendered ul li .tag {
+  color: var(--cg-green-vivid) !important;
+  background-color: var(--cg-green-light) !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+}
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
 .search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 50px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
