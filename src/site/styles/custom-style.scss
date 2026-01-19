@@ -1,14 +1,14 @@
 /* ==========================================================================
-   CGfan x Gemnana 最终完美版 (2026-01-19)
-   修复：去除幽灵标签、字体加黑、整体下移、搜索功能还原
+   CGfan x Gemnana 视觉美化版 (2026-01-19 Final Polish)
+   包含：图片/Banner圆角、字体精致化、全站绿色风格、搜索框还原
    ========================================================================== */
 
-/* --- 1. 核心配色与变量 --- */
+/* --- 1. 核心变量与配色 --- */
 :root {
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
-  --cg-text-black: #1a202c; /* [修正] 纯深色，不再发灰 */
-  --cg-text-muted: #5e6c84; /* 元数据颜色 */
+  --cg-text-black: #2d3748; /* 深色正文，非纯黑，阅读更舒适 */
+  --cg-text-muted: #718096; /* 浅灰元数据 */
   
   /* 插件变量覆盖 */
   --accent: var(--cg-green-vivid) !important;
@@ -17,30 +17,42 @@
   --background-secondary: var(--cg-green-light) !important;
   
   --dg-content-max-width: 900px !important;
-  --dg-navbar-height: 50px !important;
+  --dg-navbar-height: 52px !important;
   --dg-search-box-width: 700px !important;
 }
 
-/* --- 2. 全局布局与字体 --- */
+/* --- 2. 全局布局与字体微缩 --- */
 html, body {
   overflow-x: hidden !important; 
   width: 100% !important;
   margin: 0; padding: 0;
   background-color: #ffffff !important;
-  font-family: 'Inter', -apple-system, sans-serif !important;
-  color: var(--cg-text-black) !important; /* [修正] 全局字体加黑 */
+  /* 使用系统级字体栈，更现代 */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 15px !important; /* [修正] 全局字号微缩，更精致 */
+  line-height: 1.6 !important;
+  color: var(--cg-text-black) !important;
   -webkit-font-smoothing: antialiased;
 }
+
+/* 链接样式：绿色 + 字号微调 */
+a, .internal-link, .external-link {
+  color: var(--cg-green-vivid) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: opacity 0.2s ease;
+}
+a:hover { opacity: 0.8; }
 
 /* --- 3. 网页头 (Header) --- */
 .header, .navbar {
   background-color: rgba(232, 245, 233, 0.98) !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(76, 175, 80, 0.15) !important;
   padding: 0 1.2rem !important;
-  height: 50px !important;
-  min-height: 50px !important;
-  position: fixed !important; /* 固定在顶部 */
+  height: 52px !important;
+  min-height: 52px !important;
+  position: fixed !important;
   top: 0; left: 0; right: 0;
   z-index: 1000;
 }
@@ -49,10 +61,25 @@ html, body {
   color: var(--cg-green-vivid) !important;
   font-weight: 800 !important;
   font-size: 1.1rem !important;
+  letter-spacing: -0.02em;
 }
-.search-button svg { fill: var(--cg-green-vivid) !important; }
+.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. 首页网格系统 (核心修复) --- */
+/* --- 4. 首页 Banner 美化 (圆角+阴影) --- */
+/* 针对内容区的第一张图片进行特殊处理 */
+.content > .markdown-rendered > p:first-child img,
+img[src*="banner"] {
+  width: 100% !important;
+  max-height: 300px !important;
+  object-fit: cover !important;
+  border-radius: 16px !important; /* [修正] 大圆角 */
+  box-shadow: 0 10px 25px -5px rgba(76, 175, 80, 0.2) !important; /* [修正] 绿色柔光阴影 */
+  margin-top: 0.5rem !important;
+  margin-bottom: 2.5rem !important;
+  display: block;
+}
+
+/* --- 5. 首页网格系统 (圆角卡片) --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
@@ -63,20 +90,18 @@ html, body {
   padding: 4px !important;
 }
 
-/* [关键修复] 去除“标题、作者、日期”这些幽灵文字 */
-.grid-view table thead { display: none !important; }
-.grid-view table td::before { content: none !important; display: none !important; } 
-
+/* 隐藏幽灵标签 */
+.grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 卡片容器 */
+/* 卡片容器：圆角+边框 */
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+  border-radius: 12px !important; /* [修正] 卡片圆角 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
   overflow: hidden !important;
   transition: transform 0.2s ease !important;
   margin: 0 !important;
@@ -84,92 +109,92 @@ html, body {
 
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2) !important;
+  box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--cg-green-vivid) !important;
 }
 
-/* 单元格样式重置 */
-.grid-view table td {
-  display: block !important;
-  border: none !important;
-  padding: 0 !important;
-  width: 100% !important;
-}
+.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
 
-/* 4.1 封面图 */
+/* 5.1 封面图 */
 .grid-view table td:first-child { height: 160px !important; }
 .grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
-/* 4.2 标题 */
+/* 5.2 标题：字号微缩 */
 .grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
 .grid-view table td:nth-child(2) a {
-  font-size: 0.95rem !important;
+  font-size: 0.9rem !important; /* [修正] 稍微调小 */
   font-weight: 700 !important;
-  color: #000000 !important; /* [修正] 标题纯黑 */
+  color: #2d3748 !important;
   line-height: 1.4 !important;
 }
 
-/* 4.3 元数据 (作者/日期) */
+/* 5.3 元数据 */
 .grid-view table td:nth-child(3),
 .grid-view table td:nth-child(4) {
   padding: 0 14px !important;
   font-size: 0.75rem !important;
   color: var(--cg-text-muted) !important;
-  font-weight: 500 !important;
 }
 
-/* 4.4 标签 (增加底部距离，防止遮挡) */
+/* 5.4 标签 */
 .grid-view table td:last-child {
-  padding: 8px 14px 18px !important; /* [修正] 底部加宽 */
+  padding: 8px 14px 16px !important;
   margin-top: auto !important;
 }
 
+/* --- 6. 内容页美化 (圆角、字体、下移) --- */
+.content, #content-container {
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 90px 1.5rem 3rem 1.5rem !important; /* [修正] 顶部留白增加，防止遮挡 */
+}
+
+/* 标题字体美化 */
+h1, .note-title { 
+  color: var(--cg-green-vivid) !important; 
+  font-weight: 800 !important;
+  font-size: 1.8rem !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* 正文图片圆角 */
+.markdown-rendered img {
+  border-radius: 12px !important; /* [修正] 图片圆角 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+/* 引用块/Callout 圆角 */
+.callout, blockquote {
+  background-color: #f9fbf9 !important;
+  border-left: 4px solid var(--cg-green-vivid) !important;
+  border-radius: 10px !important; /* [修正] 容器圆角 */
+  color: #2d3748 !important;
+}
+
+/* 标签样式 */
 .tag, .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
-  border-radius: 4px !important;
+  border-radius: 6px !important;
   padding: 2px 8px !important;
-  font-size: 0.7rem !important;
+  font-size: 0.75rem !important; /* [修正] 字号减小 */
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
 }
 
-/* --- 5. 内容页适配 (下移 & 字体加黑) --- */
-.content, #content-container {
-  max-width: 900px !important;
-  margin: 0 auto !important;
-  /* [修正] 顶部增加到 80px，彻底解决被 Header 遮挡的问题 */
-  padding: 80px 1.5rem 2rem 1.5rem !important; 
-}
-
-/* 正文内容加黑 */
-.markdown-rendered p, .markdown-rendered li {
-  color: #1a202c !important; /* 深黑 */
-  line-height: 1.7 !important;
-}
-
-h1, .note-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; }
-
-/* Callout 去紫 */
-.callout, blockquote {
-  background-color: #f9fbf9 !important;
-  border-left: 4px solid var(--cg-green-vivid) !important;
-  color: #2d3748 !important;
-}
-
-/* --- 6. 搜索框还原与美化 (只改配色) --- */
+/* --- 7. 搜索框还原与美化 --- */
 .search-view-container {
   background-color: rgba(255, 255, 255, 0.98) !important;
-  padding-top: 80px !important; /* [修正] 搜索弹窗内容下移 */
+  padding-top: 80px !important;
 }
 
-/* [修正] 恢复默认布局，只改边框和圆角，保证功能正常 */
+/* [修正] 恢复搜索框原有布局，只改圆角和颜色 */
 .search-box {
   border: 2px solid var(--cg-green-vivid) !important;
-  border-radius: 50px !important;
+  border-radius: 50px !important; /* 胶囊圆角 */
   background-color: #fff !important;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-  /* 不强制修改 display/flex，防止输入框错位 */
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important;
 }
 
 .search-box input {
@@ -177,24 +202,24 @@ h1, .note-title { color: var(--cg-green-vivid) !important; font-weight: 800 !imp
   font-size: 1rem !important;
 }
 
-/* 搜索结果条目 */
+/* 搜索结果卡片 */
 .searchresult {
   background-color: #fff !important;
   border-left: 4px solid var(--cg-green-vivid) !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important; /* 结果圆角 */
   margin-bottom: 8px !important;
   padding: 12px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
 }
 
-/* --- 7. 响应式布局 --- */
+/* --- 8. 响应式布局 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .content { padding-top: 70px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-  .search-box { width: 90% !important; margin: 0 auto !important; }
+  .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .search-box { width: 92% !important; margin: 0 auto !important; }
 }
 
-/* --- 8. 强效去紫补丁 --- */
+/* --- 9. 强效清理紫色 --- */
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
