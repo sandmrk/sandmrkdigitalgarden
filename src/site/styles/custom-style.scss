@@ -191,14 +191,6 @@ a:hover { opacity: 0.8; }
   color: #2e7d32 !important;
   border-radius: 4px;
 }
-/* 5. 手机端溢出微调 */
-@media (max-width: 600px) {
-  .header {
-    padding: 0.5rem 12px !important;
-  }
-  .search-view-container .search-input {
-    width: 85% !important;
-  }
 
 /* 区域2：标题 (字体优化) */
 .grid-view table td:nth-child(2) {
