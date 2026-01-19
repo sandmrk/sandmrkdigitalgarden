@@ -1,55 +1,39 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极优化版 (绿色清新风格 - 2026修复版)
+   CGfan x Gemnana 终极优化版 (绿色清新风格 - 2026 稳定修复版)
    ========================================================================== */
 
-/* --- 1. 全局变量定义 (合并并去紫) --- */
+/* --- 1. 全局变量定义 --- */
 :root {
   --accent: #4CAF50 !important;
   --text-accent: #4CAF50 !important;
   --interactive-accent: #4CAF50 !important;
   --link-color: #4CAF50 !important;
-  --link-external-color: #4CAF50 !important;
   
-  --tag-color: #4CAF50 !important;
   --tag-background: rgba(76, 175, 80, 0.08) !important;
   
   --bg-primary: #ffffff !important;
-  --bg-secondary: #f4f9f4 !important;      /* 修改：改为更清新的浅绿色背景 */
+  --bg-secondary: #f4f9f4 !important;      /* 保持：浅绿色环境背景 */
   --text-normal: #2d3748 !important;       
-  --text-muted: #718096 !important;        
   --border-color: #e2e8f0 !important;
   
   --radius-lg: 16px !important;            
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-  
-  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  --font-family-sans: 'Inter', -apple-system, system-ui, sans-serif !important;
 }
 
-/* --- 2. 基础全局样式 & 溢出修复 --- */
-html, body {
-  overflow-x: hidden !important;           /* 增加：彻底禁止横向溢出，解决开启搜索后的晃动 */
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
+/* --- 2. 基础全局样式 --- */
 body {
   background-color: var(--bg-primary) !important;
   color: var(--text-normal) !important;
   font-family: var(--font-family-sans) !important;
-  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;           /* 解决：防止开启搜索后页面可左右滑动 */
 }
 
-/* --- 3. 网页头 (Header) 浅绿与搜索适配 --- */
+/* --- 3. 网页头 (Header) 专项美化 --- */
+/* 修改：仅染色和微调边距，不破坏原有 Flex 结构 */
 .header {
-  background-color: var(--bg-secondary) !important; /* 修改：网页头改为浅绿色底 */
-  border-bottom: 2px solid rgba(76, 175, 80, 0.2) !important; /* 增加：绿色装饰底边 */
-  padding: 0.6rem 1rem !important;
-  display: flex !important;                         /* 增加：强制 Flex 布局确保搜索按钮不移位 */
-  justify-content: space-between !important;
-  align-items: center !important;
-  width: 100% !important;
-  max-width: 800px;                                 /* 增加：与内容区宽度保持一致 */
-  margin: 0 auto !important;
+  background-color: var(--bg-secondary) !important; /* 浅绿底色 */
+  border-bottom: 2px solid rgba(76, 175, 80, 0.15) !important;
+  padding: 0.5rem 1rem !important;
 }
 
 .header-title {
@@ -57,107 +41,106 @@ body {
   font-weight: 800 !important;
 }
 
-/* 搜索触发按钮去紫变绿 */
-.search-button, .search-button svg {
+/* 搜索图标去紫变绿 */
+.search-button, .search-button svg, .search-icon svg {
   color: var(--accent) !important;
   fill: var(--accent) !important;
 }
 
-/* --- 4. 搜索弹出层 (Search UI) 深度定义 --- */
-/* 增加：此段专门修复 DG 搜索开启后风格不统一的问题 */
+/* --- 4. 搜索界面 (Search Modal) 深度去紫适配 --- */
+/* 修改：针对 DG 默认搜索界面的紫色进行强力覆盖 */
 .search-view-container {
   background-color: rgba(255, 255, 255, 0.96) !important;
-  backdrop-filter: blur(12px) !important;           /* 增加：毛玻璃效果 */
-  z-index: 9999 !important;
+  backdrop-filter: blur(10px) !important;
+  z-index: 1000 !important;
 }
 
-/* 搜索输入框：胶囊化 */
+/* 搜索输入框：保持胶囊感 */
 .search-view-container .search-input {
   border: 2px solid var(--accent) !important;
   border-radius: 50px !important;
   background-color: var(--bg-secondary) !important;
-  padding: 12px 24px !important;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important;
+  padding: 10px 20px !important;
 }
 
-/* 搜索结果卡片美化 */
+/* 搜索结果项：去紫并适配卡片感 */
 .search-view-container .search-result-item {
   background: #f8f9fa !important;
   border: 1px solid #edf2f7 !important;
   border-radius: 12px !important;
-  padding: 1rem !important;
   margin-bottom: 0.8rem !important;
 }
 
-/* 搜索结果高亮词 */
+/* 搜索结果高亮匹配词 (去紫) */
 .search-view-container mark {
-  background-color: rgba(76, 175, 80, 0.25) !important;
+  background-color: rgba(76, 175, 80, 0.2) !important;
   color: #1b5e20 !important;
   border-radius: 4px;
 }
 
-/* --- 5. 首页网格与内容页适配 (保持 800px) --- */
-.content, .content-container, #content-container {
-  max-width: 800px !important; 
-  margin: 0 auto !important;
-  padding: 2rem 1.5rem !important;
-}
-
+/* --- 5. 首页网格布局 (保留原始版式) --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;
-  border: none !important;
   width: 100% !important;
+  border: none !important;
 }
 .grid-view table thead { display: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 卡片样式 */
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
   background: #fff !important;
   border: 1px solid rgba(0,0,0,0.05) !important;
   border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-card) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
   overflow: hidden !important;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s !important;
-  margin: 0 !important;
+  transition: all 0.2s ease !important;
 }
 
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 12px 20px -5px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--accent) !important;
 }
 
-/* 区域2：标题去紫 */
-.grid-view table td:nth-child(2) a {
-  font-size: 0.95rem !important;
-  line-height: 1.5 !important;
-  font-weight: 600 !important;
-  color: #1a202c !important; /* 确保标题为深色而非紫色 */
+/* --- 6. 内容页适配 (800px) --- */
+.content, .content-container, #content-container {
+  max-width: 800px !important; 
+  margin: 0 auto !important;
+  padding: 2rem 1.5rem !important;
 }
 
-/* --- 6. 响应式规则 (Responsive) --- */
+.note-title, h1 {
+  font-size: 1.6rem !important;
+  color: var(--accent) !important;
+  font-weight: 800 !important;
+}
+
+/* --- 7. 响应式规则 (保持原始单列逻辑) --- */
 @media (max-width: 1024px) {
   .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media (max-width: 600px) {
-  /* 增加：确保手机端搜索框不撑开页面 */
-  .content, .content-container, .header { padding: 1.5rem 1rem !important; width: 100% !important; }
+  .content, .content-container, .header { padding: 1rem !important; width: 100% !important; }
   .grid-view table { grid-template-columns: 1fr !important; }
-  .search-view-container .search-input { width: 90% !important; margin: 0 auto !important; }
-  .note-title, h1 { font-size: 1.4rem !important; }
+  .search-view-container .search-input { width: 85% !important; }
 }
 
-/* --- 7. 强效清除顽固样式 --- */
-[style*="color: purple"], 
-[style*="border-left-color: rgb(107, 79, 187)"],
-.callout,
-.internal-link {
+/* --- 8. 强效清除顽固紫色 (Callout & 链接) --- */
+/* 修改：针对截图中的紫色链接和 Callout 边框进行覆盖 */
+a, .internal-link, .search-result-title {
   color: var(--accent) !important;
-  border-left-color: var(--accent) !important; /* 彻底清除 Callout 的紫色边框 */
+  text-decoration: none !important;
+}
+
+.callout, [data-callout] {
+  border-left: 4px solid var(--accent) !important;
+  background-color: #f7faf7 !important;
+}
+
+[style*="border-left-color: rgb(107, 79, 187)"] {
+  border-left-color: var(--accent) !important;
 }
