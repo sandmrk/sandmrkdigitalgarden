@@ -86,5 +86,5 @@
 右上角搜索框支持关键词查询，例如：  
 **cyberpunk Midjourney v6 人像 写实 赛博朋克 工具 Claude Skills**
 
-**Created with ❤️ by @sandmrk**  
+**Created with ❤️ by @sandmark**  
 Powered by Obsidian + Digital Garden
