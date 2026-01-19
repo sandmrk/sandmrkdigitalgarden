@@ -173,65 +173,98 @@ h1 { color: var(--accent) !important; }
   .grid-view table { grid-template-columns: 1fr !important; } /* 手机 1 列 */
   .grid-view table td:first-child { height: 200px !important; }
 }
-/* ==========================================================================
-   内容页风格适配 (Note Page Adaptation)
-   ========================================================================== */
+/* ============================================================
+   内容页全方位适配 (Note Page Total Adaptation)
+   ============================================================ */
 
-/* 1. 统一内容区宽度与首页一致 */
+/* 1. 详情页整体容器优化 */
 .content-container {
-    max-width: 900px !important; /* 内容页保持略窄，提升阅读舒适度 */
-    margin: 0 auto !important;
-    padding: 2rem 1.5rem !important;
+  max-width: 800px !important; /* 进一步收窄以提升阅读感 */
+  margin: 0 auto !important;
+  padding: 1.5rem 1.25rem !important;
 }
 
-/* 2. 标题与元数据美化 */
-.note-title {
-    font-size: 2.5rem !important;
-    color: var(--accent) !important; /* 统一使用主绿色 */
-    margin-bottom: 0.5rem !important;
-    line-height: 1.2 !important;
+/* 2. 标题微缩 (解决字体过大问题) */
+.note-title, h1 {
+  font-size: 1.75rem !important; /* 从原版大字缩小 */
+  color: var(--accent) !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.5rem !important;
 }
 
-/* 移除默认的紫色边框和链接颜色 */
+/* 3. 彻底重置紫色 Callout (重点修复) */
+/* 针对截图中的“原推文”和描述区块 */
+.callout {
+  background-color: #fcfdfc !important; /* 极浅绿背景 */
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;
+  border-left: 5px solid var(--accent) !important;
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  margin: 1.5rem 0 !important;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.03) !important;
+}
+
+.callout-title {
+  color: var(--accent) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.callout-content {
+  font-size: 0.95rem !important;
+  color: #4a5568 !important;
+  line-height: 1.6 !important;
+}
+
+/* 4. 正文排版微调 */
 .markdown-rendered {
-    color: var(--text-normal) !important;
-    line-height: 1.8 !important;
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+  color: #2d3748 !important;
 }
 
-/* 3. 正文内的图片适配 */
+/* 链接色重置 (强制改绿) */
+.markdown-rendered a, 
+.note-tag, 
+.external-link {
+  color: var(--accent) !important;
+  text-decoration: none !important;
+}
+
+/* 详情页标签美化 */
+.tag, .note-tag {
+  font-size: 0.8rem !important;
+  padding: 3px 12px !important;
+  background: rgba(76, 175, 80, 0.08) !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  border-radius: 6px !important;
+  margin-right: 8px !important;
+}
+
+/* 5. 详情页图片自适应 */
 .markdown-rendered img {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
-    margin: 1.5rem auto !important;
-    display: block !important;
-    max-width: 100% !important;
-    height: auto !important;
+  border-radius: 16px !important;
+  border: 1px solid #edf2f7 !important;
+  box-shadow: var(--shadow-md) !important;
+  margin: 2rem 0 !important;
 }
 
-/* 4. 内容页标签 (Tags) 统一风格 */
-.note-tag {
-    background-color: rgba(76, 175, 80, 0.1) !important;
-    color: var(--accent) !important;
-    border: 1px solid rgba(76, 175, 80, 0.2) !important;
-    border-radius: 50px !important;
-    padding: 3px 12px !important;
-    font-size: 0.85em !important;
-    text-decoration: none !important;
+/* 6. 移动端微调 */
+@media (max-width: 600px) {
+  .note-title, h1 {
+    font-size: 1.4rem !important;
+  }
+  .callout {
+    padding: 1rem !important;
+  }
 }
 
-/* 5. 侧边栏与页脚适配 (如果是官方模板自带的) */
-.sidebar, .footer {
-    border-top: 1px solid var(--border-color) !important;
-    background-color: var(--bg-secondary) !important;
-    color: var(--text-muted) !important;
-}
-
-/* 6. 响应式：手机端内容页边距缩小 */
-@media (max-width: 768px) {
-    .content-container {
-        padding: 1.5rem 1rem !important;
-    }
-    .note-title {
-        font-size: 1.8rem !important;
-    }
+/* --- 强制清除特定紫色类名 --- */
+[style*="color: var(--interactive-accent)"], 
+[style*="color: purple"],
+.internal-link {
+  color: var(--accent) !important;
 }
