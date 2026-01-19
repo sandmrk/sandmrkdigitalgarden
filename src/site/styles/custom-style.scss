@@ -1,10 +1,11 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极优化版 (绿色清新风格)
+   CGfan x Gemnana 终极优化版 (保持原有网格排版)
    ========================================================================== */
 
-/* --- 1. 全局变量强力去紫 --- */
+/* --- 1. 变量定义 (全局去紫) --- */
 :root {
-  --accent: #4CAF50 !important;           /* 核心绿 */
+  /* 核心绿配色 */
+  --accent: #4CAF50 !important;
   --text-accent: #4CAF50 !important;
   --interactive-accent: #4CAF50 !important;
   --link-color: #4CAF50 !important;
@@ -12,19 +13,20 @@
   --tag-color: #4CAF50 !important;
   --tag-background: rgba(76, 175, 80, 0.08) !important;
   
-  /* 基础配色 */
+  /* 基础配色与阴影 */
   --bg-primary: #ffffff !important;
-  --bg-secondary: #f9fbf9 !important;      /* 极浅绿背景 */
+  --bg-secondary: #f9fbf9 !important;
   --text-normal: #2d3748 !important;
   --text-muted: #718096 !important;
   --border-color: #e2e8f0 !important;
-  
-  /* 布局参数 */
   --radius-lg: 16px !important;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+  
+  /* 字体优化：使用现代无衬线字体栈 */
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif !important;
 }
 
-/* --- 2. 基础字体与背景重置 --- */
+/* --- 2. 基础样式重置 --- */
 body {
   background-color: var(--bg-primary) !important;
   color: var(--text-normal) !important;
@@ -32,8 +34,137 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 统一首页与内容页链接颜色 */
 a, .internal-link, .external-link {
+  color: var(--accent) !important;
+  text-decoration: none !important;
+}
+
+/* 首页 Banner 美化 */
+.markdown-rendered img[src*="banner"] {
+  width: 100% !important;
+  max-height: 300px !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+  margin-bottom: 2rem !important;
+}
+
+/* --- 3. 首页网格卡片流 (保持排版不变) --- */
+.grid-view table {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.25rem !important;
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+.grid-view table thead { display: none !important; }
+.grid-view table tbody { display: contents !important; }
+
+/* 卡片本体样式优化 */
+.grid-view table tr {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #fff !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  overflow: hidden !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  margin: 0 !important;
+}
+
+.grid-view table tr:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 20px -5px rgba(76, 175, 80, 0.2) !important;
+  border-color: var(--accent) !important;
+}
+
+/* 首页字体精细化优化：缩小字号，提升精致感 */
+.grid-view table td:nth-child(2) {
+  padding: 14px 14px 4px !important;
+}
+
+.grid-view table td:nth-child(2) a {
+  font-size: 0.95rem !important; /* 降低字号，解决“太大”的问题 */
+  line-height: 1.5 !important;
+  font-weight: 600 !important;
+  color: #1a202c !important;
+  /* 限制两行显示 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.grid-view table td:nth-child(3), 
+.grid-view table td:nth-child(4) {
+  padding: 0 14px !important;
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+}
+
+/* 封面图适配 */
+.grid-view table td:first-child {
+  height: 160px !important;
+  width: 100% !important;
+}
+
+.grid-view table td:first-child img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+
+/* --- 4. 内容页深度去紫 (修复 Callout 颜色) --- */
+.content, #content-container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
+}
+
+/* 强制覆盖内容页 Callout 的紫色边框 */
+.callout, 
+[data-callout] {
+  background-color: #f7faf7 !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  border-left: 4px solid var(--accent) !important; /* 强制变绿 */
+  border-radius: 12px !important;
+  padding: 1rem !important;
+}
+
+.callout-title,
+.callout-icon svg {
+  color: var(--accent) !important;
+  fill: var(--accent) !important;
+}
+
+.note-title {
+  font-size: 1.6rem !important; /* 优化内容页标题字号 */
+  color: var(--accent) !important;
+  font-weight: 800 !important;
+}
+
+/* --- 5. 响应式规则 (保持铺满) --- */
+@media (max-width: 1024px) {
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 600px) {
+  .grid-view table { grid-template-columns: 1fr !important; }
+  .note-title { font-size: 1.35rem !important; }
+  .grid-view table td:first-child { height: 180px !important; }
+}
+
+/* 强效清除所有残留紫色 */
+[style*="color: purple"], 
+[style*="color: rgb(107, 79, 187)"],
+[style*="border-left-color: rgb(107, 79, 187)"] {
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
+}
   color: var(--accent) !important;
   text-decoration: none !important;
   transition: opacity 0.2s ease;
