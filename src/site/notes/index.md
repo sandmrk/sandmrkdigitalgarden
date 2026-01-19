@@ -82,7 +82,7 @@
 
 ​<div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.85em;">
 
-Created with 💚 by <b>@sandmrk</b>
+Created with 💚 by <b>@sandmark</b>
 
 Powered by Obsidian + Digital Garden
 
