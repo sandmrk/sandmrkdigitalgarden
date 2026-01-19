@@ -31,12 +31,27 @@
 }
 
 /* --- 2. 基础全局样式 --- */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
 body {
   background-color: var(--bg-primary) !important;
   color: var(--text-normal) !important;
   font-family: var(--font-family-sans) !important;
   -webkit-font-smoothing: antialiased; /* 让字体在 Mac/iOS 上更清晰 */
   text-rendering: optimizeLegibility;
+}
+.header {
+  background-color: #f4f9f4 !important; /* 你要求的浅绿底色 */
+  max-width: 1280px !important;        /* 限制最大宽度 */
+  margin: 0 auto !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  border-bottom: 2px solid rgba(76, 175, 80, 0.2) !important;
 }
 
 /* 链接统一去紫 */
@@ -139,6 +154,51 @@ a:hover { opacity: 0.8; }
   border-radius: 0 !important;
   margin: 0 !important;
 }
+/* 3. 搜索按钮去紫变绿 */
+.search-button, .search-icon svg {
+  color: #4CAF50 !important;
+  fill: #4CAF50 !important;
+}
+
+/* 4. 搜索弹出层 (Search Modal) 深度适配 */
+.search-view-container {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* 胶囊状搜索输入框 */
+.search-view-container .search-input {
+  border: 2px solid #4CAF50 !important;
+  border-radius: 50px !important;
+  padding: 10px 20px !important;
+  background: #fff !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1) !important;
+  max-width: 90% !important; /* 关键：防止手机端溢出 */
+}
+
+/* 搜索结果卡片化 */
+.search-view-container .search-result-item {
+  background: #f8f9fa !important;
+  border: 1px solid #edf2f7 !important;
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  margin-bottom: 0.8rem !important;
+}
+
+/* 搜索高亮文字颜色 */
+.search-view-container mark {
+  background-color: rgba(76, 175, 80, 0.2) !important;
+  color: #2e7d32 !important;
+  border-radius: 4px;
+}
+/* 5. 手机端溢出微调 */
+@media (max-width: 600px) {
+  .header {
+    padding: 0.5rem 12px !important;
+  }
+  .search-view-container .search-input {
+    width: 85% !important;
+  }
 
 /* 区域2：标题 (字体优化) */
 .grid-view table td:nth-child(2) {
