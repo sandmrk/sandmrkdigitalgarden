@@ -66,21 +66,35 @@ a:hover { opacity: 0.8; }
 .header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* 3.2 [核心修复] 侧边栏 (文件树 & 目录) */
-.filetree-wrapper, .sidebar, .filetree-sidebar {
-  z-index: 500 !important; /* 确保在内容之上，Header 之下 */
-  display: flex !important; /* 强制显示 */
+/* 3.2 [核心修复] 侧边栏导航文字显色与层级 */
+.filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
+  z-index: 500 !important;           /* 确保浮在内容层之上 */
+  display: flex !important;
   opacity: 1 !important;
-  background-color: transparent !important; /* 避免背景遮挡 */
+  visibility: visible !important;
+  background-color: transparent !important;
 }
 
-/* 强制侧边栏文字颜色可见 */
-.filetree-sidebar a, .toc-container a, .filetree-item {
-  color: #333333 !important; /* <--- 在这里改，确保颜色足够深 */
+/* 强制锁定文字颜色为深灰色，确保在浅色背景下清晰可见 */
+.filetree-sidebar a, 
+.toc-container a, 
+.filetree-item, 
+.file-title,
+.folder-title {
+  color: #2d3748 !important;         /* 使用深色，彻底解决“隐身”问题 */
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
 }
-.filetree-sidebar a:hover, .toc-container a:hover {
-  color: var(--cg-green-vivid) !important; /* <--- 这里是鼠标划过时的绿色 */
+
+/* 鼠标划过时的 CGfan 绿色高亮 */
+.filetree-sidebar a:hover, 
+.toc-container a:hover,
+.filetree-item:hover {
+  color: var(--cg-green-vivid) !important; 
+  background-color: rgba(76, 175, 80, 0.05) !important; /* 增加极淡的绿色背景感 */
 }
+
 
 /* --- 4. 首页 Banner 美化 (带倒影) --- */
 .content > .markdown-rendered > p:first-child img,
