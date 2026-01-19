@@ -1,28 +1,28 @@
 /* ==========================================================================
-   CGfan x Gemnana 完美修复版 (2026-01-19 Fix Navigation)
-   修复：找回丢失的导航/侧边栏，保持全站美化与绿色风格
+   CGfan x Gemnana 完美修复版 (2026-01-19 Final Fix)
+   修复：找回丢失的“快速导航”，保持全站美化与绿色风格
    ========================================================================== */
 
-/* --- 1. 核心配色与变量 (通过变量控制布局，不破坏侧边栏) --- */
+/* --- 1. 核心配色与变量 (适配侧边栏) --- */
 :root {
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
   --cg-text-black: #2d3748; 
   --cg-text-muted: #718096;
   
-  /* 插件底层变量覆盖 */
+  /* 插件变量覆盖 */
   --accent: var(--cg-green-vivid) !important;
   --text-normal: var(--cg-text-black) !important;
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  /* [关键修复] 调整宽度变量，给侧边栏留出空间 */
+  /* [关键修复] 调整内容与搜索宽度，给导航留空间 */
   --dg-content-max-width: 900px !important;
   --dg-navbar-height: 52px !important;
   --dg-search-box-width: 700px !important;
   
-  /* 修复侧边栏可能被遮挡的问题 */
-  --dg-sidebar-z-index: 100 !important; 
+  /* [核心] 修正侧边栏顶部距离，防止被 Header 遮挡 */
+  --dg-sidebar-top: 60px !important; 
 }
 
 /* --- 2. 全局基础样式 --- */
@@ -32,7 +32,7 @@ html, body {
   margin: 0; padding: 0;
   background-color: #ffffff !important;
   
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: 'Inter', -apple-system, sans-serif !important;
   font-size: 15px !important; 
   line-height: 1.7 !important;
   color: var(--cg-text-black) !important;
@@ -45,11 +45,13 @@ a, .internal-link, .external-link {
   text-decoration: none !important;
   font-weight: 500 !important;
   transition: opacity 0.2s ease;
-  word-break: break-word !important; /* 防止长链接破格 */
+  word-break: break-word !important;
 }
 a:hover { opacity: 0.8; }
 
-/* --- 3. 网页头 (Header) --- */
+/* --- 3. 导航栏与侧边栏修复 (找回丢失的导航) --- */
+
+/* 3.1 顶部 Header */
 .header, .navbar {
   background-color: rgba(232, 245, 233, 0.98) !important;
   backdrop-filter: blur(12px);
@@ -59,16 +61,26 @@ a:hover { opacity: 0.8; }
   min-height: 52px !important;
   position: fixed !important;
   top: 0; left: 0; right: 0;
-  z-index: 1000;
+  z-index: 1000 !important; /* 最高层级 */
+}
+.header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
+.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
+
+/* 3.2 [核心修复] 侧边栏 (文件树 & 目录) */
+.filetree-wrapper, .sidebar, .filetree-sidebar {
+  z-index: 500 !important; /* 确保在内容之上，Header 之下 */
+  display: flex !important; /* 强制显示 */
+  opacity: 1 !important;
+  background-color: transparent !important; /* 避免背景遮挡 */
 }
 
-.header-title {
-  color: var(--cg-green-vivid) !important;
-  font-weight: 800 !important;
-  font-size: 1.1rem !important;
-  letter-spacing: -0.02em;
+/* 强制侧边栏文字颜色可见 */
+.filetree-sidebar a, .toc-container a, .filetree-item {
+  color: var(--cg-text-muted) !important;
 }
-.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
+.filetree-sidebar a:hover, .toc-container a:hover {
+  color: var(--cg-green-vivid) !important;
+}
 
 /* --- 4. 首页 Banner 美化 (带倒影) --- */
 .content > .markdown-rendered > p:first-child img,
@@ -77,9 +89,7 @@ img[src*="banner"] {
   max-height: 300px !important;
   object-fit: cover !important;
   border-radius: 16px !important;
-  box-shadow: 
-    0 5px 15px rgba(0,0,0,0.05), 
-    0 25px 50px -12px rgba(76, 175, 80, 0.35) !important;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 25px 50px -12px rgba(76, 175, 80, 0.35) !important;
   margin-top: 0.5rem !important;
   margin-bottom: 3rem !important;
   display: block;
@@ -96,7 +106,6 @@ img[src*="banner"] {
   padding: 4px !important;
 }
 
-/* 隐藏幽灵标签 */
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
 
@@ -140,17 +149,16 @@ img[src*="banner"] {
   color: var(--cg-text-muted) !important;
 }
 
-/* 标签容器 */
+/* 标签 */
 .grid-view table td:last-child {
   padding: 8px 14px 16px !important;
   margin-top: auto !important;
 }
 
-/* --- 6. 内容页布局 (恢复侧边栏显示) --- */
-/* [核心修复] 移除 margin: 0 auto !important，允许插件计算侧边栏位置 */
+/* --- 6. 内容页布局 (允许插件计算边距) --- */
 .content, #content-container {
   max-width: 900px !important;
-  /* margin-left 会由插件自动计算，这里不强制覆盖 */
+  /* [关键] 不设置 margin-left: 0，让插件自动处理侧边栏位置 */
   padding: 90px 1.5rem 3rem 1.5rem !important;
 }
 
@@ -182,7 +190,7 @@ h1, .note-title {
   color: #2d3748 !important;
 }
 
-/* --- 7. 标签样式 (加间距) --- */
+/* --- 7. 标签样式 --- */
 .tag, .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
@@ -191,7 +199,6 @@ h1, .note-title {
   font-size: 0.75rem !important;
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  
   display: inline-block !important;
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
@@ -202,19 +209,13 @@ h1, .note-title {
   background-color: rgba(255, 255, 255, 0.98) !important;
   padding-top: 80px !important;
 }
-
 .search-box {
   border: 2px solid var(--cg-green-vivid) !important;
   border-radius: 50px !important;
   background-color: #fff !important;
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important;
 }
-
-.search-box input {
-  color: #333 !important;
-  font-size: 1rem !important;
-}
-
+.search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult {
   background-color: #fff !important;
   border-left: 4px solid var(--cg-green-vivid) !important;
@@ -224,18 +225,13 @@ h1, .note-title {
   box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
 }
 
-/* --- 9. 侧边栏/导航修复 (确保不被遮挡) --- */
-.sidebar, .filetree-sidebar {
-  z-index: 50 !important; /* 确保侧边栏在内容之下但在背景之上 */
-}
-
-/* --- 10. 响应式与去紫 --- */
+/* --- 9. 响应式与去紫 --- */
 @media (max-width: 1024px) { 
   .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } 
 }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  /* 手机端由于侧边栏通常隐藏，我们可以强制内容居中并留出边距 */
+  /* 手机端隐藏侧边栏，内容居中 */
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
