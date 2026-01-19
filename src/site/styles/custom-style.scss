@@ -128,13 +128,6 @@ img[src*="banner"] {
 
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
-/* 1. 首页卡片标签：强制内部元素不换行 */
-.grid-view table td:last-child {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 6px !important;
-  white-space: nowrap !important; /* 禁止换行 */
-}
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
