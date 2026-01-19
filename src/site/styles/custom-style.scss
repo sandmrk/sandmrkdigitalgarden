@@ -1,99 +1,95 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极优化版 (绿色清新风格 - 2026修复版)
+   CGfan x Gemnana 终极优化修正版 (2026-01-19)
+   集成：浅绿导航、搜索适配、内容页排版锁定、去紫补丁
    ========================================================================== */
 
-/* --- 1. 全局变量定义 (合并并去紫) --- */
+/* --- 1. 全局变量定义 (增加插件底层变量接管) --- */
 :root {
-  /* 核心配色：CGfan 绿 */
   --accent: #4CAF50 !important;
   --text-accent: #4CAF50 !important;
   --interactive-accent: #4CAF50 !important;
   --link-color: #4CAF50 !important;
-  --link-external-color: #4CAF50 !important;
   
   /* 标签配色 */
-  --tag-color: #4CAF50 !important;
   --tag-background: rgba(76, 175, 80, 0.08) !important;
   
   /* 基础背景与文字 */
   --bg-primary: #ffffff !important;
-  --bg-secondary: #f9fbf9 !important;      /* 极浅绿灰背景 */
-  --text-normal: #2d3748 !important;       /* 深灰正文 */
-  --text-muted: #718096 !important;        /* 浅灰辅助文 */
+  --bg-secondary: #f4f9f4 !important;      /* 修正：更清新的浅绿色环境背景 */
+  --text-normal: #2d3748 !important;       
   --border-color: #e2e8f0 !important;
-  
-  /* 布局参数 */
-  --radius-lg: 16px !important;            /* 统一大圆角 */
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-  
-  /* 字体优化：系统字体栈 + Inter */
+  --radius-lg: 16px !important;            
   --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+
+  /* 修正：接管 Digital Garden 搜索与内容宽度变量 */
+  --dg-content-max-width: 800px !important;
+  --dg-search-box-width: 800px !important;
+  --dg-search-highlight-bg: rgba(76, 175, 80, 0.2) !important;
 }
 
-/* --- 2. 基础全局样式 --- */
+/* --- 2. 基础全局样式 & 溢出修复 --- */
+html, body {
+  overflow-x: hidden !important; /* 增加：彻底禁止横向溢出 */
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
 body {
   background-color: var(--bg-primary) !important;
   color: var(--text-normal) !important;
   font-family: var(--font-family-sans) !important;
-  -webkit-font-smoothing: antialiased; /* 让字体在 Mac/iOS 上更清晰 */
-  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* 链接统一去紫 */
-a, .internal-link, .external-link {
+a, .internal-link, .external-link, .search-result-title {
   color: var(--accent) !important;
   text-decoration: none !important;
-  transition: opacity 0.2s ease;
 }
-a:hover { opacity: 0.8; }
 
-/* 首页 Banner 美化 */
-.markdown-rendered img[src*="banner"] {
+/* --- 3. 网页头 (Header) & 搜索按钮美化 --- */
+/* 修正：改为浅绿背景并确保排版不因搜索开启而乱掉 */
+.header, .navbar {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 2px solid rgba(76, 175, 80, 0.1) !important;
+  padding: 0.6rem 1rem !important;
   width: 100% !important;
-  max-height: 300px !important;
-  object-fit: cover !important;
-  border-radius: var(--radius-lg) !important;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.08) !important;
-  margin-bottom: 2rem !important;
 }
 
-/* --- 3. 组件样式 (标签 & Callout) --- */
-
-/* 标签美化 (统一首页和内容页) */
-.tag, .note-tag, a.tag {
-  background-color: var(--tag-background) !important;
+.header-title {
   color: var(--accent) !important;
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
-  border-radius: 50px !important;
-  padding: 2px 10px !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
+  font-weight: 800 !important;
 }
 
-/* Callout 提示框深度修复 (彻底去除紫色边框) */
-.callout, [data-callout] {
-  background-color: #f7faf7 !important; /* 极淡绿背景 */
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
-  border-left: 4px solid var(--accent) !important; /* 强制绿条 */
-  border-radius: 12px !important;
-  padding: 1rem 1.25rem !important;
-  margin: 1.5rem 0 !important;
-  color: var(--text-normal) !important;
-}
-
-.callout-title, .callout-icon svg {
+.search-button, .search-button svg {
   color: var(--accent) !important;
   fill: var(--accent) !important;
-  font-size: 0.95rem !important;
-  font-weight: 700 !important;
 }
 
-/* --- 4. 首页网格布局 (Grid Layout) --- */
-/* 必须配合 index.md 中的 <div class="grid-view"> */
+/* --- 4. 搜索弹出层 (Search UI) 风格定制 --- */
+/* 增加：修复开启搜索后风格不匹配的问题 */
+.search-view-container {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+}
 
+.search-view-container .search-input {
+  border: 2px solid var(--accent) !important;
+  border-radius: 50px !important;
+  background-color: var(--bg-secondary) !important;
+}
+
+.search-view-container .search-result-item {
+  background: #f8f9fa !important;
+  border: 1px solid #edf2f7 !important;
+  border-radius: 12px !important;
+  margin-bottom: 0.8rem !important;
+}
+
+/* --- 5. 首页网格布局 (保留您的所有功能) --- */
 .grid-view table {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important; /* 电脑端 4 列 */
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;
   border: none !important;
   width: 100% !important;
@@ -101,7 +97,6 @@ a:hover { opacity: 0.8; }
 .grid-view table thead { display: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 卡片本体 */
 .grid-view table tr {
   display: flex !important;
   flex-direction: column !important;
@@ -119,113 +114,65 @@ a:hover { opacity: 0.8; }
   border-color: var(--accent) !important;
 }
 
-/* 单元格通用 */
-.grid-view table td {
-  display: block !important;
-  border: none !important;
-  padding: 0 !important;
-  width: 100% !important;
-}
+.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
+.grid-view table td:first-child { height: 160px !important; width: 100% !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
-/* 区域1：封面图 */
-.grid-view table td:first-child {
-  height: 160px !important;
-  width: 100% !important;
-}
-.grid-view table td:first-child img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-}
-
-/* 区域2：标题 (字体优化) */
-.grid-view table td:nth-child(2) {
-  padding: 14px 14px 4px !important;
-}
+.grid-view table td:nth-child(2) { padding: 14px 14px 4px !important; }
 .grid-view table td:nth-child(2) a {
-  font-size: 0.95rem !important; /* 缩小字号，更精致 */
+  font-size: 0.95rem !important;
   line-height: 1.5 !important;
   font-weight: 600 !important;
   color: #1a202c !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* 区域3 & 4：作者与日期 */
-.grid-view table td:nth-child(3), 
-.grid-view table td:nth-child(4) {
-  padding: 0 14px !important;
-  font-size: 0.8rem !important;
-  color: var(--text-muted) !important;
+/* 标签美化保留 */
+.tag, .note-tag, a.tag, .grid-view table td:last-child a {
+  background-color: var(--tag-background) !important;
+  color: var(--accent) !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  border-radius: 50px !important;
+  padding: 2px 10px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
 }
 
-/* 区域5：标签 */
-.grid-view table td:last-child {
-  padding: 8px 14px 16px !important;
-  margin-top: auto !important;
-}
-
-/* --- 5. 内容页适配 (Note Layout) --- */
-
-/* 容器收窄，提升阅读感 */
-.content, .content-container, #content-container {
+/* --- 6. 内容页 (Note Layout) 深度锁定 --- */
+/* 修正：通过重置 margin 解决排版错位问题 */
+.content, .content-container, #content-container, .dg-stack {
   max-width: 800px !important; 
-  margin: 0 auto !important;
-  padding: 2rem 1.5rem !important;
+  margin-left: auto !important; /* 修正插件复杂的公式锁定 */
+  margin-right: auto !important;
+  padding: 1.5rem 1rem !important;
+  width: 100% !important;
 }
 
-/* 标题美化 (缩小避免过大) */
 .note-title, h1 {
-  font-size: 1.6rem !important;
+  font-size: 1.5rem !important;
   color: var(--accent) !important;
   font-weight: 800 !important;
-  line-height: 1.3 !important;
-  margin-bottom: 1.5rem !important;
-  letter-spacing: -0.02em;
 }
 
-/* 正文排版优化 */
-.markdown-rendered {
-  font-size: 1rem !important;
-  line-height: 1.75 !important;
-  color: #2d3748 !important;
-}
-
-/* 内容页图片 */
-.markdown-rendered img {
+/* --- 7. 组件与响应式修复 --- */
+.callout, [data-callout] {
+  background-color: #f7faf7 !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  border-left: 4px solid var(--accent) !important;
   border-radius: 12px !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-  margin: 1.5rem 0 !important;
 }
 
-/* --- 6. 响应式规则 (Responsive) --- */
+@media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 
-/* 平板 (2列) */
-@media (max-width: 1024px) {
-  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
-}
-
-/* 手机 (1列 + 字体微调) */
 @media (max-width: 600px) {
-  .content, .content-container { padding: 1.5rem 1rem !important; width: 100% !important; }
-  
-  /* 首页手机端 */
+  .content, .content-container, .header { padding: 1rem !important; width: 100% !important; }
   .grid-view table { grid-template-columns: 1fr !important; }
-  .grid-view table td:first-child { height: 180px !important; }
-  
-  /* 内容页手机端 */
-  .note-title, h1 { font-size: 1.4rem !important; }
-  .callout { padding: 1rem !important; }
+  .search-view-container .search-input { width: 90% !important; margin: 0 auto !important; }
 }
 
-/* --- 7. 强效清除顽固样式 --- */
+/* --- 8. 强效去紫强制补丁 --- */
 [style*="color: purple"], 
-[style*="border-left-color: rgb(107, 79, 187)"] {
+[style*="border-left-color: rgb(107, 79, 187)"],
+[style*="color: rgb(107, 79, 187)"] {
   color: var(--accent) !important;
   border-left-color: var(--accent) !important;
 }
-
