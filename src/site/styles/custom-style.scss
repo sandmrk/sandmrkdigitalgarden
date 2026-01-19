@@ -65,19 +65,37 @@ a:hover { opacity: 0.8; }
 }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. 首页 Banner 美化 (圆角+阴影) --- */
+/* --- 4. 首页 Banner 美化 (圆角 + 浅绿模糊倒影光晕) --- */
 /* 针对内容区的第一张图片进行特殊处理 */
 .content > .markdown-rendered > p:first-child img,
 img[src*="banner"] {
   width: 100% !important;
   max-height: 300px !important;
   object-fit: cover !important;
-  border-radius: 16px !important; /* [修正] 大圆角 */
-  box-shadow: 0 10px 25px -5px rgba(76, 175, 80, 0.2) !important; /* [修正] 绿色柔光阴影 */
+  border-radius: 20px !important; /* [升级] 加大圆角，更柔和 */
+  
+  /* [核心升级] 双层阴影模拟浅绿色模糊倒影 */
+  box-shadow: 
+    /* 第1层：基础深色阴影，提供立体感 */
+    0 5px 15px rgba(0,0,0,0.05), 
+    /* 第2层：大范围浅绿色光晕，模拟倒影效果 */
+    0 25px 50px -12px rgba(76, 175, 80, 0.35) !important;
+    
   margin-top: 0.5rem !important;
-  margin-bottom: 2.5rem !important;
+  margin-bottom: 3rem !important; /* [微调] 增加底部留白，给倒影展示空间 */
   display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
+
+/* [可选] 鼠标悬停时增强浮动感 */
+.content > .markdown-rendered > p:first-child img:hover,
+img[src*="banner"]:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 
+    0 8px 20px rgba(0,0,0,0.08), 
+    0 35px 60px -15px rgba(76, 175, 80, 0.45) !important;
+}
+
 
 /* --- 5. 首页网格系统 (圆角卡片) --- */
 .grid-view table {
