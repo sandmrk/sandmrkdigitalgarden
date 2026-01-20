@@ -248,7 +248,7 @@ q::before, q::after {
 /* 3. [关键] 标签组：消除内部所有间隙 */
 .tag-group {
   display: inline-flex !important; /* 强制内部元素紧贴 */
-  align-items: center !important;
+  align-items: baseline !important; /* 改为基线对齐，确保文字底部在一条线上 */
   white-space: nowrap !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -263,7 +263,7 @@ q::before, q::after {
   border: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  line-height: 1.2 !important;
+  line-height: 1 !important; /* 统一行高防止偏移 */
 }
 
 /* 5. 数字：零距离贴合补丁 */
@@ -274,7 +274,12 @@ q::before, q::after {
   padding: 0 !important;
   /* 如果还是觉得远，可以尝试 0px 甚至 -1px */
   margin: 0 0 0 1px !important; 
-  line-height: 1.2 !important;
+  line-height: 1 !important;
+     /* 强制向左偏移，0.5px - 1px 可根据视觉微调 */
+  margin-left: 0.5px !important; 
+  /* 修正数字垂直位置，如果数字偏高可调大正值，偏低调为负值 */
+  position: relative !important;
+  top: 0px !important; 
 }
 
 /* 悬停效果 */
