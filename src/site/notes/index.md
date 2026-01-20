@@ -6,7 +6,9 @@
 
 # CGfan 的 AI Art Gallery
 
-
+欢迎来到我的个人 AI 艺术与提示词收藏库  
+这里汇集了从 X 上精选的生成艺术瞬间、提示词实验、工具推荐与设计灵感  
+所有作品以深色调卡片呈现，支持标签浏览与搜索。
 ## 🌟 最新入库 
 
 <div class="grid-view">
@@ -43,7 +45,7 @@
 
 ## ​🏷️ 热门标签 
 
-- <span class='tag-capsule'>#待处理<span class='tag-count'>159</span></span> <span class='tag-capsule'>#x-post<span class='tag-count'>159</span></span> <span class='tag-capsule'>#提示词<span class='tag-count'>84</span></span> <span class='tag-capsule'>#摄影<span class='tag-count'>31</span></span> <span class='tag-capsule'>#教程<span class='tag-count'>26</span></span> <span class='tag-capsule'>#经验<span class='tag-count'>23</span></span> <span class='tag-capsule'>#Skills<span class='tag-count'>18</span></span> <span class='tag-capsule'>#工具<span class='tag-count'>16</span></span> <span class='tag-capsule'>#搞钱<span class='tag-count'>13</span></span> <span class='tag-capsule'>#Nanobanana<span class='tag-count'>11</span></span> <span class='tag-capsule'>#视频<span class='tag-count'>7</span></span> <span class='tag-capsule'>#网站<span class='tag-count'>7</span></span> <span class='tag-capsule'>#网盘<span class='tag-count'>6</span></span> <span class='tag-capsule'>#AI小说<span class='tag-count'>4</span></span> <span class='tag-capsule'>#AI漫画<span class='tag-count'>3</span></span> <span class='tag-capsule'>#Kling<span class='tag-count'>3</span></span> <span class='tag-capsule'>#skills<span class='tag-count'>3</span></span> <span class='tag-capsule'>#\-<span class='tag-count'>2</span></span> <span class='tag-capsule'>#股市<span class='tag-count'>2</span></span> <span class='tag-capsule'>#AI搭建<span class='tag-count'>2</span></span> <span class='tag-capsule'>#veo<span class='tag-count'>2</span></span> <span class='tag-capsule'>#VPN<span class='tag-count'>2</span></span> <span class='tag-capsule'>#股票<span class='tag-count'>1</span></span> <span class='tag-capsule'>#域名<span class='tag-count'>1</span></span> <span class='tag-capsule'>#AI<span class='tag-count'>1</span></span> <span class='tag-capsule'>#Wan<span class='tag-count'>1</span></span>
+- <span class='tag-capsule'>#待处理&nbsp;(159)</span> <span class='tag-capsule'>#x-post&nbsp;(159)</span> <span class='tag-capsule'>#提示词&nbsp;(84)</span> <span class='tag-capsule'>#摄影&nbsp;(31)</span> <span class='tag-capsule'>#教程&nbsp;(26)</span> <span class='tag-capsule'>#经验&nbsp;(23)</span> <span class='tag-capsule'>#Skills&nbsp;(18)</span> <span class='tag-capsule'>#工具&nbsp;(16)</span> <span class='tag-capsule'>#搞钱&nbsp;(13)</span> <span class='tag-capsule'>#Nanobanana&nbsp;(11)</span> <span class='tag-capsule'>#视频&nbsp;(7)</span> <span class='tag-capsule'>#网站&nbsp;(7)</span> <span class='tag-capsule'>#网盘&nbsp;(6)</span> <span class='tag-capsule'>#AI小说&nbsp;(4)</span> <span class='tag-capsule'>#AI漫画&nbsp;(3)</span> <span class='tag-capsule'>#Kling&nbsp;(3)</span> <span class='tag-capsule'>#skills&nbsp;(3)</span> <span class='tag-capsule'>#\-&nbsp;(2)</span> <span class='tag-capsule'>#股市&nbsp;(2)</span> <span class='tag-capsule'>#AI搭建&nbsp;(2)</span> <span class='tag-capsule'>#veo&nbsp;(2)</span> <span class='tag-capsule'>#VPN&nbsp;(2)</span> <span class='tag-capsule'>#股票&nbsp;(1)</span> <span class='tag-capsule'>#域名&nbsp;(1)</span> <span class='tag-capsule'>#AI&nbsp;(1)</span> <span class='tag-capsule'>#Wan&nbsp;(1)</span>
 
 { .block-language-dataview}
 
