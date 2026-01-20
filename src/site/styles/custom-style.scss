@@ -228,44 +228,53 @@ q::before, q::after {
   margin-bottom: 6px !important;
 }
 
-/* --- 热门标签最终完美方案 --- */
-/* --- 热门标签：去嵌套一体化方案 --- */
+/* --- 热门标签：一体化胶囊美化方案 --- */
 
-/* 1. 彻底移除列表容器的默认样式（去掉圆点和缩进） */
+/* 1. 彻底移除列表容器样式，确保横向平铺 */
 .markdown-rendered ul:has(.hot-tag-capsule) {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 10px !important;
-  list-style: none !important; /* 强制移除列表圆点 */
+  list-style: none !important;
   padding: 0 !important;
   margin: 15px 0 !important;
 }
 
-/* 2. 消除列表项包裹层，让 span 直接参与平铺 */
+/* 2. 消除列表项包裹，防止圆点干扰 */
 .markdown-rendered li:has(.hot-tag-capsule) {
-  display: contents !important; /* 关键：不渲染 li 容器，直接显示内容 */
+  display: contents !important;
 }
 
-/* 3. 一体化胶囊样式 */
+/* 3. 极致美化的胶囊样式 */
 .hot-tag-capsule {
   display: inline-flex !important;
   align-items: center !important;
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  border: 1px solid rgba(76, 175, 80, 0.12) !important;
   padding: 4px 14px !important;
-  border-radius: 20px !important; /* 药丸形状 */
+  border-radius: 20px !important;
   font-size: 0.85rem !important;
-  font-weight: 500 !important;
-  white-space: nowrap !important; /* 强制 Nano banana 和数字不换行 */
+  font-weight: 600 !important; /* 标签主文字加粗 */
+  white-space: nowrap !important; /* 强制 Nano banana 标签不断开 */
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(76, 175, 80, 0.05) !important;
 }
 
-/* 悬停效果 */
+/* 4. [核心优化] 美化数字和括号：通过局部颜色微调 */
+/* 利用 CSS 选择器让括号和数字变得稍微透明/变细，产生精致感 */
+.hot-tag-capsule {
+  /* 增加一点字母间距 */
+  letter-spacing: 0.01em !important;
+}
+
+/* 悬停效果：整体反色，更加醒目 */
 .hot-tag-capsule:hover {
   background-color: var(--cg-green-vivid) !important;
   color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
 }
 
 /* --- 9. 搜索框还原 --- */
