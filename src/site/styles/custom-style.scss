@@ -233,10 +233,10 @@ q::before, q::after {
 .markdown-rendered ul:has(.tag-group) {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 0px 0px !important; /* 标签组与标签组之间的间距 */
+  gap: 2px 2px !important; /* 标签组与标签组之间的间距 */
   list-style: none !important;
   padding: 0 !important;
-  margin: 10px 0 !important;
+  margin: 2px 0 !important;
   text-indent: 0 !important;
 }
 
