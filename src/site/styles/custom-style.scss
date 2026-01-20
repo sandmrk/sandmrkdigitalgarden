@@ -228,53 +228,56 @@ q::before, q::after {
   margin-bottom: 6px !important;
 }
 
-/* --- 热门标签：标签胶囊 + 数字分离方案 --- */
+/* --- 热门标签修复：去掉外层绿圈，保留内部样式 --- */
 
-/* 1. 强制横向排列，彻底移除列表圆点 */
+/* 1. 彻底移除列表容器样式 */
 .markdown-rendered ul:has(.hot-tag-capsule) {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 12px 8px !important; /* 上下间距12px，左右间距8px */
-  list-style: none !important; /* 彻底去掉原点 */
+  gap: 12px 8px !important;
+  list-style: none !important;
   padding: 0 !important;
   margin: 15px 0 !important;
 }
 
-/* 2. 消除列表项包裹，防止结构干扰 */
+/* 2. 消除列表项包裹 */
 .markdown-rendered li:has(.hot-tag-capsule) {
-  display: contents !important; /* 关键：让内部元素直接参与平铺 */
+  display: contents !important;
 }
 
-/* 3. 绿色标签胶囊样式 */
+/* 3. [核心修改] 去掉外层容器的背景和边框 */
 .hot-tag-capsule {
   display: inline-flex !important;
   align-items: center !important;
-  background-color: var(--cg-green-light) !important;
+  /* 移除以下两项以去掉外圈 */
+  background: none !important; 
+  border: none !important;
+  padding: 0 !important; 
+  
+  /* 确保内部文字颜色和防断裂逻辑 */
   color: var(--cg-green-vivid) !important;
-  padding: 2px 10px !important;
-  border-radius: 6px !important; /* 方圆型更符合主流审美 */
-  font-size: 0.8rem !important;
+  font-size: 0.9rem !important;
   font-weight: 600 !important;
-  white-space: nowrap !important; /* 锁定：确保类似 Nano banana 的标签不断开 */
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  white-space: nowrap !important;
   cursor: pointer;
 }
 
-/* 4. 分离的数字样式：美观且有层次感 */
+/* 4. 数字美化：保持括号数字在外部 */
 .hot-tag-count {
   font-size: 0.75rem !important;
-  color: var(--cg-text-muted) !important; /* 使用次要文字颜色 */
-  margin-left: -4px !important; /* 让数字稍微靠近标签 */
-  margin-right: 8px !important; /* 给下一个标签留出空间 */
-  font-family: 'Inter', sans-serif !important;
+  color: var(--cg-text-muted) !important;
+  margin-left: 4px !important;
+  margin-right: 12px !important;
   opacity: 0.8;
 }
 
-/* 悬停效果 */
-.hot-tag-capsule:hover {
-  background-color: var(--cg-green-vivid) !important;
-  color: #ffffff !important;
+/* 如果您发现内部标签还是没有背景，可以尝试强制给 class="tag" 补上背景 */
+.hot-tag-capsule .tag, .hot-tag-capsule a.tag {
+  background-color: var(--cg-green-light) !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
 }
+
 
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
