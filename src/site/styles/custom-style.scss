@@ -274,9 +274,9 @@ q::before, q::after {
   padding: -1 !important;
   /* 如果还是觉得远，可以尝试 0px 甚至 -1px */
   margin: 0 0 0 1px !important; 
-  line-height: 5 !important;
+  line-height: 1.2 !important;
      /* 强制向左偏移，0.5px - 1px 可根据视觉微调 */
-  margin-left: 1.5px !important; 
+  margin-left: 5px !important; 
   /* 修正数字垂直位置，如果数字偏高可调大正值，偏低调为负值 */
   position: relative !important;
   top: 0px !important; 
