@@ -228,60 +228,56 @@ q::before, q::after {
   margin-bottom: 6px !important;
 }
 
-/* --- 热门标签修复：去掉外层绿圈，保留内部样式 --- */
+/* --- 热门标签最终优化：去外圈 + 精准空格间距 --- */
 
-/* 1. 彻底移除列表容器样式 */
+/* 1. 强制横向排列，移除列表圆点 */
 .markdown-rendered ul:has(.hot-tag-capsule) {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 12px 8px !important;
+  gap: 12px 6px !important; /* 调整标签组之间的间距 */
   list-style: none !important;
   padding: 0 !important;
   margin: 15px 0 !important;
 }
 
-/* 2. 消除列表项包裹 */
+/* 2. 消除列表项包裹，防止圆点干扰 */
 .markdown-rendered li:has(.hot-tag-capsule) {
   display: contents !important;
 }
 
-/* 3. [核心修改] 去掉外层容器的背景和边框 */
+/* 3. 去掉外层绿圈，仅保留标签文字样式 */
 .hot-tag-capsule {
   display: inline-flex !important;
   align-items: center !important;
-  /* 移除以下两项以去掉外圈 */
-  background: none !important; 
-  border: none !important;
-  padding: 0 !important; 
+  background: none !important; /* [核心] 移除外层绿圈背景 */
+  border: none !important;     /* [核心] 移除外层绿圈边距 */
+  padding: 0 !important;       /* [核心] 移除内边距 */
   
-  /* 确保内部文字颜色和防断裂逻辑 */
   color: var(--cg-green-vivid) !important;
   font-size: 0.9rem !important;
   font-weight: 600 !important;
-  white-space: nowrap !important;
+  white-space: nowrap !important; /* 锁定：确保标签名内部（如 Nanobanana）不断开 */
   cursor: pointer;
 }
 
-/* 4. 数字美化：保持括号数字在外部 */
+/* 4. 数字美化：间距锁定与样式减淡 */
 .hot-tag-count {
   font-size: 0.75rem !important;
   color: var(--cg-text-muted) !important;
-  margin-left: 4px !important;
-  margin-right: 12px !important;
+  margin-right: 12px !important; /* 每一个标签组与下一个标签组的距离 */
   opacity: 0.8;
+  white-space: nowrap !important; /* 锁定：确保括号和数字作为一个整体 */
 }
 
-/* 如果您发现内部标签还是没有背景，可以尝试强制给 class="tag" 补上背景 */
-.hot-tag-capsule .tag, .hot-tag-capsule a.tag {
-  background-color: var(--cg-green-light) !important;
-  padding: 2px 8px !important;
-  border-radius: 4px !important;
+/* 悬停效果：仅针对文字部分反馈 */
+.hot-tag-capsule:hover {
+  opacity: 0.8;
+  text-decoration: underline !important;
 }
-
 
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
-.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 50px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
+.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
 
