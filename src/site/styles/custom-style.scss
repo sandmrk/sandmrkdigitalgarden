@@ -227,58 +227,59 @@ q::before, q::after {
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
 }
-/* --- 热门标签极致美化：零距离贴合补丁 --- */
+/* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
-/* 1. 确保横向平铺逻辑不变 */
+/* 1. 列表容器：横向排列，彻底去点 */
 .markdown-rendered ul:has(.tag-group) {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 10px 14px !important; /* 调整标签组相互之间的间距 */
+  gap: 10px 14px !important; /* 标签组与标签组之间的间距 */
   list-style: none !important;
   padding: 0 !important;
   margin: 10px 0 !important;
+  text-indent: 0 !important;
 }
 
-/* 2. 移除列表项干扰，确保圆点不再反弹 */
+/* 2. 移除 li 干扰 */
 .markdown-rendered li:has(.tag-group) {
   display: contents !important;
 }
 
-/* 3. [新增] 标签组容器：锁定标签和数字绝不断开 */
+/* 3. [关键] 标签组：消除内部所有间隙 */
 .tag-group {
-  display: inline-flex !important;
+  display: inline-flex !important; /* 强制内部元素紧贴 */
   align-items: center !important;
-  white-space: nowrap !important; /* 强制内部所有元素在一行 */
+  white-space: nowrap !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-/* 4. 标签文字：彻底去掉任何边框和背景 */
+/* 4. 标签文字：绿色、无框 */
 .hot-tag-item {
   color: var(--cg-green-vivid) !important;
   font-size: 0.9rem !important;
   font-weight: 600 !important;
-  background: transparent !important; /* 确保无框 */
+  background: transparent !important;
   border: none !important;
   padding: 0 !important;
-  cursor: pointer;
+  margin: 0 !important;
+  line-height: 1.2 !important;
 }
 
-/* 5. [核心优化] 数字样式：向左平移实现“紧贴”效果 */
+/* 5. 数字：零距离贴合补丁 */
 .hot-tag-count {
   font-size: 0.75rem !important;
   color: var(--cg-text-muted) !important;
   opacity: 0.6;
-  
-  /* 极致间距控制：根据需要微调 0px 到 2px */
-  margin-left: 1px !important; 
-  
-  display: inline-block !important;
+  padding: 0 !important;
+  /* 如果还是觉得远，可以尝试 0px 甚至 -1px */
+  margin: 0 0 0 1px !important; 
+  line-height: 1.2 !important;
 }
 
-/* 悬停反馈 */
-.hot-tag-item:hover {
-  text-decoration: underline !important;
-  opacity: 0.8;
-}
+/* 悬停效果 */
+.hot-tag-item:hover { text-decoration: underline !important; }
+
 
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
