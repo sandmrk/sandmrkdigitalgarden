@@ -228,51 +228,55 @@ q::before, q::after {
   margin-bottom: 6px !important;
 }
 
-/* --- 热门标签最终优化：去外圈 + 精准空格间距 --- */
+/* --- 热门标签极致优化：彻底去框 + 紧凑布局 --- */
 
-/* 1. 强制横向排列，移除列表圆点 */
-.markdown-rendered ul:has(.hot-tag-capsule) {
+/* 1. 强制横向排列并移除列表点 */
+.markdown-rendered ul:has(.hot-tag-item) {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 12px 6px !important; /* 调整标签组之间的间距 */
+  gap: 8px 12px !important; /* 降低上下间距，保持左右间距 */
   list-style: none !important;
   padding: 0 !important;
-  margin: 15px 0 !important;
+  margin: 10px 0 !important;
 }
 
-/* 2. 消除列表项包裹，防止圆点干扰 */
-.markdown-rendered li:has(.hot-tag-capsule) {
+/* 2. 消除列表项干扰 */
+.markdown-rendered li:has(.hot-tag-item) {
   display: contents !important;
 }
 
-/* 3. 去掉外层绿圈，仅保留标签文字样式 */
-.hot-tag-capsule {
-  display: inline-flex !important;
-  align-items: center !important;
-  background: none !important; /* [核心] 移除外层绿圈背景 */
-  border: none !important;     /* [核心] 移除外层绿圈边距 */
-  padding: 0 !important;       /* [核心] 移除内边距 */
-  
+/* 3. 标签文字：彻底去掉任何边框和背景 */
+.hot-tag-item {
   color: var(--cg-green-vivid) !important;
   font-size: 0.9rem !important;
   font-weight: 600 !important;
-  white-space: nowrap !important; /* 锁定：确保标签名内部（如 Nanobanana）不断开 */
+  white-space: nowrap !important;
   cursor: pointer;
+  
+  /* 暴力清除所有框和背景 */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
-/* 4. 数字美化：间距锁定与样式减淡 */
+/* 4. 数字美化：向左偏移紧贴标签 */
 .hot-tag-count {
   font-size: 0.75rem !important;
   color: var(--cg-text-muted) !important;
-  margin-right: 12px !important; /* 每一个标签组与下一个标签组的距离 */
-  opacity: 0.8;
-  white-space: nowrap !important; /* 锁定：确保括号和数字作为一个整体 */
+  opacity: 0.7;
+  
+  /* [关键修改] 使用负边距让数字和标签“吸”在一起 */
+  margin-left: 2px !important; 
+  margin-right: 15px !important; /* 标签组之间的距离 */
+  
+  white-space: nowrap !important;
 }
 
-/* 悬停效果：仅针对文字部分反馈 */
-.hot-tag-capsule:hover {
-  opacity: 0.8;
+/* 悬停效果 */
+.hot-tag-item:hover {
   text-decoration: underline !important;
+  opacity: 0.8;
 }
 
 /* --- 9. 搜索框还原 --- */
