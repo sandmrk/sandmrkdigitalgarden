@@ -228,36 +228,46 @@ q::before, q::after {
   margin-bottom: 6px !important;
 }
 
-/* --- 热门标签样式优化 --- */
+/* --- 热门标签最终完美方案 --- */
 
-/* 1. 强制横向平铺并去掉列表点 */
-.markdown-rendered ul:has(.tag-capsule) {
+/* 1. 彻底清除列表圆点和缩进 */
+.markdown-rendered ul:has(.hot-tag-item) {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 10px !important;
-  list-style: none !important;
+  list-style: none !important; /* 强制移除那个烦人的圆点 */
   padding: 0 !important;
-  margin: 10px 0 !important;
+  margin: 15px 0 !important;
 }
 
-.markdown-rendered li:has(.tag-capsule) {
+/* 2. 移除列表项的默认边距 */
+.markdown-rendered li:has(.hot-tag-item) {
   margin: 0 !important;
   padding: 0 !important;
+  display: contents !important; /* 让内部 span 直接参与 flex 布局 */
 }
 
-/* 2. 标签胶囊样式：确保空格不断开 */
-.tag-capsule {
+/* 3. 胶囊样式：标签与数字一体化 */
+.hot-tag-item {
   display: inline-flex !important;
   align-items: center !important;
-  background-color: var(--cg-green-light) !important;
-  color: var(--cg-green-vivid) !important;
+  background-color: #e8f5e9 !important; /* 浅绿色背景 */
+  color: #4CAF50 !important;           /* 深绿色文字 */
   border: 1px solid rgba(76, 175, 80, 0.15) !important;
-  padding: 4px 12px !important; /* 统一左右内边距 */
-  border-radius: 20px !important;
-  font-size: 0.8rem !important;
+  padding: 4px 14px !important;        /* 左右对称间距 */
+  border-radius: 20px !important;      /* 圆润药丸型 */
+  font-size: 0.85rem !important;
   font-weight: 500 !important;
-  white-space: nowrap !important; /* [核心修复] 强制标签和括号数字不换行 */
-  text-decoration: none !important;
+  white-space: nowrap !important;      /* 强制 Nano banana 不断开 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 悬停效果：颜色加深 */
+.hot-tag-item:hover {
+  background-color: #4CAF50 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2) !important;
 }
 /* --- 9. 搜索框还原 --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
