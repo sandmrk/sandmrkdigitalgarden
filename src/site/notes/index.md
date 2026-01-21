@@ -101,6 +101,7 @@
 
     window.addEventListener('popstate', resetState);
 })();
+
 </script>
 ​<div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.85em; line-height: 1.6;">
 Created with 💚 by <b>@sandmark</b>
