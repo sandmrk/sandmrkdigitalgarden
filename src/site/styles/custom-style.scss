@@ -1,6 +1,8 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极精修 V3 (2026-01-21 Final Polish)
-   修复：内容页标签绿框、移除图片阴影、首页滚动容错
+   CGfan x Gemnana 终极精修版 (2026-01-21 Final Fix)
+   1. 内容页标签增加绿框
+   2. 图片去除阴影
+   3. 首页无限滚动显示修复
    ========================================================================== */
 
 /* --- 1. 核心变量 --- */
@@ -14,35 +16,42 @@
   --accent: var(--cg-green-vivid) !important;
   --text-normal: var(--cg-text-black) !important;
   --background-primary: #ffffff !important;
+  --background-secondary: var(--cg-green-light) !important;
+  
+  --dg-content-max-width: 900px !important;
+  --dg-sidebar-top: 60px !important; 
 }
 
 /* --- 2. 基础排版 --- */
 html, body {
   overflow-x: hidden !important; 
   margin: 0; padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif !important;
   font-size: 15px !important; 
   color: var(--cg-text-black) !important;
 }
 * { font-feature-settings: "palt" 1 !important; }
 
-a { color: var(--cg-green-vivid) !important; text-decoration: none !important; transition: opacity 0.2s ease; }
+a { color: var(--cg-green-vivid) !important; text-decoration: none !important; }
 a:hover { opacity: 0.8; }
 [style*="color: purple"], [style*="rgb(107, 79, 187)"] { color: var(--cg-green-vivid) !important; }
 
-/* --- 3. 顶部导航栏 --- */
+/* --- 3. 导航栏 & 侧边栏 --- */
 .header, .navbar {
   background-color: rgba(232, 245, 233, 0.98) !important;
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(76, 175, 80, 0.15) !important;
   height: 52px !important;
-  min-height: 52px !important;
   position: fixed !important; top: 0; left: 0; right: 0; z-index: 1000 !important;
 }
 .header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.0rem !important; }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.85); }
 
-/* --- 4. 内容页 (Content) 深度美化 --- */
+.filetree-wrapper, .sidebar { pointer-events: none !important; background: transparent !important; }
+.filetree-sidebar a { pointer-events: auto !important; color: #2d3748 !important; }
+.filetree-sidebar a:hover { color: var(--cg-green-vivid) !important; }
+
+/* --- 4. [核心修改] 内容页样式 --- */
 .content, #content-container {
   max-width: 900px !important;
   padding: 100px 1.5rem 3rem 1.5rem !important;
@@ -50,46 +59,37 @@ a:hover { opacity: 0.8; }
   position: relative !important; z-index: 1 !important;
 }
 
-/* 标题 */
 h1, .note-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important;
-  font-size: 1.6rem !important;
-  margin-bottom: 1.5rem !important;
+  color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.6rem !important; margin-bottom: 1.5rem !important;
 }
 
-/* [修改] 正文图片 (圆角 + 无阴影) */
-.markdown-rendered img { 
-  border-radius: 12px !important; 
-  box-shadow: none !important; /* 移除阴影 */
+/* [修改点1] 内容页标签：增加绿框 (仅针对内容页 a.tag) */
+.markdown-rendered a.tag {
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important; /* 绿框 */
+  border-radius: 4px !important;
+  padding: 2px 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  margin-right: 6px !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+}
+
+/* [修改点2] 内容页图片：去除阴影 */
+.markdown-rendered img {
+  border-radius: 12px !important;
+  box-shadow: none !important; /* 去除阴影 */
   margin-bottom: 1rem !important;
 }
-/* Banner 保持原有风格 */
-img[src*="banner"] {
-  width: 100% !important; max-height: 260px !important; object-fit: cover !important;
-  border-radius: 12px !important; margin-bottom: 2rem !important; display: block;
-}
-
-/* [新增] 内容页顶部标签 (绿框风格) */
-.tag, .note-tag, a.tag {
-  display: inline-flex !important;
-  align-items: center !important;
-  background-color: #f0fdf4 !important; /* 淡绿背景 */
-  border: 1px solid rgba(76, 175, 80, 0.3) !important; /* 绿框 */
-  color: var(--cg-green-vivid) !important;
-  border-radius: 6px !important;
-  padding: 2px 8px !important;
-  font-size: 0.8rem !important;
-  font-weight: 600 !important;
-  margin-right: 8px !important;
-  text-decoration: none !important;
-}
+img[src*="banner"] { max-height: 260px !important; object-fit: cover !important; display: block; }
 
 /* 引用块 */
 blockquote, .callout { border-left: 4px solid var(--cg-green-vivid) !important; background: #f9fbf9 !important; }
 blockquote::before, blockquote::after { display: none !important; }
 
-/* --- 5. 首页无限滚动网格 (Grid View) --- */
+/* --- 5. [核心修复] 首页网格系统 --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
@@ -99,12 +99,14 @@ blockquote::before, blockquote::after { display: none !important; }
 .grid-view table thead { display: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 卡片 - [关键修改] 默认显示 flex，防止 JS 挂了导致白屏 */
+/* [修改点3] 滚动显示修复：默认全显示，防止白屏 */
 .grid-view table tr {
-  display: flex !important; 
+  display: flex !important; /* 关键：CSS默认显示，由JS负责切片 */
   flex-direction: column !important;
-  background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 12px !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important; overflow: hidden !important;
+  background: #fff !important; 
+  border: 1px solid #e2e8f0 !important; border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important; 
+  overflow: hidden !important;
   transition: all 0.3s ease !important; margin: 0 !important;
 }
 .grid-view table tr:hover {
@@ -114,32 +116,28 @@ blockquote::before, blockquote::after { display: none !important; }
 
 /* 单元格清理 */
 .grid-view table td { display: block !important; border: none !important; padding: 0 !important; }
-
-/* [区域1] 封面 */
 .grid-view table td:first-child { height: 150px !important; }
-.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; box-shadow: none !important; }
 
-/* [区域2] 文章标题 */
+/* 标题与信息 */
 .grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
 .grid-view table td:nth-child(2) a { 
   font-size: 0.95rem !important; font-weight: 700 !important; color: #1a202c !important; 
-  line-height: 1.4 !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-
-/* [区域3] 信息 */
 .grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { 
   padding: 0 14px !important; font-size: 0.75rem !important; color: #a0aec0 !important; 
 }
 
-/* [区域4] 首页卡片标签 */
+/* 首页标签 (保持原样，不加框或仅细框) */
 .grid-view table td:last-child {
   display: flex !important; flex-wrap: wrap !important; gap: 6px !important;
   padding: 8px 14px 14px !important; margin-top: auto !important;
 }
-.grid-view td ul, .grid-view td li { display: contents !important; list-style: none !important; margin: 0 !important; }
+.grid-view td ul, .grid-view td li { display: contents !important; }
 .grid-view td li::before { content: none !important; }
 
-/* 首页卡片内的小标签 */
+/* 首页标签样式 (保持清新风格，不干扰内容页设置) */
 .grid-tag, .grid-view span[class*="tag"] {
   display: inline-flex !important; align-items: center !important;
   background-color: #f0fdf4 !important; color: var(--cg-green-vivid) !important;
@@ -147,7 +145,7 @@ blockquote::before, blockquote::after { display: none !important; }
   padding: 1px 6px !important; font-size: 0.7rem !important; font-weight: 600 !important;
 }
 
-/* --- 6. 热门标签 (Hot Tags) --- */
+/* --- 6. 热门标签 --- */
 .markdown-rendered ul:has(.tag-group) {
   display: flex !important; flex-wrap: wrap !important; gap: 8px !important;
   list-style: none !important; padding: 0 !important; margin: 10px 0 20px 0 !important;
@@ -156,34 +154,20 @@ blockquote::before, blockquote::after { display: none !important; }
 
 .tag-group {
   display: inline-flex !important; align-items: center !important;
-  border: 1px solid rgba(76, 175, 80, 0.3) !important; 
-  background-color: #f0fdf4 !important; 
-  border-radius: 6px !important; padding: 3px 8px !important;
-  transition: all 0.2s ease !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important; /* 绿框 */
+  background-color: #f0fdf4 !important; border-radius: 6px !important;
+  padding: 3px 8px !important;
 }
 .hot-tag-item { color: var(--cg-green-vivid) !important; font-weight: 600 !important; font-size: 0.8rem !important; }
-.hot-tag-count { color: #718096 !important; font-size: 0.7rem !important; margin-left: 4px !important; opacity: 0.8; }
+.hot-tag-count { color: #718096 !important; font-size: 0.7rem !important; margin-left: 4px !important; }
 
-.tag-group:hover { background-color: var(--cg-green-vivid) !important; border-color: var(--cg-green-vivid) !important; }
-.tag-group:hover .hot-tag-item, .tag-group:hover .hot-tag-count { color: #ffffff !important; }
-
-/* --- 7. 其他组件与响应式 --- */
-.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 8px !important; }
-#load-more-sentinel {
-  text-align: center !important; padding: 40px 0 !important;
-  color: var(--cg-green-vivid) !important; font-size: 0.85rem !important; animation: pulse 2s infinite;
-}
+/* --- 7. 加载器与响应式 --- */
+#load-more-sentinel { text-align: center !important; padding: 40px 0 !important; color: var(--cg-green-vivid) !important; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-/* 侧边栏修复 */
-.filetree-wrapper, .sidebar, .filetree-sidebar { z-index: 500 !important; background-color: transparent !important; pointer-events: none !important; }
-.filetree-sidebar a { pointer-events: auto !important; color: #2d3748 !important; }
-.filetree-sidebar a:hover { color: var(--cg-green-vivid) !important; }
-
-/* 响应式 */
 @media (max-width: 1100px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
   .grid-view table td:first-child { height: 200px !important; }
-  .content { padding-top: 70px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .content { padding-top: 70px !important; }
 }
