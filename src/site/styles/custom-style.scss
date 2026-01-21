@@ -311,9 +311,10 @@ q::before, q::after {
 .search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
-/* --- 分页组件修复：去空框 + 强制横向 --- */
+```css
+/* --- 首页分页修复：消除空框 + 强制横向 --- */
 
-/* 1. 强制容器横向平铺，并移除所有列表圆点或空框 */
+/* 1. 隔离分页容器，确保不受列表影响 */
 .cg-pagination {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -321,16 +322,24 @@ q::before, q::after {
   gap: 10px !important;
   margin: 30px 0 !important;
   padding: 20px 0 !important;
-  list-style: none !important; /* 彻底移除可能的圆点 */
+  /* 暴力清除所有可能反弹的圆点和装饰框 */
+  list-style: none !important;
 }
 
-/* 2. 针对可能生成的隐形列表项进行屏蔽 */
+/* 2. 彻底屏蔽分页区域内的换行和空行 */
 .cg-pagination br, 
-.cg-pagination li {
-  display: none !important; 
+.cg-pagination li::before,
+.cg-pagination li::after {
+  display: none !important;
+  content: none !important;
 }
 
-/* 3. 页码方块样式：确保大小统一且对齐 */
+/* 3. 修正列表项，防止它包裹按钮产生边框 */
+.cg-pagination li {
+  display: contents !important;
+}
+
+/* 4. 页码方块美化 */
 .page-btn {
   display: inline-flex !important;
   align-items: center !important;
@@ -343,18 +352,13 @@ q::before, q::after {
   font-weight: 600 !important;
   text-decoration: none !important;
   border: 1px solid rgba(76, 175, 80, 0.1) !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* 激活状态 */
 .page-btn.is-active {
   background-color: var(--cg-green-vivid) !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15) !important;
-}
-
-.page-btn:hover {
-  transform: translateY(-2px) !important;
 }
 
 /* --- 10. 响应式与去紫 --- */
