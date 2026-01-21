@@ -312,55 +312,57 @@ q::before, q::after {
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
 ```css
-/* --- 首页分页修复：消除空框 + 强制横向 --- */
+/* --- 首页分页终极优化：深绿当前页 + 物理消框 --- */
 
-/* 1. 隔离分页容器，确保不受列表影响 */
+/* 1. 强制容器横向平铺，并移除所有列表圆点或空框 */
 .cg-pagination {
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: center !important;
-  gap: 10px !important;
-  margin: 30px 0 !important;
+  gap: 12px !important;
+  margin: 40px 0 !important;
   padding: 20px 0 !important;
-  /* 暴力清除所有可能反弹的圆点和装饰框 */
-  list-style: none !important;
+  list-style: none !important; /* 彻底移除列表属性 */
 }
 
-/* 2. 彻底屏蔽分页区域内的换行和空行 */
-.cg-pagination br, 
-.cg-pagination li::before,
-.cg-pagination li::after {
+/* 2. 暴力消除标签之间出现的空框/线条 */
+.cg-pagination li, 
+.cg-pagination br,
+.cg-pagination li::before {
   display: none !important;
   content: none !important;
 }
 
-/* 3. 修正列表项，防止它包裹按钮产生边框 */
-.cg-pagination li {
-  display: contents !important;
-}
-
-/* 4. 页码方块美化 */
+/* 3. 页码方块基础样式 */
 .page-btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 34px !important;
-  height: 34px !important;
+  width: 36px !important;
+  height: 36px !important;
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
-  border: 1px solid rgba(76, 175, 80, 0.1) !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+/* 4. [修改] 当前页：深绿色背景 + 白字 */
 .page-btn.is-active {
-  background-color: var(--cg-green-vivid) !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15) !important;
+  background-color: var(--cg-green-vivid) !important; /* 深绿色 */
+  color: #ffffff !important; /* 白字 */
+  border-color: var(--cg-green-vivid) !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
+  cursor: default;
 }
 
+.page-btn:hover:not(.is-active) {
+  transform: translateY(-2px) !important;
+  background-color: var(--cg-green-vivid) !important;
+  color: #ffffff !important;
+}
 /* --- 10. 响应式与去紫 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
