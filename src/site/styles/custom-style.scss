@@ -312,79 +312,56 @@ q::before, q::after {
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
 
-/* ==========================================================================
-   11. 分页组件 (Pagination) - 终极整合版
-   功能：消除列表空框、强制横向排列、深绿当前页高亮
-   ========================================================================== */
-
-/* 1. 容器与外层清理：彻底消除产生的“空框” */
-.markdown-rendered li:has(.page-btn) {
-  display: contents !important; /* 物理消失，仅保留子元素内容，解决空框问题 */
-}
-
-.cg-pagination {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  gap: 12px !important;
-  margin: 40px auto !important;
-  padding: 10px 0 !important;
-  list-style: none !important;
-  border: none !important;
-  width: 100% !important;
-}
-
-/* 2. 暴力屏蔽容器内所有非按钮的干扰元素 */
-.cg-pagination li, 
-.cg-pagination br,
-.cg-pagination li::before,
-.cg-pagination li::after {
-  display: none !important;
-  content: none !important;
-  border: none !important;
-}
-
-/* 3. 按钮基础样式：方块美学 */
-.page-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 36px !important;
-  height: 36px !important;
-  background-color: var(--cg-green-light) !important;
-  color: var(--cg-green-vivid) !important;
-  border-radius: 6px !important;
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  text-decoration: none !important;
-  border: 1px solid rgba(76, 175, 80, 0.15) !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  cursor: pointer !important;
-}
-
-/* 4. [高亮] 当前页：深绿色背景 + 白字 */
-.page-btn.is-active {
-  background-color: var(--cg-green-vivid) !important; 
-  color: #ffffff !important;
-  border-color: var(--cg-green-vivid) !important;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
-  cursor: default !important;
-}
-
-/* 5. 交互：非激活状态的悬停反馈 */
-.page-btn:hover:not(.is-active) {
-  transform: translateY(-2px) !important;
-  background-color: var(--cg-green-vivid) !important;
-  color: #ffffff !important;
-}
-
-
 /* --- 10. 响应式与去紫 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
+}
+/* --- 12. 无限滚动与多端自适应布局 --- */
+
+/* 网格系统响应式调整：电脑 4 列，平板 2 列，手机 1 列 */
+.grid-view table {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important; /* 默认电脑端 */
+  gap: 20px !important;
+  border: none !important;
+}
+
+@media (max-width: 1024px) {
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } /* 平板 */
+}
+
+@media (max-width: 640px) {
+  .grid-view table { grid-template-columns: 1fr !important; } /* 手机 */
+  .grid-view table td:first-child { height: 220px !important; } /* 手机端图片稍高，视觉更好 */
+}
+
+/* 加载指示器样式 */
+.load-more-text {
+  text-align: center !important;
+  padding: 40px 0 !important;
+  color: var(--cg-green-vivid) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  opacity: 0.8;
+}
+
+/* 消除标签空框补丁（维持现状） */
+.grid-view td li, .grid-view td ul, .grid-view td br {
+  display: none !important;
+}
+
+/* 标签样式微调：支持手机端自动换行对齐 */
+.grid-tag {
+  display: inline-block !important;
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-size: 0.75rem !important;
+  margin: 0 6px 6px 0 !important;
 }
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
