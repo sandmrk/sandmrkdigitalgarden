@@ -68,12 +68,61 @@
             // 如果已成功初始化且第21条已隐藏，则停止检测
             if (isInitialized && rows.length > 20 && rows[20].style.display === 'none') {
                 clearInterval(heartBeat);
+<div class="grid-view" id="gallery-grid">
+</div>
+
+<script>
+(function() {
+    let visibleCount = 20;
+    let isInitialized = false;
+
+    function runInfiniteScroll() {
+        const container = document.getElementById('gallery-grid');
+        const sentinel = document.getElementById('load-more-sentinel');
+        if (!container || !sentinel) return;
+
+        const rows = container.querySelectorAll('table tbody tr');
+        if (rows.length === 0) return;
+
+        // 核心：强制执行初始隐藏
+        const updateRows = () => {
+            rows.forEach((row, index) => {
+                row.style.setProperty('display', index < visibleCount ? 'flex' : 'none', 'important');
+            });
+            if (visibleCount >= rows.length) sentinel.innerText = "已加载全部作品 💚";
+        };
+
+        if (!isInitialized) {
+            // 设置更灵敏的观察器
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && visibleCount < rows.length) {
+                    visibleCount += 20;
+                    updateRows();
+                }
+            }, { 
+                rootMargin: '600px', // 增大预加载范围，体验更顺滑
+                threshold: 0.1 
+            });
+            observer.observe(sentinel);
+            isInitialized = true;
+            updateRows(); // 立即执行一次隐藏
+        }
+    }
+
+    // [关键] 放弃事件监听，改为暴力循环检测，解决 Vercel 静态页跑空问题
+    const timer = setInterval(() => {
+        const rows = document.querySelectorAll('#gallery-grid table tbody tr');
+        if (rows.length > 0) {
+            runInfiniteScroll();
+            // 如果第 21 条已经被成功隐藏，说明脚本已生效，停止检测
+            if (isInitialized && rows.length > 20 && rows[20].style.display === 'none') {
+                clearInterval(timer);
             }
         }
-    }, 500);
+    }, 400);
 
-    // 兜底：5秒后自动停止，防止耗能
-    setTimeout(() => clearInterval(heartBeat), 5000);
+    // 5秒后强制停止，防止浪费性能
+    setTimeout(() => clearInterval(timer), 5000);
 })();
 </script>
 <div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.85em; line-height: 1.6;">
