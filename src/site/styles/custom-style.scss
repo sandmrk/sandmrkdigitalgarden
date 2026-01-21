@@ -396,6 +396,56 @@ q::before, q::after {
   margin: 0 6px 6px 0 !important;
   white-space: nowrap !important;
 }
+/* ==========================================================================
+   首页单元格标签清理 (2026-01-21)
+   目标：彻底消除标签间的空框、点、线及多余嵌套
+   ========================================================================== */
 
+/* 1. 暴力清除单元格内所有不请自来的列表装饰物 */
+.grid-view td ul,
+.grid-view td li,
+.grid-view td br,
+.grid-view td li::before,
+.grid-view td li::after {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* 2. 重新定义标签容器，确保它们平铺排列 */
+/* 强制让 td（单元格底部区域）成为一个干净的 flex 容器 */
+.grid-view td:last-child {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important; /* 精准控制标签之间的间距 */
+  padding: 12px 14px 16px !important;
+}
+
+/* 3. 标签（Grid Tag）精致化样式 */
+/* 确保它们不再受任何外层 li 样式的干扰 */
+.grid-tag, 
+.grid-view td span[class*="tag"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 4px !important;
+  padding: 2px 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  margin: 0 !important; /* 间距由父级 gap 控制 */
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+/* 4. 移除由于 Digital Garden 嵌套导致的背景残留 */
+.grid-view table tbody tr td {
+  background-color: transparent !important;
+}
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
