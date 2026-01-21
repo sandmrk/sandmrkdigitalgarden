@@ -319,27 +319,6 @@ q::before, q::after {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
-/* --- 11. 图片点击交互增强 (2026-01-20 新增) --- */
 
-/* 修改行：35行以后 (建议添加在全局字体设置之后) */
-.markdown-rendered img {
-  /* 备注：将鼠标指针改为放大镜，提示用户图片可点击查看原图 */
-  cursor: zoom-in !important; 
-  
-  /* 备注：增加平滑过渡效果，让悬停时的亮度变化更自然 */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; 
-  
-  /* 备注：防止大图撑破内容页布局，保持与您 900px 的最大宽度协调 */
-  max-width: 100% !important;
-  height: auto !important;
-  border-radius: 8px !important; /* 备注：保持与您全站一致的微圆角风格 */
-}
-
-/* 备注：悬停时轻微变暗并产生阴影，增强“可点击”的工业精密感 */
-.markdown-rendered img:hover {
-  filter: brightness(0.9) !important;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-  transform: scale(1.01); /* 备注：轻微放大，模拟 A7L 物理按键的反馈感 */
-}
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
