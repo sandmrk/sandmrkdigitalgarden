@@ -238,4 +238,53 @@ blockquote::before, blockquote::after, q::before, q::after { display: none !impo
 }
 .hot-tag-count {
   font-size: 0.75rem !important; color: var(--cg-text-muted) !important; opacity: 0.6;
-  padding: -1 !important; margin: 0 0 0 -2px !important; margin-left: 1px !
+  padding: -1 !important; margin: 0 0 0 -2px !important; margin-left: 1px !important; 
+  position: relative !important; top: 0px !important;
+}
+.hot-tag-item:hover { text-decoration: underline !important; }
+
+/* 普通正文标签 */
+.tag, .note-tag, a.tag {
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+  font-size: 0.75rem !important;
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;
+}
+
+/* --- 9. 搜索框 --- */
+.search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
+.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; }
+.searchresult { border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; }
+
+/* --- 10. 加载指示器 (Sentinel) --- */
+#load-more-sentinel {
+  text-align: center !important;
+  padding: 60px 0 !important;
+  color: var(--cg-green-vivid) !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 2px;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* --- 11. 响应式适配 (Media Queries) --- */
+/* 平板 (iPad等) */
+@media (max-width: 1100px) {
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* 手机 (Mobile) */
+@media (max-width: 600px) {
+  .grid-view table { grid-template-columns: 1fr !important; }
+  .grid-view table td:first-child { height: 240px !important; } /* 封面图加高 */
+  
+  .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .search-box { width: 92% !important; margin: 0 auto !important; }
+}
