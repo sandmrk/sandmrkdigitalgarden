@@ -124,7 +124,7 @@ img[src*="banner"] {
 
 /* 6.3 卡片 (Card) 样式 */
 .grid-view table tr {
-  display: none; /* 初始状态：隐藏 (由无限滚动脚本控制显示为 flex) */
+ display: flex !important;  /* <-- 改为这行：默认显示！ */
   flex-direction: column !important;
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
