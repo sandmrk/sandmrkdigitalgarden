@@ -1,19 +1,16 @@
 ---
-{"dg-publish":true,"permalink":"/index/","title":"@sandmrk 的 AI Art Gallery","tags":["gardenEntry"]}
+{"dg-publish":true,"permalink":"/index/","title":"CGfan 的 AI Art Gallery","tags":["gardenEntry"]}
 ---
 
 
-![banner.jpg|banner](/img/user/banner.jpg)
+![banner.jpg](/img/user/banner.jpg)
 
-# @sandmrk 的 AI Art Gallery
+# CGfan 的 AI Art Gallery
 
 欢迎来到我的个人 AI 艺术与提示词收藏库  
-这里汇集了从 X 上精选的生成艺术瞬间、提示词实验、工具推荐与设计灵感  
-所有作品以清新绿 App 风格呈现，支持标签浏览与搜索。
+这里汇集了从 X 上精选的生成艺术瞬间、提示词实验、工具推荐与设计灵感。
 
-## 🏷️ 热门标签
-
-<div class="hot-tags-wrapper">
+## 🏷️ 热门标签 
 
 - #待处理 (170)
 - #x-post (170)
