@@ -312,27 +312,39 @@ q::before, q::after {
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
 
-/* --- 首页分页终极优化：深绿当前页 + 物理消框 --- */
-/* 1. 强制容器横向平铺，并移除所有列表圆点或空框 */
+/* ==========================================================================
+   11. 分页组件 (Pagination) - 终极整合版
+   功能：消除列表空框、强制横向排列、深绿当前页高亮
+   ========================================================================== */
+
+/* 1. 容器与外层清理：彻底消除产生的“空框” */
+.markdown-rendered li:has(.page-btn) {
+  display: contents !important; /* 物理消失，仅保留子元素内容，解决空框问题 */
+}
+
 .cg-pagination {
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: center !important;
   gap: 12px !important;
-  margin: 40px 0 !important;
-  padding: 20px 0 !important;
-  list-style: none !important; /* 彻底移除列表属性 */
+  margin: 40px auto !important;
+  padding: 10px 0 !important;
+  list-style: none !important;
+  border: none !important;
+  width: 100% !important;
 }
 
-/* 2. 暴力消除标签之间出现的空框/线条 */
+/* 2. 暴力屏蔽容器内所有非按钮的干扰元素 */
 .cg-pagination li, 
 .cg-pagination br,
-.cg-pagination li::before {
+.cg-pagination li::before,
+.cg-pagination li::after {
   display: none !important;
   content: none !important;
+  border: none !important;
 }
 
-/* 3. 页码方块基础样式 */
+/* 3. 按钮基础样式：方块美学 */
 .page-btn {
   display: inline-flex !important;
   align-items: center !important;
@@ -343,25 +355,30 @@ q::before, q::after {
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
   font-weight: 600 !important;
+  font-size: 0.9rem !important;
   text-decoration: none !important;
   border: 1px solid rgba(76, 175, 80, 0.15) !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
 }
 
-/* 4. [修改] 当前页：深绿色背景 + 白字 */
+/* 4. [高亮] 当前页：深绿色背景 + 白字 */
 .page-btn.is-active {
-  background-color: var(--cg-green-vivid) !important; /* 深绿色 */
-  color: #ffffff !important; /* 白字 */
+  background-color: var(--cg-green-vivid) !important; 
+  color: #ffffff !important;
   border-color: var(--cg-green-vivid) !important;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
-  cursor: default;
+  cursor: default !important;
 }
 
+/* 5. 交互：非激活状态的悬停反馈 */
 .page-btn:hover:not(.is-active) {
   transform: translateY(-2px) !important;
   background-color: var(--cg-green-vivid) !important;
   color: #ffffff !important;
 }
+
+
 /* --- 10. 响应式与去紫 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
