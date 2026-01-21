@@ -311,6 +311,43 @@ q::before, q::after {
 .search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
 .search-box input { color: #333 !important; font-size: 1rem !important; }
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
+/* --- 分页按钮：确保横向排列且有间距 --- */
+.cg-pagination {
+  display: flex !important;           /* 强制横向 */
+  justify-content: center !important;  /* 居中 */
+  gap: 10px !important;                /* 数字之间的间距 */
+  margin: 30px 0 !important;
+  padding: 20px 0 !important;
+}
+
+.page-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  background-color: var(--cg-green-light) !important; /* 浅绿底 */
+  color: var(--cg-green-vivid) !important;            /* 绿字 */
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  border: 1px solid rgba(76, 175, 80, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* 选中状态 */
+.page-btn.is-active {
+  background-color: var(--cg-green-vivid) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2) !important;
+}
+
+.page-btn:hover {
+  transform: translateY(-2px) !important;
+  background-color: var(--cg-green-vivid) !important;
+  color: #ffffff !important;
+}
 
 /* --- 10. 响应式与去紫 --- */
 @media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
