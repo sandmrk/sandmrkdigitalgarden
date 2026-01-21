@@ -313,7 +313,6 @@ q::before, q::after {
 .searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
 
 /* --- 首页分页终极优化：深绿当前页 + 物理消框 --- */
-
 /* 1. 强制容器横向平铺，并移除所有列表圆点或空框 */
 .cg-pagination {
   display: flex !important;
