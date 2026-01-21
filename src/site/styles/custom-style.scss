@@ -105,7 +105,15 @@ blockquote::before, blockquote::after { display: none !important; }
   transform: translateY(-5px) !important; border-color: var(--cg-green-vivid) !important;
   box-shadow: 0 15px 30px rgba(76, 175, 80, 0.12) !important;
 }
-load-more-sentinel {
+#scroll-sentinel {
+  display: block !important;
+  min-height: 50px !important;
+  text-align: center !important;
+  padding: 40px 0 !important;
+  color: var(--cg-green-vivid) !important;
+  clear: both !important;
+}
+#load-more-sentinel {
   min-height: 40px !important;
   display: block !important;
   text-align: center !important;
