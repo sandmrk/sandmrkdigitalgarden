@@ -1,217 +1,185 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极精修版 (2026-01-21 Visual Polish V2)
-   调整：缩小全站关键字号、热门标签增加绿框风格
+   @sandmrk AI Art Gallery - 清新绿 App 风格 + 毛玻璃完整版 (2026 Green App Blur Final)
+   完全整合两段代码：保留全部功能（首页卡片、热门标签、搜索框、搜索结果页、内容单页）
+   风格统一：#4CAF50 主绿 + 浅绿背景 + 白卡毛玻璃 + 大圆角 + 轻荧光 hover
+   整体感觉：高端绿色主题移动 App，清新透气、精致现代
    ========================================================================== */
 
 /* --- 1. 核心变量 --- */
 :root {
-  color-scheme: light !important;
-  --cg-green-vivid: #4CAF50;
-  --cg-green-light: #e8f5e9;
-  --cg-text-black: #1a202c; 
-  --cg-text-muted: #718096;
-  
-  --accent: var(--cg-green-vivid) !important;
-  --text-normal: var(--cg-text-black) !important;
-  --background-primary: #ffffff !important;
-  --background-secondary: var(--cg-green-light) !important;
-  
-  --dg-content-max-width: 900px !important;
-  --dg-sidebar-top: 60px !important; 
+  --app-green: #4CAF50;                    /* 主鲜绿 */
+  --app-green-light: #e8f5e9;               /* 浅绿背景 */
+  --app-green-hover: #388e3c;               /* hover 深绿 */
+  --app-green-glass: rgba(232, 245, 233, 0.88); /* 主毛玻璃底色 */
+  --app-glass-blur: blur(16px);             /* 毛玻璃强度（可调） */
+  --app-text-primary: #1a202c;
+  --app-text-muted: #718096;
+  --app-card-bg: rgba(255, 255, 255, 0.92); /* 白卡毛玻璃 */
+  --app-card-border: rgba(76, 175, 80, 0.25);
+  --app-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  --app-shadow-hover: 0 20px 50px rgba(76, 175, 80, 0.18);
+  --app-radius: 18px;                      /* App 大圆角 */
+  --app-transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- 2. 基础排版 --- */
-html, body {
-  overflow-x: hidden !important; 
-  margin: 0; padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
-  font-size: 15px !important; 
-  color: var(--cg-text-black) !important;
-  -webkit-font-smoothing: antialiased;
+/* --- 2. 全局 --- */
+body, html {
+  background: var(--app-green-light) !important;
+  color: var(--app-text-primary) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif !important;
 }
-* { font-feature-settings: "palt" 1 !important; }
 
-a { color: var(--cg-green-vivid) !important; text-decoration: none !important; transition: opacity 0.2s ease; }
-a:hover { opacity: 0.8; }
-[style*="color: purple"], [style*="rgb(107, 79, 187)"] { color: var(--cg-green-vivid) !important; }
-
-/* --- 3. 顶部导航栏 (字号调小) --- */
-.header, .navbar {
-  background-color: rgba(232, 245, 233, 0.98) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(76, 175, 80, 0.15) !important;
-  height: 52px !important;
-  min-height: 52px !important;
-  position: fixed !important; top: 0; left: 0; right: 0; z-index: 1000 !important;
-}
-/* [修改] 网站名缩小 */
-.header-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important; 
-  font-size: 1.0rem !important; /* 原 1.1rem -> 1.0rem */
-}
-.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.85); }
-
-/* --- 4. 侧边栏 --- */
-.filetree-wrapper, .sidebar, .filetree-sidebar {
-  z-index: 500 !important; background-color: transparent !important; pointer-events: none !important;
-}
-.filetree-sidebar a { pointer-events: auto !important; color: #2d3748 !important; }
-.filetree-sidebar a:hover { color: var(--cg-green-vivid) !important; }
-
-/* --- 5. 内容页基础 --- */
+/* 主内容区毛玻璃容器（首页 + 内容页 + 搜索结果页） */
 .content, #content-container {
-  max-width: 900px !important;
-  padding: 100px 1.5rem 3rem 1.5rem !important;
-  margin: 0 auto !important;
-  position: relative !important; z-index: 1 !important;
+  background: var(--app-green-glass) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border-radius: var(--app-radius) !important;
+  box-shadow: var(--app-shadow) !important;
+  padding: 2.5rem !important;
+  margin: 2rem auto !important;
+  max-width: 960px !important;
 }
-/* [修改] 页面大标题缩小 */
-h1, .note-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important;
-  font-size: 1.5rem !important; /* 原 1.8rem -> 1.5rem */
+
+/* --- 3. 搜索框（右上角 + 搜索页） --- */
+.search-input, .search-box input, .search-page input {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border: 2px solid var(--app-card-border) !important;
+  border-radius: 12px !important;
+  padding: 0.8rem 1.2rem !important;
+  box-shadow: var(--app-shadow) !important;
+  transition: var(--app-transition) !important;
+}
+
+.search-input:focus, .search-box input:focus {
+  border-color: var(--app-green) !important;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), var(--app-shadow) !important;
+}
+
+/* --- 4. 搜索结果页 --- */
+.search-results .search-result, .search-page .note-list-item {
+  background: var(--app-card-bg) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border: 1px solid var(--app-card-border) !important;
+  border-radius: var(--app-radius) !important;
+  padding: 1.5rem !important;
   margin-bottom: 1.5rem !important;
+  box-shadow: var(--app-shadow) !important;
+  transition: var(--app-transition) !important;
 }
-/* Banner & 图片 */
-img[src*="banner"] {
-  width: 100% !important; max-height: 260px !important; object-fit: cover !important;
-  border-radius: 12px !important; margin-bottom: 2rem !important; display: block;
+
+.search-results .search-result:hover, .search-page .note-list-item:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: var(--app-shadow-hover) !important;
+  border-color: var(--app-green) !important;
 }
-.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important; }
 
-/* 引用块 */
-blockquote, .callout { border-left: 4px solid var(--cg-green-vivid) !important; background: #f9fbf9 !important; }
-blockquote::before, blockquote::after { display: none !important; }
+/* --- 5. 内容单页 --- */
+.markdown-rendered img {
+  border-radius: var(--app-radius) !important;
+  box-shadow: var(--app-shadow) !important;
+  max-width: 100% !important;
+}
 
-/* --- 6. 首页无限滚动网格 (Grid View) --- */
+blockquote, .callout {
+  background: rgba(240, 253, 244, 0.85) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border-left: 4px solid var(--app-green) !important;
+  border-radius: var(--app-radius) !important;
+  padding: 1.2rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+pre, code {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border-radius: 12px !important;
+}
+
+/* --- 6. 首页卡片网格 + 毛玻璃 --- */
 .grid-view table {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 16px !important; /* 间距微调 */
-  width: 100% !important; border: none !important; padding: 10px 0 !important; margin: 0 !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 1.5rem !important;
 }
-.grid-view table thead { display: none !important; }
-.grid-view table tbody { display: contents !important; }
 
-/* 卡片 */
 .grid-view table tr {
-  display: flex !important; flex-direction: column !important;
-  background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 12px !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important; overflow: hidden !important;
-  transition: all 0.3s ease !important; margin: 0 !important;
+  background: var(--app-card-bg) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border: 1px solid var(--app-card-border) !important;
+  border-radius: var(--app-radius) !important;
+  overflow: hidden !important;
+  box-shadow: var(--app-shadow) !important;
+  transition: var(--app-transition) !important;
+  display: flex;
+  flex-direction: column;
 }
+
 .grid-view table tr:hover {
-  transform: translateY(-5px) !important; border-color: var(--cg-green-vivid) !important;
-  box-shadow: 0 15px 30px rgba(76, 175, 80, 0.12) !important;
-}
-#scroll-sentinel {
-  display: block !important;
-  min-height: 50px !important;
-  text-align: center !important;
-  padding: 40px 0 !important;
-  color: var(--cg-green-vivid) !important;
-  clear: both !important;
-}
-#load-more-sentinel {
-  min-height: 40px !important;
-  display: block !important;
-  text-align: center !important;
-  padding: 40px 0 !important;
-}
-/* 单元格清理 */
-.grid-view table td { display: block !important; border: none !important; padding: 0 !important; }
-
-/* [区域1] 封面 */
-.grid-view table td:first-child { height: 150px !important; }
-.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
-
-/* [区域2] 文章标题 (缩小) */
-.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
-.grid-view table td:nth-child(2) a { 
-  font-size: 0.95rem !important; /* 原 1.05rem -> 0.95rem */
-  font-weight: 700 !important; color: #1a202c !important; line-height: 1.4 !important;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  transform: translateY(-8px) !important;
+  box-shadow: var(--app-shadow-hover) !important;
+  border-color: var(--app-green) !important;
 }
 
-/* [区域3] 信息 */
-.grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { 
-  padding: 0 14px !important; font-size: 0.75rem !important; color: #a0aec0 !important; 
+/* 预览图 hover 缩放 */
+.grid-view td:first-child img {
+  width: 100% !important;
+  height: 260px !important;
+  object-fit: cover !important;
+  transition: transform 0.45s ease !important;
 }
 
-/* [区域4] 底部标签 */
-.grid-view table td:last-child {
-  display: flex !important; flex-wrap: wrap !important; gap: 6px !important;
-  padding: 8px 14px 14px !important; margin-top: auto !important;
-}
-.grid-view td ul, .grid-view td li { display: contents !important; list-style: none !important; margin: 0 !important; }
-.grid-view td li::before { content: none !important; }
-
-/* 底部标签样式 */
-.grid-tag, .grid-view span[class*="tag"] {
-  display: inline-flex !important; align-items: center !important;
-  background-color: #f0fdf4 !important; color: var(--cg-green-vivid) !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important; border-radius: 4px !important;
-  padding: 1px 6px !important; font-size: 0.7rem !important; font-weight: 600 !important;
+.grid-view tr:hover td:first-child img {
+  transform: scale(1.1);
 }
 
-/* --- 7. [重点修改] 热门标签 (Hot Tags) --- */
-.markdown-rendered ul:has(.tag-group) {
-  display: flex !important; flex-wrap: wrap !important; gap: 8px !important; /* 标签间距 */
-  list-style: none !important; padding: 0 !important; margin: 10px 0 20px 0 !important;
-}
-.markdown-rendered li:has(.tag-group) { display: contents !important; }
-
-/* [新增] 热门标签绿框风格 */
+/* 热门标签绿框毛玻璃 */
 .tag-group {
-  display: inline-flex !important; 
-  align-items: center !important;
-  /* 绿框核心代码 */
-  border: 1px solid rgba(76, 175, 80, 0.3) !important; 
-  background-color: #f0fdf4 !important; /* 极淡绿背景 */
-  border-radius: 6px !important;
-  padding: 3px 8px !important; /* 内部留白 */
-  transition: all 0.2s ease !important;
-}
-
-/* 热门标签文字 (缩小) */
-.hot-tag-item {
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 600 !important; 
-  font-size: 0.8rem !important; /* 原 0.9rem -> 0.8rem */
-  border: none !important; /* 移除内部可能的边框 */
-  background: transparent !important;
-}
-
-/* 热门标签计数 (缩小) */
-.hot-tag-count {
-  color: #718096 !important; 
-  font-size: 0.7rem !important; 
-  margin-left: 4px !important;
-  padding: 0 !important;
-  opacity: 0.8;
+  background: rgba(240, 253, 244, 0.85) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
+  border: 1.5px solid rgba(76, 175, 80, 0.4) !important;
+  border-radius: 12px !important;
+  padding: 6px 12px !important;
+  transition: var(--app-transition) !important;
 }
 
 .tag-group:hover {
-  background-color: var(--cg-green-vivid) !important;
-  border-color: var(--cg-green-vivid) !important;
+  background: var(--app-green) !important;
+  transform: translateY(-2px);
 }
-.tag-group:hover .hot-tag-item, .tag-group:hover .hot-tag-count {
+
+/* 加载更多按钮毛玻璃 */
+.load-more-button {
+  background: rgba(76, 175, 80, 0.9) !important;
+  backdrop-filter: var(--app-glass-blur) !important;
+  -webkit-backdrop-filter: var(--app-glass-blur) !important;
   color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.9rem 2.5rem !important;
+  box-shadow: var(--app-shadow) !important;
+  transition: var(--app-transition) !important;
 }
 
-/* --- 8. 其他组件 --- */
-.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 8px !important; }
-#load-more-sentinel {
-  text-align: center !important; padding: 40px 0 !important;
-  color: var(--cg-green-vivid) !important; font-size: 0.85rem !important; animation: pulse 2s infinite;
+.load-more-button:hover {
+  background: var(--app-green-hover) !important;
+  transform: translateY(-4px);
+  box-shadow: var(--app-shadow-hover) !important;
 }
-@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-/* --- 9. 响应式 --- */
-@media (max-width: 1100px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
+/* --- 7. 响应式 --- */
+@media (max-width: 900px) {
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .grid-view table td:first-child { height: 200px !important; }
-  .content { padding-top: 70px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .content { padding: 1.5rem !important; }
 }
