@@ -319,49 +319,82 @@ q::before, q::after {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
-/* --- 12. 无限滚动与多端自适应布局 --- */
+/* ==========================================================================
+   12. 无限滚动与多端自适应终极优化 (2026-01-20)
+   适配：电脑 (4列)、平板 (2列)、手机 (1列)
+   ========================================================================== */
 
-/* 网格系统响应式调整：电脑 4 列，平板 2 列，手机 1 列 */
+/* 1. 网格系统核心：解决自适应与对齐 */
 .grid-view table {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important; /* 默认电脑端 */
+  /* 默认电脑端：四列布局 */
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 20px !important;
+  width: 100% !important;
   border: none !important;
+  padding: 10px 0 !important;
 }
 
-@media (max-width: 1024px) {
-  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } /* 平板 */
+/* 2. 响应式断点控制 */
+@media (max-width: 1100px) {
+  /* 中等屏幕（如 iPad）改为两列 */
+  .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
-@media (max-width: 640px) {
-  .grid-view table { grid-template-columns: 1fr !important; } /* 手机 */
-  .grid-view table td:first-child { height: 220px !important; } /* 手机端图片稍高，视觉更好 */
+@media (max-width: 600px) {
+  /* 移动端改为单列，并优化卡片比例 */
+  .grid-view table { grid-template-columns: 1fr !important; }
+  .grid-view table td:first-child { height: 240px !important; } /* 手机端封面图加高 */
 }
 
-/* 加载指示器样式 */
-.load-more-text {
+/* 3. 彻底屏蔽表格渲染的“残留物”（解决空框关键） */
+.grid-view table thead { display: none !important; }
+.grid-view table tbody { display: contents !important; }
+.grid-view table tr {
+  display: none; /* 由 JS 动态控制显示为 flex */
+  flex-direction: column !important;
+  margin: 0 !important;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* 消除标签间的干扰框 */
+.grid-view td ul, .grid-view td li, .grid-view td br {
+  display: none !important;
+  content: none !important;
+}
+
+/* 4. 加载指示器（Sentinel）美化 */
+#load-more-sentinel {
   text-align: center !important;
-  padding: 40px 0 !important;
+  padding: 60px 0 !important;
   color: var(--cg-green-vivid) !important;
   font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  opacity: 0.8;
+  font-size: 0.95rem !important;
+  letter-spacing: 2px;
+  animation: pulse 2s infinite; /* 增加呼吸感动效 */
 }
 
-/* 消除标签空框补丁（维持现状） */
-.grid-view td li, .grid-view td ul, .grid-view td br {
-  display: none !important;
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
-/* 标签样式微调：支持手机端自动换行对齐 */
+/* 5. 卡片精致度升级 */
+.grid-view table tr:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 20px 40px rgba(76, 175, 80, 0.15) !important;
+}
+
 .grid-tag {
   display: inline-block !important;
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   padding: 2px 8px !important;
   border-radius: 4px !important;
-  font-size: 0.75rem !important;
+  font-size: 0.7rem !important;
   margin: 0 6px 6px 0 !important;
+  white-space: nowrap !important;
 }
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
