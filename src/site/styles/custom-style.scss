@@ -1,39 +1,40 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极完美版 (2026-01-21 Optimized)
-   功能：全站绿色风格、无限滚动适配、多端响应、标签去框清理
+   CGfan x Gemnana 终极工业版 (2026-01-21 Final Release)
+   特性：全站绿色风格、无限滚动架构、绝对去框、多端自适应
    ========================================================================== */
 
-/* --- 1. 核心变量与强制亮色模式 --- */
+/* --- 1. 核心变量与全局重置 --- */
 :root {
   color-scheme: light !important;
   
+  /* [A7L Shooting Brake 风格绿] */
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
   --cg-text-black: #2d3748; 
   --cg-text-muted: #5e6c84;
   
-  /* 插件变量覆盖 */
+  /* 覆盖 Obsidian/Digital Garden 默认变量 */
   --accent: var(--cg-green-vivid) !important;
   --text-normal: var(--cg-text-black) !important;
   --text-muted: var(--cg-text-muted) !important;
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  /* 侧边栏变量 */
+  /* 侧边栏与导航栏变量 */
   --nav-item-color: #2d3748 !important;
   --nav-text-color: #2d3748 !important;
   --dg-content-max-width: 900px !important;
   --dg-navbar-height: 52px !important;
-  --dg-search-box-width: 700px !important;
   --dg-sidebar-top: 60px !important; 
 }
 
-/* --- 2. 全局字体与排版 --- */
+/* --- 2. 字体与基础排版 --- */
 html, body {
   overflow-x: hidden !important; 
   width: 100% !important;
   margin: 0; padding: 0;
   background-color: #ffffff !important;
+  /* 优先使用系统无衬线字体，保证加载速度和清晰度 */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
   font-size: 15px !important; 
   line-height: 1.7 !important;
@@ -43,7 +44,7 @@ html, body {
 
 * { font-feature-settings: "palt" 1 !important; }
 
-/* 链接与去紫补丁 */
+/* 链接样式与“去紫”补丁 */
 a, .internal-link, .external-link {
   color: var(--cg-green-vivid) !important;
   text-decoration: none !important;
@@ -52,10 +53,11 @@ a, .internal-link, .external-link {
   word-break: break-word !important;
 }
 a:hover { opacity: 0.8; }
+/* 强制覆盖所有可能的紫色链接 */
 [style*="color: purple"], [style*="rgb(107, 79, 187)"] { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
 
-/* --- 3. 导航栏 (Header) --- */
+/* --- 3. 顶部导航栏 (Header) --- */
 .header, .navbar {
   background-color: rgba(232, 245, 233, 0.98) !important;
   backdrop-filter: blur(12px);
@@ -69,14 +71,14 @@ a:hover { opacity: 0.8; }
 .header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
 .search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. 侧边栏修复 --- */
+/* --- 4. 侧边栏 (Sidebar) --- */
 .filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
   z-index: 500 !important;
   background-color: transparent !important;
-  pointer-events: none !important; /* 透传点击 */
+  pointer-events: none !important; /* 关键：让鼠标点击能穿透透明区域 */
 }
 
-/* 侧边栏交互恢复 */
+/* 恢复侧边栏内部元素的点击交互 */
 .filetree-sidebar a, .toc-container a, .filetree-item {
   pointer-events: auto !important;
   color: #2d3748 !important; 
@@ -89,7 +91,7 @@ a:hover { opacity: 0.8; }
   cursor: pointer !important;
 }
 
-/* --- 5. 首页 Banner --- */
+/* --- 5. 首页 Banner 图片 --- */
 .content > .markdown-rendered > p:first-child img,
 img[src*="banner"] {
   width: 100% !important;
@@ -101,13 +103,13 @@ img[src*="banner"] {
   display: block;
 }
 
-/* --- 6. [核心] 首页网格系统 (Grid View) --- */
-/* 整合了布局、卡片样式、去框逻辑 */
+/* --- 6. [核心引擎] 首页网格系统 (Grid View) --- */
+/* 注意：此部分配合 index.md 中的 JS 脚本工作 */
 
-/* 6.1 容器布局 (电脑端默认4列) */
+/* 6.1 网格容器定义 */
 .grid-view table {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
+  grid-template-columns: repeat(4, 1fr) !important; /* 默认：电脑端 4 列 */
   gap: 20px !important;
   width: 100% !important;
   border: none !important;
@@ -115,13 +117,14 @@ img[src*="banner"] {
   margin: 0 !important;
 }
 
-/* 6.2 结构降维 (去除表格干扰) */
+/* 6.2 结构降维 (Flattening) */
+/* 隐藏表头，将 tbody 设为 contents 以消除 HTML 嵌套对 Grid 的干扰 */
 .grid-view table thead { display: none !important; }
 .grid-view table tbody { display: contents !important; }
 
-/* 6.3 卡片 (Row) 样式 */
+/* 6.3 卡片 (Card) 样式 */
 .grid-view table tr {
-  display: none; /* 默认隐藏，由 JS 控制显隐 (Infinite Scroll) */
+  display: none; /* 初始状态：隐藏 (由无限滚动脚本控制显示为 flex) */
   flex-direction: column !important;
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
@@ -132,14 +135,14 @@ img[src*="banner"] {
   margin: 0 !important;
 }
 
-/* 卡片悬停效果 */
+/* 卡片悬停动效 */
 .grid-view table tr:hover {
   transform: translateY(-8px) !important;
   box-shadow: 0 20px 40px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--cg-green-vivid) !important;
 }
 
-/* 6.4 单元格 (Cell) 清理与布局 */
+/* 6.4 单元格 (Cell) 通用设置 */
 .grid-view table td { 
   display: block !important; 
   border: none !important; 
@@ -155,20 +158,33 @@ img[src*="banner"] {
 /* 标题区域 */
 .grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
 .grid-view table td:nth-child(2) a { 
-  font-size: 0.9rem !important; font-weight: 700 !important; color: #2d3748 !important; 
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: 0.9rem !important; 
+  font-weight: 700 !important; 
+  color: #2d3748 !important; 
+  line-height: 1.4 !important;
+  /* 标题最多显示两行，超出省略 */
+  display: -webkit-box; 
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical; 
+  overflow: hidden;
 }
 
-/* 元数据区域 */
+/* 作者与日期区域 */
 .grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { 
-  padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; 
+  padding: 0 14px !important; 
+  font-size: 0.75rem !important; 
+  color: var(--cg-text-muted) !important; 
 }
 
-/* 6.5 [重点] 标签区域去框与重排 */
-/* 暴力清除 li/ul 等干扰 */
+/* 6.5 [重点] 标签区域清理与布局 */
+/* 彻底清除单元格内所有不请自来的列表装饰 (解决空框的关键) */
 .grid-view td ul, .grid-view td li, .grid-view td br, 
 .grid-view td li::before, .grid-view td li::after {
-  display: none !important; content: none !important; border: none !important; margin: 0 !important; padding: 0 !important;
+  display: none !important; 
+  content: none !important; 
+  border: none !important; 
+  margin: 0 !important; 
+  padding: 0 !important;
 }
 
 /* 标签容器 Flex 化 */
@@ -177,10 +193,10 @@ img[src*="banner"] {
   flex-wrap: wrap !important;
   gap: 6px !important;
   padding: 12px 14px 16px !important;
-  margin-top: auto !important;
+  margin-top: auto !important; /* 确保标签始终在卡片底部 */
 }
 
-/* 卡片内标签样式 */
+/* 单个标签样式 */
 .grid-tag, .grid-view td span[class*="tag"] {
   display: inline-flex !important;
   align-items: center !important;
@@ -211,20 +227,22 @@ h1, .note-title {
   margin-bottom: 1.5rem !important;
 }
 
-/* 清除引用装饰 */
+/* 引用块美化 */
 blockquote::before, blockquote::after, q::before, q::after { display: none !important; }
 .callout, blockquote {
   background-color: #f9fbf9 !important;
   border-left: 4px solid var(--cg-green-vivid) !important;
   border-radius: 10px !important;
+  color: #2d3748 !important;
 }
 
 /* --- 8. 热门标签 (Hot Tags) --- */
-/* 列表容器 */
+/* 列表容器：横向排列，去点 */
 .markdown-rendered ul:has(.tag-group) {
   display: flex !important; flex-wrap: wrap !important; gap: 0px 5px !important;
   list-style: none !important; padding: 0 !important; margin: 2px 0 !important; text-indent: 0 !important;
 }
+/* 屏蔽外层 li */
 .markdown-rendered li:has(.tag-group) { display: contents !important; }
 
 /* 标签组 */
@@ -238,12 +256,12 @@ blockquote::before, blockquote::after, q::before, q::after { display: none !impo
 }
 .hot-tag-count {
   font-size: 0.75rem !important; color: var(--cg-text-muted) !important; opacity: 0.6;
-  padding: -1 !important; margin: 0 0 0 -2px !important; margin-left: 1px !important; 
+  padding: 0 !important; margin: 0 0 0 -2px !important; margin-left: 1px !important; /* 物理贴合 */
   position: relative !important; top: 0px !important;
 }
 .hot-tag-item:hover { text-decoration: underline !important; }
 
-/* 普通正文标签 */
+/* 普通正文内标签 */
 .tag, .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
@@ -253,12 +271,12 @@ blockquote::before, blockquote::after, q::before, q::after { display: none !impo
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
 }
 
-/* --- 9. 搜索框 --- */
+/* --- 9. 搜索框 (Search) --- */
 .search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
 .search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; }
 .searchresult { border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; }
 
-/* --- 10. 加载指示器 (Sentinel) --- */
+/* --- 10. 加载指示器 (Infinite Scroll Sentinel) --- */
 #load-more-sentinel {
   text-align: center !important;
   padding: 60px 0 !important;
@@ -275,15 +293,15 @@ blockquote::before, blockquote::after, q::before, q::after { display: none !impo
 }
 
 /* --- 11. 响应式适配 (Media Queries) --- */
-/* 平板 (iPad等) */
+/* 平板设备 (iPad等)：变为 2 列 */
 @media (max-width: 1100px) {
   .grid-view table { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
-/* 手机 (Mobile) */
+/* 手机设备 (Mobile)：变为 1 列，并优化体验 */
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .grid-view table td:first-child { height: 240px !important; } /* 封面图加高 */
+  .grid-view table td:first-child { height: 240px !important; } /* 封面图加高，增强视觉冲击 */
   
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
