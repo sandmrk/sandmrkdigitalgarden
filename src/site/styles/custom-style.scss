@@ -386,6 +386,85 @@ q::before, q::after {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
+/* ==========================================================================
+   首页网格与分页 CSS 终极修复补丁 (2026-01-20)
+   目标：仅通过 CSS 解决空框、锁定深绿高亮、强制对齐
+   ========================================================================== */
+
+/* --- 1. 暴力清除单元格内标签之间的“空框” --- */
+/* 针对 index.md 渲染出的 TABLE 内部进行深度清理，屏蔽由于空格产生的 li */
+.grid-view td ul,
+.grid-view td li,
+.grid-view td br,
+.grid-view td li::before {
+  display: none !important;
+  content: none !important;
+  list-style: none !important;
+  border: none !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 重新找回标签间距：为单元格内的 span 强制增加外边距 */
+.grid-view td span {
+  display: inline-block !important;
+  margin-right: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+/* --- 2. 修复分页“空框”与排列问题 --- */
+/* 彻底清除包裹在分页按钮外层的绿色列表装饰框 */
+.markdown-rendered li:has(.page-btn) {
+  display: contents !important; /* 物理消失，让内部按钮直接参与布局 */
+  list-style: none !important;
+}
+
+.cg-pagination {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  margin: 40px auto !important;
+  padding: 10px 0 !important;
+  border: none !important;
+}
+
+/* --- 3. 锁定高亮样式：深绿色背景 --- */
+.page-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(76, 175, 80, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* 强制当前活动页显示深绿色 */
+.page-btn.is-active {
+  background-color: var(--cg-green-vivid) !important; 
+  color: #ffffff !important;
+  border-color: var(--cg-green-vivid) !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2) !important;
+}
+
+.page-btn:hover:not(.is-active) {
+  background-color: var(--cg-green-vivid) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+}
+
+/* --- 4. 热门标签：数字物理贴合 --- */
+.hot-tag-count {
+  margin-left: 1px !important; /* 强制左移贴近文字 */
+  opacity: 0.6;
+}
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
