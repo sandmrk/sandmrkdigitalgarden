@@ -215,3 +215,30 @@ blockquote::before, blockquote::after { display: none !important; }
   .grid-view table td:first-child { height: 200px !important; }
   .content { padding-top: 70px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
 }
+/* 热门标签横排 + 药丸风格 */
+.hot-tags-wrapper ul {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  justify-content: center !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 1.5rem 0 !important;
+}
+
+.hot-tags-wrapper li {
+  display: inline-flex !important;
+  background: rgba(76, 175, 80, 0.1) !important;
+  color: #4CAF50 !important;
+  border: 1px solid rgba(76, 175, 80, 0.3) !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-size: 0.9rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.hot-tags-wrapper li:hover {
+  background: #4CAF50 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
