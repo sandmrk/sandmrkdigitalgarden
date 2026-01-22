@@ -322,20 +322,6 @@ q::before, q::after {
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
-/* --- 修复：隐藏标签之间的丑陋绿框横线 --- */
 
-/* 1. 针对常见的插件分隔符类名进行隐藏 */
-.tag-separator, 
-.tag-pane-separator,
-.markdown-rendered span:empty:not(.tag) { 
-  display: none !important; 
-}
-
-/* 2. 针对图中显示的、夹在标签中间的小横线 span */
-.markdown-rendered span:not(.tag):not(.hot-tag-item) {
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
 
 
