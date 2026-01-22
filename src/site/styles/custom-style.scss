@@ -319,6 +319,12 @@ q::before, q::after {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
+/* 只有具备 grid-tag 或 tag 类名的元素才允许有边框 */
+.grid-view td *:not(.grid-tag):not(.tag):not(img):not(a) {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
