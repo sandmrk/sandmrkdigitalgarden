@@ -221,9 +221,7 @@ q::before, q::after {
   font-size: 0.75rem !important;
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  display: none !important;
-  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
-  word-break: keep-all !important; /* 禁止单词内断开 */
+  display: inline-block !important;
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
 }
