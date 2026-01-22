@@ -280,7 +280,33 @@ a.tag,
 .tag:empty, .grid-tag:empty, span:empty, div:empty {
   display: none !important;
 }
+/* --- 专杀 Obsidian 标签幽灵包裹层（彻底去除外圈绿框/背景，保留内层真正标签） --- */
+.cm-hashtag,
+.cm-hashtag-begin,
+.cm-hashtag-end {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  display: inline !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 0 !important; /* 可选：进一步防止任何残留间隙 */
+  line-height: 1 !important;
+}
 
+/* 保险：任何带有 cm-hashtag 的 span 也强制清除 */
+span.cm-hashtag,
+span.cm-hashtag-begin,
+span.cm-hashtag-end {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
 /* 1. 列表容器：横向排列，彻底去点 */
