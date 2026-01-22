@@ -212,40 +212,72 @@ q::before, q::after {
   font-family: inherit !important; 
 }
 
-/* --- 8. 标签样式 (保留真正标签的绿色背景和边框) --- */
-.tag:not(:empty), .note-tag, a.tag, .grid-tag {
+/* --- 8. 标签样式：保留真正标签的完整样式（绿色背景 + 浅绿边框） --- */
+.tag:not(:empty), 
+.note-tag, 
+a.tag, 
+.grid-tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
   padding: 2px 8px !important;
   font-size: 0.75rem !important;
   font-weight: 600 !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important;  /* ← 保留边框 */
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;
   display: inline-flex !important;
   align-items: center;
   white-space: nowrap !important;
   word-break: keep-all !important;
-  margin-right: 4px !important; 
+  margin-right: 4px !important;
   margin-bottom: 4px !important;
   text-decoration: none !important;
+  box-shadow: none !important; /* 防止可能的阴影干扰 */
 }
 
-/* [增强版] 彻底清除外层/幽灵元素的绿色背景、边框和多余样式 */
-.grid-view td > *:not(.tag):not(.note-tag):not(a.tag):not(.grid-tag),
-.grid-view td span:not(.tag):not(.note-tag):not(.grid-tag),
-.grid-view td div:not(.tag):not(.note-tag):not(.grid-tag),
-.grid-view td p:not(.tag):not(.note-tag):not(.grid-tag) {
+/* --- 超强清除规则：针对所有可能的幽灵外层元素 --- */
+/* 1. td 内所有直接子元素，除了真正标签 */
+.grid-view td > *:not(.tag):not(.note-tag):not(a.tag):not(.grid-tag):not(a):not(span):not(div) {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  outline: none !important;
   padding: 0 !important;
   margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* 2. td 内所有 span/div（最常见的幽灵载体），排除真正标签 */
+.grid-view td span:not(.tag):not(.note-tag):not(.grid-tag),
+.grid-view td div:not(.tag):not(.note-tag):not(.grid-tag) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
   display: inline !important;
+}
+
+/* 3. 更深层的嵌套（如果幽灵在多层包裹里） */
+.grid-view td * *:not(.tag):not(.note-tag):not(a.tag):not(.grid-tag) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
-/* [原有] 隐藏空标签 */
-.tag:empty, .grid-tag:empty {
+/* 4. 保险：针对任何带有绿色背景的非标签元素强制清除 */
+.grid-view td [style*="background"],
+.grid-view td [style*="border"],
+.grid-view td span[style],
+.grid-view td div[style] {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* 5. 隐藏空元素 */
+.tag:empty, .grid-tag:empty, span:empty, div:empty {
   display: none !important;
 }
 
