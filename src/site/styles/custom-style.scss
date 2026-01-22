@@ -16,7 +16,7 @@
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  --dg-content-max-width: 900px !important;
+  --dg-content-max-width: 800px !important;
   --dg-sidebar-top: 60px !important; 
 }
 
@@ -61,7 +61,7 @@ a:hover { opacity: 0.8; }
 
 /* --- 5. 内容页基础 --- */
 .content, #content-container {
-  max-width: 900px !important;
+  max-width: 800px !important;
   padding: 100px 1.5rem 3rem 1.5rem !important;
   margin: 0 auto !important;
   position: relative !important; z-index: 1 !important;
