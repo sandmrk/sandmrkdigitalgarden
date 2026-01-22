@@ -143,9 +143,13 @@ img[src*="banner"] {
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
-  overflow: hidden !important;
   transition: transform 0.2s ease !important;
   margin: 0 !important;
+}
+.grid-view table td:first-child {
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+  overflow: hidden !important;
 }
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
@@ -388,18 +392,7 @@ span.cm-hashtag-end {
 
 /* 悬停效果 */
 .hot-tag-item:hover { text-decoration: underline !important; }
-/* --- 卡片美化：画廊级精致度 --- */
-.grid-view table tr {
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-}
 
-.grid-view table tr:hover {
-  transform: translateY(-5px) !important;
-  box-shadow: 0 20px 40px rgba(76, 175, 80, 0.12) !important;
-  border-color: var(--cg-green-vivid) !important;
-}
 
 /* 标题截断：保持对齐 */
 .grid-view table td:nth-child(2) a {
@@ -431,8 +424,7 @@ span.cm-hashtag-end {
 }
 
 /* 恢复标签内文字的大小 */
-.grid-view table td:last-child .tag, 
-.grid-view table td:last-child .grid-tag {
+.grid-view table td:last-child .tag {
   font-size: 0.75rem !important;
 }
 
