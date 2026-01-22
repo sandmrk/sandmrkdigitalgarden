@@ -21,52 +21,51 @@
 
 
 <script>
-(function() {
-    let visibleCount = 20;
-    let isApplied = false;
+document.addEventListener('DOMContentLoaded', () => {  // ← 新增这行
+  (function() {
+      let visibleCount = 20;
+      let isApplied = false;
 
-    // 核心：强制执行可见性逻辑
-    const runEngine = () => {
-        const container = document.getElementById('gallery-grid');
-        const sentinel = document.getElementById('infinite-sentinel');
-        const rows = document.querySelectorAll('#gallery-grid table tr');
-        
-        if (!container || !sentinel || !rows.length) return;
+      const runEngine = () => {
+          const container = document.getElementById('gallery-grid');
+          const sentinel = document.getElementById('infinite-sentinel');
+          const rows = document.querySelectorAll('#gallery-grid table tr');
 
-        const update = () => {
-            rows.forEach((row, i) => {
-                row.style.setProperty('display', i < visibleCount ? 'flex' : 'none', 'important');
-            });
-            if (visibleCount >= rows.length) sentinel.innerText = "已加载全部作品 💚";
-        };
+          if (!container || !sentinel || !rows.length) return;
 
-        if (!isApplied) {
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && visibleCount < rows.length) {
-                    visibleCount += 20;
-                    update();
-                }
-            }, { rootMargin: '600px', threshold: 0.1 });
-            observer.observe(sentinel);
-            isApplied = true;
-        }
-        update(); 
-    };
+          const update = () => {
+              rows.forEach((row, i) => {
+                  row.style.setProperty('display', i < visibleCount ? 'flex' : 'none', 'important');
+              });
+              if (visibleCount >= rows.length) sentinel.innerText = "已加载全部作品 💚";
+          };
 
-    // 强力心跳监测：解决静态渲染延迟与 SPA 跳转
-    const heartBeat = setInterval(() => {
-        runEngine();
-        const rows = document.querySelectorAll('#gallery-grid table tr');
-        if (isApplied && rows.length > 20 && rows[20].style.display === 'none') {
-            // 只有当成功隐藏了第21行，才判定接管成功
-            clearInterval(heartBeat);
-        }
-    }, 500);
+          if (!isApplied) {
+              const observer = new IntersectionObserver((entries) => {
+                  if (entries[0].isIntersecting && visibleCount < rows.length) {
+                      visibleCount += 20;
+                      update();
+                  }
+              }, { rootMargin: '600px', threshold: 0.1 });
+              observer.observe(sentinel);
+              isApplied = true;
+          }
+          update(); 
+      };
 
-    // 针对 Digital Garden 的单页跳转重置
-    window.addEventListener('popstate', () => { isApplied = false; });
-    setTimeout(() => clearInterval(heartBeat), 8000); 
-})();
+      // 强力心跳监测
+      const heartBeat = setInterval(() => {
+          runEngine();
+          const rows = document.querySelectorAll('#gallery-grid table tr');  // ← 已修正
+          if (isApplied && rows.length > 20 && (rows[20] && rows[20].style.display === 'none' || visibleCount >= rows.length)) {
+    clearInterval(heartBeat);
+}
+      }, 500);
+
+      window.addEventListener('popstate', () => { isApplied = false; });
+      setTimeout(() => clearInterval(heartBeat), 8000); 
+  })();
+});  // ← 新增这行闭合
 </script>
 
 
