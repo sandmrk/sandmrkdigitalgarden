@@ -164,22 +164,6 @@ img[src*="banner"] {
 /* 元数据 */
 .grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
 /* 标签 */
-/* 只针对明确带有 tag 类名的元素应用样式 */
-.grid-view .grid-tag, 
-.grid-view a.tag, 
-.grid-view .tag {
-  display: inline-flex !important;
-  align-items: center !important;
-  background-color: #f0fdf4 !important;
-  color: var(--cg-green-vivid) !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  border-radius: 4px !important;
-  padding: 1px 6px !important;
-  font-size: 0.7rem !important;
-  font-weight: 600 !important;
-  margin: 2px 2px !important; /* 增加一点外边距来替代原本的空格 */
-}
-
 .grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
 
 /* --- 7. 内容页正文修复 (第132行优化：强制显示) --- */
@@ -228,8 +212,8 @@ q::before, q::after {
   font-family: inherit !important; 
 }
 
-/* --- 8. 标签样式 --- */
-.tag:not(:empty), .note-tag, a.tag {
+/* --- 8. 标签样式 (修复：精准识别真标签，剔除幽灵绿框) --- */
+.tag:not(:empty), .note-tag, a.tag, .grid-tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
@@ -237,13 +221,31 @@ q::before, q::after {
   font-size: 0.75rem !important;
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  display: inline-block !important;
-  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
-  word-break: keep-all !important; /* 禁止单词内断开 */
-  margin-right: 8px !important; 
-  margin-bottom: 6px !important;
+  display: inline-flex !important; /* 改为 inline-flex 更好对齐 */
+  align-items: center;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  margin-right: 4px !important; 
+  margin-bottom: 4px !important;
+  text-decoration: none !important;
 }
-.tag:contains("-") { display: none !important; } 
+
+/* [新增] 专门清除嵌套在标签外的无名 span 的边框 */
+.grid-view td span:not([class]), 
+.grid-view td > span {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: inline !important; /* 确保不换行 */
+}
+
+/* [新增] 彻底隐藏内容只有横线、空格或逗号的异常元素 */
+.tag:empty, .grid-tag:empty {
+  display: none !important;
+}
+
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
 /* 1. 列表容器：横向排列，彻底去点 */
@@ -256,6 +258,7 @@ q::before, q::after {
   margin: 2px 0 !important;
   text-indent: 0 !important;
 }
+
 /* 2. 移除 li 干扰 */
 .markdown-rendered li:has(.tag-group) {
   display: contents !important;
@@ -335,33 +338,25 @@ q::before, q::after {
   .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
   .search-box { width: 92% !important; margin: 0 auto !important; }
 }
-/* 只有具备 grid-tag 或 tag 类名的元素才允许有边框 */
-.grid-view td *:not(.grid-tag):not(.tag):not(img):not(a) {
-    border: none !important;
-    background: none !important;
-    box-shadow: none !important;
+/* --- 专项修复：清除网格内非卡片元素的干扰 --- */
+
+/* 消除标签容器 span 之间的字间距（防止空格变成绿点） */
+.grid-view table td:last-child {
+  font-size: 0 !important; 
 }
-/* 彻底清除不带类名的普通 span 的背景和边框 */
-.grid-view td span:not([class]), 
-.grid-view td > span {
-  background: transparent !important;
+
+/* 恢复标签内文字的大小 */
+.grid-view table td:last-child .tag, 
+.grid-view table td:last-child .grid-tag {
+  font-size: 0.75rem !important;
+}
+
+/* 强制去掉所有非 .tag 类的 span 的背景和边框 */
+.grid-view td span:not(.tag):not(.grid-tag):not(.hot-tag-item) {
   border: none !important;
+  background: none !important;
   box-shadow: none !important;
-  padding: 0 !important;
-}
-
-/* 移除标签间可能的空格/换行符导致的视觉残留 */
-.grid-view td {
-  font-size: 0 !important; /* 消除空格间隙 */
-}
-
-/* 恢复标签文字的大小 */
-.grid-view .grid-tag, .grid-view .tag {
-  font-size: 0.7rem !important; 
 }
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
-
-
-
