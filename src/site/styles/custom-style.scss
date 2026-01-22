@@ -213,7 +213,8 @@ q::before, q::after {
 }
 
 /* --- 8. 标签样式 --- */
-.tag, .note-tag, a.tag {
+/* 只有当标签内包含内容（不是空横线）时才显示绿框 */
+.tag:not(:empty), .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
@@ -222,9 +223,9 @@ q::before, q::after {
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
   display: inline-block !important;
-  margin-right: 8px !important; 
-  margin-bottom: 6px !important;
 }
+
+/* 强制隐藏长度过短或内容为横线的标签 */
 .tag:contains("-") { display: none !important; } 
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
