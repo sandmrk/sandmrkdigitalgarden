@@ -4,9 +4,9 @@
 
 ![banner.jpg](/img/user/banner.jpg)
 
-# CGfan 的 AI Art Gallery
+# CGfan AI Art Gallery
 
-欢迎来到我的个人 AI 艺术与提示词收藏库  
+欢迎来到 CGfan AI 艺术与提示词收藏库  
 这里汇集了从 X 上精选的生成艺术瞬间、提示词实验、工具推荐与设计灵感。
 
 ## ​🏷️ 热门标签 
