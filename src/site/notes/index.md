@@ -31,7 +31,7 @@
     const runEngine = () => {
         const container = document.getElementById('gallery-grid');
         const sentinel = document.getElementById('infinite-sentinel');
-        const rows = document.querySelectorAll('#gallery-grid table tbody tr');
+        const rows = document.querySelectorAll('#gallery-grid table tr');
         
         if (!container || !sentinel || !rows.length) return;
 
