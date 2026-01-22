@@ -208,7 +208,7 @@ h1, .note-title {
   margin-bottom: 1.5rem !important;
 }
 
-.markdown-rendered img { box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
+.markdown-rendered img { border-radius: 12px !important;box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
 
 /* [核心修复] 清除所有装饰性引号 */
 blockquote::before, blockquote::after, 
