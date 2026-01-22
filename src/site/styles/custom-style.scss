@@ -213,6 +213,7 @@ q::before, q::after {
 }
 
 /* --- 8. 标签样式 (修复：精准识别真标签，剔除幽灵绿框) --- */
+/* --- 8. 标签样式 (修复：精准识别真标签，剔除幽灵绿框) --- */
 .tag:not(:empty), .note-tag, a.tag, .grid-tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
@@ -229,21 +230,52 @@ q::before, q::after {
   margin-bottom: 4px !important;
   text-decoration: none !important;
 }
+/* --- 8. 标签样式 (V5 精准剥离版) --- */
 
-/* [新增] 专门清除嵌套在标签外的无名 span 的边框 */
-.grid-view td span:not([class]), 
-.grid-view td > span {
+/* 1. 彻底清除所有 td 内部 span 的默认边框和背景 (去掉外圈的关键) */
+.grid-view td span {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  display: inline !important; /* 确保不换行 */
+  display: inline !important;
 }
 
-/* [新增] 彻底隐藏内容只有横线、空格或逗号的异常元素 */
-.tag:empty, .grid-tag:empty {
-  display: none !important;
+/* 2. 隐藏标签内的所有图片 (满足“不要图片”需求) */
+.grid-view td .tag img, 
+.grid-view td .grid-tag img,
+.grid-view td img[alt*="标签图标"] { 
+  display: none !important; 
+}
+
+/* 3. 重新定义最内层文字链接的样式 (只保留文字框) */
+.grid-view .tag, 
+.grid-view .grid-tag,
+.grid-view a.tag {
+  display: inline-flex !important;
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border: 1px solid rgba(76, 175, 80, 0.2) !important; /* 只有这一层有框 */
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  margin: 2px 4px 2px 0 !important;
+  text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+
+/* 4. 辅助修复：消除由于嵌套 span 之间的空格导致的“绿点” */
+.grid-view td:last-child {
+  font-size: 0 !important; /* 消除空格 */
+  line-height: 0 !important;
+}
+
+/* 5. 确保文字可见 */
+.grid-view .tag, .grid-view .grid-tag {
+  font-size: 0.7rem !important;
+  line-height: 1.2 !important;
 }
 
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
