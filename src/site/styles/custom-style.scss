@@ -1,217 +1,324 @@
 /* ==========================================================================
-   CGfan x Gemnana 终极精修版 (2026-01-21 Visual Polish V2)
-   调整：缩小全站关键字号、热门标签增加绿框风格
+   CGfan x Gemnana 终极完美版 (2026-01-19 Final Polish V4)
+   修复：清除丑陋装饰引号、侧边栏强制显色、全站字体统一、绿色风格
    ========================================================================== */
 
-/* --- 1. 核心变量 --- */
+/* --- 1. 核心变量与强制亮色模式 --- */
 :root {
-  color-scheme: light !important;
+  color-scheme: light !important; /* 强制亮色模式 */
+  
   --cg-green-vivid: #4CAF50;
   --cg-green-light: #e8f5e9;
-  --cg-text-black: #1a202c; 
-  --cg-text-muted: #718096;
+  --cg-text-black: #2d3748; 
+  --cg-text-muted: #5e6c84;
   
+  /* 插件变量覆盖 */
   --accent: var(--cg-green-vivid) !important;
   --text-normal: var(--cg-text-black) !important;
+  --text-muted: var(--cg-text-muted) !important;
   --background-primary: #ffffff !important;
   --background-secondary: var(--cg-green-light) !important;
   
-  --dg-content-max-width: 800px !important;
+  /* 侧边栏专用变量重置 */
+  --nav-item-color: #2d3748 !important;
+  --nav-text-color: #2d3748 !important;
+  
+  --dg-content-max-width: 900px !important;
+  --dg-navbar-height: 52px !important;
+  --dg-search-box-width: 700px !important;
   --dg-sidebar-top: 60px !important; 
 }
 
-/* --- 2. 基础排版 --- */
+/* --- 2. 全局字体与排版 (修复丑陋标点) --- */
 html, body {
   overflow-x: hidden !important; 
+  width: 100% !important;
   margin: 0; padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  background-color: #ffffff !important;
+  
+  /* [核心修复] 字体栈优化：优先使用系统无衬线字体，确保标点符号不回退到衬线体 */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif !important;
+  
   font-size: 15px !important; 
+  line-height: 1.7 !important;
   color: var(--cg-text-black) !important;
   -webkit-font-smoothing: antialiased;
 }
-* { font-feature-settings: "palt" 1 !important; }
 
-a { color: var(--cg-green-vivid) !important; text-decoration: none !important; transition: opacity 0.2s ease; }
+/* [关键] 强制所有标点符号不使用特殊字体 */
+* {
+  font-feature-settings: "palt" 1 !important; /* 优化标点间距 */
+}
+
+/* 链接样式 */
+a, .internal-link, .external-link {
+  color: var(--cg-green-vivid) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: opacity 0.2s ease;
+  word-break: break-word !important;
+}
 a:hover { opacity: 0.8; }
-[style*="color: purple"], [style*="rgb(107, 79, 187)"] { color: var(--cg-green-vivid) !important; }
 
-/* --- 3. 顶部导航栏 (字号调小) --- */
+/* --- 3. 导航栏 (Header) --- */
 .header, .navbar {
   background-color: rgba(232, 245, 233, 0.98) !important;
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(76, 175, 80, 0.15) !important;
+  padding: 0 1.2rem !important;
   height: 52px !important;
   min-height: 52px !important;
-  position: fixed !important; top: 0; left: 0; right: 0; z-index: 1000 !important;
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  z-index: 1000 !important;
 }
-/* [修改] 网站名缩小 */
-.header-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important; 
-  font-size: 1.0rem !important; /* 原 1.1rem -> 1.0rem */
-}
-.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.85); }
+.header-title { color: var(--cg-green-vivid) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
+.search-button svg { fill: var(--cg-green-vivid) !important; transform: scale(0.9); }
 
-/* --- 4. 侧边栏 --- */
-.filetree-wrapper, .sidebar, .filetree-sidebar {
-  z-index: 500 !important; background-color: transparent !important; pointer-events: none !important;
+/* --- 4. 侧边栏修复 (第65行优化：防止遮挡正文) --- */
+.filetree-wrapper, .sidebar, .filetree-sidebar, .toc-container {
+  z-index: 500 !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  /* 关键：容器不阻挡点击，透传给下方的正文 */
+  pointer-events: none !important; 
 }
-.filetree-sidebar a { pointer-events: auto !important; color: #2d3748 !important; }
-.filetree-sidebar a:hover { color: var(--cg-green-vivid) !important; }
 
-/* --- 5. 内容页基础 --- */
-.content, #content-container {
-  max-width: 800px !important;
-  padding: 100px 1.5rem 3rem 1.5rem !important;
-  margin: 0 auto !important;
-  position: relative !important; z-index: 1 !important;
+/* 恢复侧边栏内链接的点击 */
+.filetree-sidebar a, .toc-container a, .filetree-item {
+  pointer-events: auto !important;
+  color: #2d3748 !important; 
+  fill: #2d3748 !important;  
 }
-/* [修改] 页面大标题缩小 */
-h1, .note-title { 
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 800 !important;
-  font-size: 1.5rem !important; /* 原 1.8rem -> 1.5rem */
-  margin-bottom: 1.5rem !important;
+
+/* 强制深灰色 */
+.filetree-sidebar a, .filetree-sidebar div, .filetree-sidebar span, 
+.toc-container a, .toc-container div, .toc-container span,
+.filetree-item, .filetree-folder-name, .filetree-file-name {
+  color: #2d3748 !important; 
+  fill: #2d3748 !important;  
+  text-shadow: none !important;
 }
-/* Banner & 图片 */
+
+/* 悬停变绿 */
+.filetree-sidebar a:hover, .filetree-item:hover, .filetree-folder-name:hover, .filetree-file-name:hover {
+  color: var(--cg-green-vivid) !important;
+  fill: var(--cg-green-vivid) !important;
+  cursor: pointer !important;
+}
+.filetree-sidebar svg, .filetree-folder-icon { color: #2d3748 !important; fill: #2d3748 !important; }
+
+/* --- 5. 首页 Banner 美化 --- */
+.content > .markdown-rendered > p:first-child img,
 img[src*="banner"] {
-  width: 100% !important; max-height: 260px !important; object-fit: cover !important;
-  border-radius: 12px !important; margin-bottom: 2rem !important; display: block;
+  width: 100% !important;
+  max-height: 300px !important;
+  object-fit: cover !important;
+  border-radius: 16px !important;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05), 0 25px 50px -12px rgba(76, 175, 80, 0.35) !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 3rem !important;
+  display: block;
 }
-.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important; }
 
-/* 引用块 */
-blockquote, .callout { border-left: 4px solid var(--cg-green-vivid) !important; background: #f9fbf9 !important; }
-blockquote::before, blockquote::after { display: none !important; }
-
-/* --- 6. 首页无限滚动网格 (Grid View) --- */
+/* --- 6. 首页网格系统 --- */
 .grid-view table {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 16px !important; /* 间距微调 */
-  width: 100% !important; border: none !important; padding: 10px 0 !important; margin: 0 !important;
+  gap: 16px !important;
+  width: 100% !important; 
+  margin: 0 !important;
+  border: none !important;
+  padding: 4px !important;
 }
-.grid-view table thead { display: none !important; }
-.grid-view table tbody { display: contents !important; }
 
-/* 卡片 */
+.grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
+.grid-view table tbody { display: contents !important; }
 .grid-view table tr {
-  display: flex !important; flex-direction: column !important;
-  background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 12px !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important; overflow: hidden !important;
-  transition: all 0.3s ease !important; margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
+  overflow: hidden !important;
+  transition: transform 0.2s ease !important;
+  margin: 0 !important;
 }
 .grid-view table tr:hover {
-  transform: translateY(-5px) !important; border-color: var(--cg-green-vivid) !important;
-  box-shadow: 0 15px 30px rgba(76, 175, 80, 0.12) !important;
-}
-#scroll-sentinel {
-  display: block !important;
-  min-height: 50px !important;
-  text-align: center !important;
-  padding: 40px 0 !important;
-  color: var(--cg-green-vivid) !important;
-  clear: both !important;
-}
-#load-more-sentinel {
-  min-height: 40px !important;
-  display: block !important;
-  text-align: center !important;
-  padding: 40px 0 !important;
-}
-/* 单元格清理 */
-.grid-view table td { display: block !important; border: none !important; padding: 0 !important; }
-
-/* [区域1] 封面 */
-.grid-view table td:first-child { height: 150px !important; }
-.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
-
-/* [区域2] 文章标题 (缩小) */
-.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
-.grid-view table td:nth-child(2) a { 
-  font-size: 0.95rem !important; /* 原 1.05rem -> 0.95rem */
-  font-weight: 700 !important; color: #1a202c !important; line-height: 1.4 !important;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-/* [区域3] 信息 */
-.grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { 
-  padding: 0 14px !important; font-size: 0.75rem !important; color: #a0aec0 !important; 
-}
-
-/* [区域4] 底部标签 */
-.grid-view table td:last-child {
-  display: flex !important; flex-wrap: wrap !important; gap: 6px !important;
-  padding: 8px 14px 14px !important; margin-top: auto !important;
-}
-.grid-view td ul, .grid-view td li { display: contents !important; list-style: none !important; margin: 0 !important; }
-.grid-view td li::before { content: none !important; }
-
-/* 底部标签样式 */
-.grid-tag, .grid-view span[class*="tag"] {
-  display: inline-flex !important; align-items: center !important;
-  background-color: #f0fdf4 !important; color: var(--cg-green-vivid) !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important; border-radius: 4px !important;
-  padding: 1px 6px !important; font-size: 0.7rem !important; font-weight: 600 !important;
-}
-
-/* --- 7. [重点修改] 热门标签 (Hot Tags) --- */
-.markdown-rendered ul:has(.tag-group) {
-  display: flex !important; flex-wrap: wrap !important; gap: 8px !important; /* 标签间距 */
-  list-style: none !important; padding: 0 !important; margin: 10px 0 20px 0 !important;
-}
-.markdown-rendered li:has(.tag-group) { display: contents !important; }
-
-/* [新增] 热门标签绿框风格 */
-.tag-group {
-  display: inline-flex !important; 
-  align-items: center !important;
-  /* 绿框核心代码 */
-  border: 1px solid rgba(76, 175, 80, 0.3) !important; 
-  background-color: #f0fdf4 !important; /* 极淡绿背景 */
-  border-radius: 6px !important;
-  padding: 3px 8px !important; /* 内部留白 */
-  transition: all 0.2s ease !important;
-}
-
-/* 热门标签文字 (缩小) */
-.hot-tag-item {
-  color: var(--cg-green-vivid) !important; 
-  font-weight: 600 !important; 
-  font-size: 0.8rem !important; /* 原 0.9rem -> 0.8rem */
-  border: none !important; /* 移除内部可能的边框 */
-  background: transparent !important;
-}
-
-/* 热门标签计数 (缩小) */
-.hot-tag-count {
-  color: #718096 !important; 
-  font-size: 0.7rem !important; 
-  margin-left: 4px !important;
-  padding: 0 !important;
-  opacity: 0.8;
-}
-
-.tag-group:hover {
-  background-color: var(--cg-green-vivid) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
   border-color: var(--cg-green-vivid) !important;
 }
-.tag-group:hover .hot-tag-item, .tag-group:hover .hot-tag-count {
-  color: #ffffff !important;
+
+.grid-view table td { display: block !important; border: none !important; padding: 0 !important; width: 100% !important; }
+.grid-view table td:first-child { height: 160px !important; }
+.grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+
+/* 标题 */
+.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
+.grid-view table td:nth-child(2) a { font-size: 0.9rem !important; font-weight: 700 !important; color: #2d3748 !important; line-height: 1.4 !important; }
+
+/* 元数据 */
+.grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
+/* 标签 */
+.grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
+
+/* --- 7. 内容页正文修复 (第132行优化：强制显示) --- */
+.content, #content-container {
+  max-width: 900px !important;
+  padding: 100px 1.5rem 3rem 1.5rem !important;
+  margin: 0 auto !important;
+  /* 强制建立层级，确保在侧边栏透明层下方但文字可见 */
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* --- 8. 其他组件 --- */
-.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 8px !important; }
-#load-more-sentinel {
-  text-align: center !important; padding: 40px 0 !important;
-  color: var(--cg-green-vivid) !important; font-size: 0.85rem !important; animation: pulse 2s infinite;
+.markdown-rendered {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  font-size: 0.95rem !important;
+  line-height: 1.75 !important;
+  color: var(--cg-text-black) !important;
 }
-@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-/* --- 9. 响应式 --- */
-@media (max-width: 1100px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
+h1, .note-title { 
+  color: var(--cg-green-vivid) !important; 
+  font-weight: 800 !important;
+  font-size: 1.8rem !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
+
+/* [核心修复] 清除所有装饰性引号 */
+blockquote::before, blockquote::after, 
+q::before, q::after {
+  content: none !important;
+  display: none !important;
+}
+
+.callout, blockquote {
+  background-color: #f9fbf9 !important;
+  border-left: 4px solid var(--cg-green-vivid) !important;
+  border-radius: 10px !important;
+  color: #2d3748 !important;
+  /* 确保引用块内文字也是无衬线 */
+  font-family: inherit !important; 
+}
+
+/* --- 8. 标签样式 --- */
+.tag, .note-tag, a.tag {
+  background-color: var(--cg-green-light) !important;
+  color: var(--cg-green-vivid) !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;
+  display: inline-block !important;
+  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
+  word-break: keep-all !important; /* 禁止单词内断开 */
+  margin-right: 8px !important; 
+  margin-bottom: 6px !important;
+}
+/* --- 热门标签终极紧凑方案 (2026-01-20) --- */
+
+/* 1. 列表容器：横向排列，彻底去点 */
+.markdown-rendered ul:has(.tag-group) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0px 5px !important; /* 标签组与标签组之间的间距 */
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 2px 0 !important;
+  text-indent: 0 !important;
+}
+
+/* 2. 移除 li 干扰 */
+.markdown-rendered li:has(.tag-group) {
+  display: contents !important;
+}
+
+/* 3. [关键] 标签组：消除内部所有间隙 */
+.tag-group {
+  display: inline-flex !important; /* 强制内部元素紧贴 */
+  align-items: baseline !important; /* 改为基线对齐，确保文字底部在一条线上 */
+  white-space: nowrap !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 4. 标签文字：绿色、无框 */
+.hot-tag-item {
+  color: var(--cg-green-vivid) !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important; /* 统一行高防止偏移 */
+}
+
+/* 5. 数字：零距离贴合补丁 */
+.hot-tag-count {
+  font-size: 0.75rem !important;
+  color: var(--cg-text-muted) !important;
+  opacity: 0.6;
+  padding: -1 !important;
+  /* 如果还是觉得远，可以尝试 0px 甚至 -1px */
+  margin: 0 0 0 -2px !important; 
+  line-height: 1.2 !important;
+     /* 强制向左偏移，0.5px - 1px 可根据视觉微调 */
+  margin-left: 1px !important; 
+  /* 修正数字垂直位置，如果数字偏高可调大正值，偏低调为负值 */
+  position: relative !important;
+  top: 0px !important; 
+}
+
+/* 悬停效果 */
+.hot-tag-item:hover { text-decoration: underline !important; }
+/* --- 卡片美化：画廊级精致度 --- */
+.grid-view table tr {
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+
+.grid-view table tr:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 20px 40px rgba(76, 175, 80, 0.12) !important;
+  border-color: var(--cg-green-vivid) !important;
+}
+
+/* 标题截断：保持对齐 */
+.grid-view table td:nth-child(2) a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- 9. 搜索框还原 --- */
+.search-view-container { background-color: rgba(255, 255, 255, 0.98) !important; padding-top: 80px !important; }
+.search-box { border: 2px solid var(--cg-green-vivid) !important; border-radius: 10px !important; background-color: #fff !important; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1) !important; }
+.search-box input { color: #333 !important; font-size: 1rem !important; }
+.searchresult { background-color: #fff !important; border-left: 4px solid var(--cg-green-vivid) !important; border-radius: 10px !important; margin-bottom: 8px !important; padding: 12px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important; }
+
+/* --- 10. 响应式与去紫 --- */
+@media (max-width: 1024px) { .grid-view table { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) {
   .grid-view table { grid-template-columns: 1fr !important; }
-  .grid-view table td:first-child { height: 200px !important; }
-  .content { padding-top: 70px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .content { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; margin: 0 auto !important; }
+  .search-box { width: 92% !important; margin: 0 auto !important; }
 }
+
+[style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
+[style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
