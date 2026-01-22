@@ -212,7 +212,7 @@ q::before, q::after {
   font-family: inherit !important; 
 }
 
-/* --- 8. 标签样式 (修复：精准识别真标签，剔除幽灵绿框) --- */
+/* --- 8. 标签样式 (保留真正标签的绿色背景和边框) --- */
 .tag:not(:empty), .note-tag, a.tag, .grid-tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
@@ -220,8 +220,8 @@ q::before, q::after {
   padding: 2px 8px !important;
   font-size: 0.75rem !important;
   font-weight: 600 !important;
-  border: 1px solid rgba(76, 175, 80, 0.2) !important;
-  display: inline-flex !important; /* 改为 inline-flex 更好对齐 */
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;  /* ← 保留边框 */
+  display: inline-flex !important;
   align-items: center;
   white-space: nowrap !important;
   word-break: keep-all !important;
@@ -230,18 +230,21 @@ q::before, q::after {
   text-decoration: none !important;
 }
 
-/* [新增] 专门清除嵌套在标签外的无名 span 的边框 */
-.grid-view td span:not([class]), 
-.grid-view td > span {
+/* [增强版] 彻底清除外层/幽灵元素的绿色背景、边框和多余样式 */
+.grid-view td > *:not(.tag):not(.note-tag):not(a.tag):not(.grid-tag),
+.grid-view td span:not(.tag):not(.note-tag):not(.grid-tag),
+.grid-view td div:not(.tag):not(.note-tag):not(.grid-tag),
+.grid-view td p:not(.tag):not(.note-tag):not(.grid-tag) {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  display: inline !important; /* 确保不换行 */
+  display: inline !important;
+  outline: none !important;
 }
 
-/* [新增] 彻底隐藏内容只有横线、空格或逗号的异常元素 */
+/* [原有] 隐藏空标签 */
 .tag:empty, .grid-tag:empty {
   display: none !important;
 }
