@@ -1,4 +1,4 @@
-margin-bottomrgin-bottom ==========================================================================
+/* ==========================================================================
    CGfan x Gemnana 终极完美版 (2026-01-19 Final Polish V4)
    修复：清除丑陋装饰引号、侧边栏强制显色、全站字体统一、绿色风格
    ========================================================================== */
@@ -213,8 +213,7 @@ q::before, q::after {
 }
 
 /* --- 8. 标签样式 --- */
-/* 只有当标签内包含内容（不是空横线）时才显示绿框 */
-.tag:not(:empty), .note-tag, a.tag {
+.tag, .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
@@ -223,11 +222,11 @@ q::before, q::after {
   font-weight: 600 !important;
   border: 1px solid rgba(76, 175, 80, 0.2) !important;
   display: inline-block !important;
+  white-space: nowrap !important; /* [新增] 强制标签不换行，保持精致感 */
+  word-break: keep-all !important; /* 禁止单词内断开 */
+  margin-right: 8px !important; 
+  margin-bottom: 6px !important;
 }
-
-/* 强制隐藏长度过短或内容为横线的标签 */
-.tag:contains("-") { display: none !important; } 
-
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
 /* 1. 列表容器：横向排列，彻底去点 */
@@ -323,3 +322,24 @@ q::before, q::after {
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
+/* --- 修复：隐藏标签之间的丑陋绿框横线 --- */
+
+/* 1. 针对常见的插件分隔符类名进行隐藏 */
+.tag-separator, 
+.tag-pane-separator,
+.markdown-rendered span:empty:not(.tag) { 
+  display: none !important; 
+}
+
+/* 2. 针对图中显示的、夹在标签中间的小横线 span */
+.markdown-rendered span:not(.tag):not(.hot-tag-item) {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 3. 针对首页网格中可能出现的无用装饰符 */
+.grid-view td span:not([class]) {
+    display: none !important;
+}
+
