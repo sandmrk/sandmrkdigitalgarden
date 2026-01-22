@@ -338,8 +338,4 @@ q::before, q::after {
     box-shadow: none !important;
 }
 
-/* 3. 针对首页网格中可能出现的无用装饰符 */
-.grid-view td span:not([class]) {
-    display: none !important;
-}
 
