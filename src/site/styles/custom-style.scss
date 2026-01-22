@@ -213,7 +213,7 @@ q::before, q::after {
 }
 
 /* --- 8. 标签样式 --- */
-.tag, .note-tag, a.tag {
+.tag:not(:empty), .note-tag, a.tag {
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
@@ -227,6 +227,7 @@ q::before, q::after {
   margin-right: 8px !important; 
   margin-bottom: 6px !important;
 }
+.tag:contains("-") { display: none !important; } 
 /* --- 热门标签终极紧凑方案 (2026-01-20) --- */
 
 /* 1. 列表容器：横向排列，彻底去点 */
@@ -239,7 +240,6 @@ q::before, q::after {
   margin: 2px 0 !important;
   text-indent: 0 !important;
 }
-
 /* 2. 移除 li 干扰 */
 .markdown-rendered li:has(.tag-group) {
   display: contents !important;
