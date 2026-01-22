@@ -164,6 +164,22 @@ img[src*="banner"] {
 /* 元数据 */
 .grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
 /* 标签 */
+/* 只针对明确带有 tag 类名的元素应用样式 */
+.grid-view .grid-tag, 
+.grid-view a.tag, 
+.grid-view .tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  background-color: #f0fdf4 !important;
+  color: var(--cg-green-vivid) !important;
+  border: 1px solid rgba(76, 175, 80, 0.2) !important;
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  margin: 2px 2px !important; /* 增加一点外边距来替代原本的空格 */
+}
+
 .grid-view table td:last-child { padding: 8px 14px 16px !important; margin-top: auto !important; }
 
 /* --- 7. 内容页正文修复 (第132行优化：强制显示) --- */
