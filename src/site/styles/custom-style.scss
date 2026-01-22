@@ -212,11 +212,12 @@ q::before, q::after {
   font-family: inherit !important; 
 }
 
-/* --- 8. 标签样式：保留真正标签的完整样式（绿色背景 + 浅绿边框） --- */
+/* --- 8. 标签样式：只作用于真正内层标签（去除外层幽灵绿框） --- */
+/* 修改这一行：删除最后的 , .grid-tag */
 .tag:not(:empty), 
 .note-tag, 
-a.tag, 
-.grid-tag {
+a.tag {
+  /* 注意：这里已经删除了 .grid-tag，原来的完整选择器是 .tag:not(:empty), .note-tag, a.tag, .grid-tag */
   background-color: var(--cg-green-light) !important;
   color: var(--cg-green-vivid) !important;
   border-radius: 6px !important;
@@ -231,7 +232,7 @@ a.tag,
   margin-right: 4px !important;
   margin-bottom: 4px !important;
   text-decoration: none !important;
-  box-shadow: none !important; /* 防止可能的阴影干扰 */
+  box-shadow: none !important;
 }
 
 /* --- 超强清除规则：针对所有可能的幽灵外层元素 --- */
@@ -297,7 +298,30 @@ a.tag,
   font-size: 0 !important; /* 可选：进一步防止任何残留间隙 */
   line-height: 1 !important;
 }
+/* --- 彻底清除外层幽灵元素（grid-tag span + 外层 a 链接） --- */
+.grid-tag,
+.grid-view td .grid-tag,
+.grid-view td a:not(.tag):not(a.internal-link):not(a.external-link) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  display: inline !important;
+}
 
+/* 保险：如果外层 a 有内联 style 或其他残留 */
+.grid-view td a[rel="noopener nofollow"],
+.grid-view td a[target="_blank"] {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 /* 保险：任何带有 cm-hashtag 的 span 也强制清除 */
 span.cm-hashtag,
 span.cm-hashtag-begin,
