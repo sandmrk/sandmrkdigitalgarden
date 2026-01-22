@@ -325,6 +325,24 @@ q::before, q::after {
     background: none !important;
     box-shadow: none !important;
 }
+/* 彻底清除不带类名的普通 span 的背景和边框 */
+.grid-view td span:not([class]), 
+.grid-view td > span {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 移除标签间可能的空格/换行符导致的视觉残留 */
+.grid-view td {
+  font-size: 0 !important; /* 消除空格间隙 */
+}
+
+/* 恢复标签文字的大小 */
+.grid-view .grid-tag, .grid-view .tag {
+  font-size: 0.7rem !important; 
+}
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
