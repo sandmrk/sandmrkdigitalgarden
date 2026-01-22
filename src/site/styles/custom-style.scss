@@ -146,10 +146,20 @@ img[src*="banner"] {
   transition: transform 0.2s ease !important;
   margin: 0 !important;
 }
+
+/* 图片容器：只顶部圆角剪裁（完美融合卡片） */
 .grid-view table td:first-child {
   border-top-left-radius: 12px !important;
   border-top-right-radius: 12px !important;
-  overflow: hidden !important;
+  overflow: hidden !important;  /* 只剪裁顶部圆角，底部直角延伸 */
+}
+
+/* 强制图片本身无圆角（覆盖全局 markdown-rendered img 规则） */
+.grid-view table td:first-child img {
+  border-radius: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
@@ -198,7 +208,7 @@ h1, .note-title {
   margin-bottom: 1.5rem !important;
 }
 
-.markdown-rendered img { border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
+.markdown-rendered img { box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; }
 
 /* [核心修复] 清除所有装饰性引号 */
 blockquote::before, blockquote::after, 
