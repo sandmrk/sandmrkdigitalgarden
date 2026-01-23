@@ -444,6 +444,36 @@ span.cm-hashtag-end {
   background: none !important;
   box-shadow: none !important;
 }
+<style>
+  #back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--interactive-accent); /* 自动适配 Obsidian 主题色 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: none; /* 初始隐藏 */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    z-index: 9999;
+  }
 
+  #back-to-top:hover {
+    transform: translateY(-5px);
+    background-color: var(--interactive-hover);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
+
+  #back-to-top svg {
+    width: 28px;
+    height: 28px;
+  }
+</style>
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
 [style*="border-left-color: rgb(107, 79, 187)"] { border-left-color: var(--cg-green-vivid) !important; }
