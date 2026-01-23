@@ -68,6 +68,53 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
         {% include imp %}
       {% endfor %}
       {{ content | hideDataview | taggify | link | safe}}
+      {{ content | hideDataview | taggify | link | safe}}
+
+      <button id="back-to-top" title="返回顶部">↑</button>
+
+      <div id="cgfan-comments" style="margin-top: 50px;">
+          <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
+          <div id="waline"></div>
+      </div>
+
+      <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+      <script type="module">
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+
+        // 初始化 Waline (已去掉登录禁用，恢复正常登录模式)
+        init({
+          el: '#waline',
+          serverURL: 'https://cgfan-comments.vercel.app',
+          lang: 'zh-CN',
+          reaction: true,
+          dark: 'auto',
+          placeholder: '请登录后发表你的评论...',
+        });
+
+        // 返回顶部逻辑
+        const btt = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+          btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
+        });
+        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+      </script>
+
+      <style>
+        /* 统一绿色风格 */
+        #back-to-top {
+          position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
+          border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
+          border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
+          box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
+          transition: all 0.3s ease;
+        }
+        #back-to-top:hover { transform: translateY(-5px); background-color: #388E3C !important; }
+        :root { --waline-theme-color: #4CAF50 !important; }
+      </style>
+      {% for imp in dynamics.common.afterContent %}
+        {% include imp %}
+      {% endfor %}
+
       {% for imp in dynamics.common.afterContent %}
         {% include imp %}
       {% endfor %}
