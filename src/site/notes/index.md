@@ -69,7 +69,34 @@ document.addEventListener('DOMContentLoaded', () => {
   initGallery();
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btt = document.getElementById('back-to-top');
 
+  // 监听滚动，显示/隐藏按钮
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+      btt.style.display = 'flex';
+    } else {
+      btt.style.display = 'none';
+    }
+  });
+
+  // 点击平滑滚动到顶部
+  btt.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+});
+</script>
+
+<button id="back-to-top" title="返回顶部">
+  <svg viewBox="0 0 24 24" width="24" height="24">
+    <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
+  </svg>
+</button>
 ​<div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.85em; line-height: 1.6;">
 Created with 💚 by <b>@sandmark</b>
 
