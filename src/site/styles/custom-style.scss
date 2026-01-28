@@ -140,18 +140,21 @@ img[src*="banner"] {
 .grid-view table tbody { display: contents !important; }
 .grid-view table tr {
   display: flex !important;
-  flex-direction: column !important;
-  height: 300px !important; /* 物理锁定整张卡片高度，防止破格 */
+   flex-direction: column !important;
+  justify-content: flex-start !important; /* 强制所有内容从顶部对齐，不留空 */
+  height: 310px !important; /* 略微调高，给底部标签留出呼吸感 *//* 物理锁定整张卡片高度，防止破格 */
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
   overflow: hidden !important; /* 强制切掉任何溢出的内容 */
   margin: 0 !important;
+  padding: 0 !important; /* 确保卡片内部没有 padding 挤压图片 */
 }
 /* 图片容器：只顶部圆角剪裁（完美融合卡片） */
 .grid-view table td:first-child {
   border-top-left-radius: 12px !important;
   border-top-right-radius: 12px !important;
+  width: 100% !important;
   height: 160px !important; 
   background-color: var(--cg-green-light) !important; /* 图片不显示时的底色占位 */
   min-height: 160px !important; /* 强制锁定最小高度 */
@@ -160,14 +163,18 @@ img[src*="banner"] {
   padding: 0 !important;
   position: relative !important;
   overflow: hidden !important;  /* 只剪裁顶部圆角，底部直角延伸 */
+  top: 0 !important; /* 物理置顶 */
 }
 
 /* 强制图片本身无圆角（覆盖全局 markdown-rendered img 规则） */
 .grid-view table td:first-child img {
-  border-radius: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
+   position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  object-fit: cover !important; /* 像 App 封面一样自动裁剪填充 */
+  border-radius: 0 !important; /* 图片本身不需要圆角，由容器 td 剪裁 */
 }
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
