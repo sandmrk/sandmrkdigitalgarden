@@ -139,7 +139,7 @@ img[src*="banner"] {
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
 .grid-view table tr {
-  display: flex !important;
+  display: flex;
    flex-direction: column !important;
   justify-content: flex-start !important; /* 强制所有内容从顶部对齐，不留空 */
   height: 310px !important; /* 略微调高，给底部标签留出呼吸感 *//* 物理锁定整张卡片高度，防止破格 */
@@ -462,6 +462,19 @@ span.cm-hashtag-end {
 .grid-view table td:last-child {
   font-size: 0 !important; 
 }
+/* 对应 INDEX 中的 cls: "infinite-sentinel-marker" */
+.infinite-sentinel-marker {
+  display: block !important;
+  height: 60px !important;    /* 必须有高度，否则无法被观察器捕获 */
+  width: 100% !important;
+  line-height: 60px !important;
+  text-align: center !important;
+  margin: 20px 0 !important;
+  color: var(--cg-green-vivid) !important;
+  font-size: 0.85rem !important;
+  visibility: visible !important;
+  clear: both !important;      /* 防止被上面的浮动卡片遮挡 */
+}
 
 /* 恢复标签内文字的大小 */
 .grid-view table td:last-child .tag {
@@ -473,6 +486,16 @@ span.cm-hashtag-end {
   border: none !important;
   background: none !important;
   box-shadow: none !important;
+}
+/* 优化哨兵状态切换 */
+.infinite-sentinel-marker:empty {
+  display: none !important;
+}
+
+/* 确保文字不会因为 4K 屏的宽度被挤到看不见的地方 */
+#gallery-grid {
+  position: relative !important;
+  overflow: visible !important; /* 必须让哨兵在文档流中被探测到 */
 }
 /* --- 11. 返回顶部按钮 (绿色风格统一版) --- */
 #back-to-top {
@@ -504,10 +527,6 @@ span.cm-hashtag-end {
   width: 24px;
   height: 24px;
   fill: currentColor;
-}
-/* 强制屏蔽死锁的提示文字 */
-#load-done-text {
-  display: none !important; /* 物理隐藏：除非脚本强行注入 style，否则绝不显示 */
 }
 
 [style*="color: purple"], [style*="rgb(107, 79, 187)"], .internal-link { color: var(--cg-green-vivid) !important; }
