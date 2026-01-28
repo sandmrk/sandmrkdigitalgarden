@@ -139,8 +139,8 @@ img[src*="banner"] {
 .grid-view table thead, .grid-view table td::before { display: none !important; content: none !important; }
 .grid-view table tbody { display: contents !important; }
 .grid-view table tr {
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   height: 300px !important; /* 物理锁定整张卡片高度，防止破格 */
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
@@ -154,6 +154,10 @@ img[src*="banner"] {
   border-top-right-radius: 12px !important;
   height: 160px !important; 
   background-color: var(--cg-green-light) !important; /* 图片不显示时的底色占位 */
+  min-height: 160px !important; /* 强制锁定最小高度 */
+  max-height: 160px !important; /* 强制锁定最大高度 */
+  margin: 0 !important;
+  padding: 0 !important;
   position: relative !important;
   overflow: hidden !important;  /* 只剪裁顶部圆角，底部直角延伸 */
 }
@@ -168,6 +172,10 @@ img[src*="banner"] {
 .grid-view table tr:hover {
   transform: translateY(-4px) !important;
   box-shadow: 0 12px 24px -6px rgba(76, 175, 80, 0.15) !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* 像手机 App 封面一样自动裁剪填充 */
+  display: block !important;
   border-color: var(--cg-green-vivid) !important;
 }
 
@@ -176,7 +184,9 @@ img[src*="banner"] {
 .grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
 /* 标题 */
-.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }.grid-view table td:nth-child(2) a { 
+.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important;
+  height: 60px !important; /* 给标题区一个固定“底座” */ }
+.grid-view table td:nth-child(2) a { 
   font-size: 0.9rem !important; 
   font-weight: 700 !important; 
   color: #2d3748 !important; 
