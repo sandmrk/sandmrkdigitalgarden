@@ -61,9 +61,7 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
         {% include imp %}
       {% endfor %}
       </header>
-      {% for imp in dynamics.common.beforeContent %}
-        {% include imp %}
-      {% endfor %}
+
       {% for imp in dynamics.notes.beforeContent %}
         {% include imp %}
       {% endfor %}
@@ -111,10 +109,6 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
         #back-to-top:hover { transform: translateY(-5px); background-color: #388E3C !important; }
         :root { --waline-theme-color: #4CAF50 !important; }
       </style>
-      {% for imp in dynamics.common.afterContent %}
-        {% include imp %}
-      {% endfor %}
-
       {% for imp in dynamics.common.afterContent %}
         {% include imp %}
       {% endfor %}
