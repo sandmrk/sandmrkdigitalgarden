@@ -22,8 +22,10 @@
   /* 侧边栏专用变量重置 */
   --nav-item-color: #2d3748 !important;
   --nav-text-color: #2d3748 !important;
-  
+    /* 
   --dg-content-max-width: 900px !important;
+   修改第 31 行 */
+  --dg-content-max-width: min(1200px, 95vw) !important;
   --dg-navbar-height: 52px !important;
   --dg-search-box-width: 700px !important;
   --dg-sidebar-top: 60px !important; 
@@ -139,18 +141,20 @@ img[src*="banner"] {
 .grid-view table tr {
   display: flex;
   flex-direction: column;
+  height: 300px !important; /* 物理锁定整张卡片高度，防止破格 */
   background: #fff !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.03) !important;
-  transition: transform 0.2s ease !important;
+  overflow: hidden !important; /* 强制切掉任何溢出的内容 */
   margin: 0 !important;
 }
-
 /* 图片容器：只顶部圆角剪裁（完美融合卡片） */
 .grid-view table td:first-child {
   border-top-left-radius: 12px !important;
   border-top-right-radius: 12px !important;
+  height: 160px !important; 
+  background-color: var(--cg-green-light) !important; /* 图片不显示时的底色占位 */
+  position: relative !important;
   overflow: hidden !important;  /* 只剪裁顶部圆角，底部直角延伸 */
 }
 
@@ -172,9 +176,18 @@ img[src*="banner"] {
 .grid-view table td:first-child img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
 /* 标题 */
-.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }
-.grid-view table td:nth-child(2) a { font-size: 0.9rem !important; font-weight: 700 !important; color: #2d3748 !important; line-height: 1.4 !important; }
-
+.grid-view table td:nth-child(2) { padding: 12px 14px 4px !important; }.grid-view table td:nth-child(2) a { 
+  font-size: 0.9rem !important; 
+  font-weight: 700 !important; 
+  color: #2d3748 !important; 
+  line-height: 1.4 !important; 
+  height: 2.8em !important;   /* 关键：强制锁定两行高度，多一个像素都不行 */
+  display: -webkit-box; 
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical; 
+  overflow: hidden;
+  margin-bottom: 4px !important;
+}
 /* 元数据 */
 .grid-view table td:nth-child(3), .grid-view table td:nth-child(4) { padding: 0 14px !important; font-size: 0.75rem !important; color: var(--cg-text-muted) !important; }
 /* 标签 */
