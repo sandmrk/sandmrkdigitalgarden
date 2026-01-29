@@ -127,56 +127,50 @@
     .vertical-mode td:nth-child(2) { height: auto !important; padding: 16px !important; }
   }
 </style>
-
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-    const tag = new URLSearchParams(window.location.search).get('tag');
-    if (!tag) return;
-    document.getElementById('target-tag-name').innerText = tag;
-
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTag = urlParams.get('tag');
     const container = document.getElementById('tag-results-container');
+    
+    if (!targetTag) return;
+    document.getElementById('target-tag-name').innerText = targetTag;
 
-    try {
-        // 增加缓存清除参数，防止 fetch 拿到旧的空页面
-        const response = await fetch('/?t=' + Date.now());
-        const html = await response.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        
-        // 关键：Digital Garden 的渲染可能有延迟，尝试定位 table
-        const allRows = doc.querySelectorAll('.grid-view table tbody tr');
-        
-        if (allRows.length === 0) {
-            // 如果没抓到 tr，尝试直接从内容区域找
-            console.warn("未发现表格行，首页可能尚未渲染完成");
-            container.innerHTML = "正在同步画廊数据，请稍后...";
-            // 3秒后尝试重试一次
-            setTimeout(() => location.reload(), 3000);
-            return;
-        }
+    // 1. 从储物箱取货
+    const rawData = localStorage.getItem('cgfan_gallery_data');
+    if (!rawData) {
+        container.innerHTML = `<div style="text-align:center;padding:100px;">
+            <p>由于是首次访问或缓存失效，请先返回<a href="/">首页</a>加载数据。</p>
+        </div>`;
+        return;
+    }
 
-        const listBody = document.createElement('tbody');
-        let found = 0;
+    const allPages = JSON.parse(rawData);
+    
+    // 2. 筛选并构建 HTML
+    let htmlRows = "";
+    const filtered = allPages.filter(p => p.tags.includes(targetTag));
 
-        allRows.forEach(row => {
-            // 匹配隐藏的 .row-tags 或者行内文本
-            if (row.innerText.toLowerCase().includes(tag.toLowerCase())) {
-                const clonedRow = row.cloneNode(true);
-                clonedRow.style.display = 'flex'; 
-                listBody.appendChild(clonedRow);
-                found++;
-            }
+    if (filtered.length > 0) {
+        filtered.forEach(p => {
+            // 处理图片反代
+            const proxiedCover = p.cover.includes('twimg.com') 
+                ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}` 
+                : p.cover;
+
+            htmlRows += `
+            <tr style="display: flex !important;">
+                <td><img src="${proxiedCover}" style="width:100%;height:100%;object-fit:cover;"></td>
+                <td>
+                    <a href="/notes/${p.path.split('/').pop().replace('.md','')}/" style="font-weight:bold;font-size:1.1rem;text-decoration:none;color:var(--cg-text-black);">${p.title}</a>
+                    <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">👤 ${p.author} | 📅 ${p.created}</div>
+                </td>
+            </tr>`;
         });
-
-        if (found > 0) {
-            const table = document.createElement('table');
-            table.appendChild(listBody);
-            container.innerHTML = '';
-            container.appendChild(table);
-        } else {
-            container.innerHTML = `<div style="padding:100px;">未找到 #${tag} 相关的灵感</div>`;
-        }
-    } catch (e) {
-        container.innerHTML = "连接画廊实验室失败。";
+        
+        container.innerHTML = `<table><tbody>${htmlRows}</tbody></table>`;
+    } else {
+        container.innerHTML = `<div style="text-align:center;padding:100px;">未发现标签 #${targetTag} 的内容。</div>`;
     }
 });
 </script>
