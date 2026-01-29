@@ -130,26 +130,53 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tag = urlParams.get('tag');
-    const container = document.getElementById('tag-results-container');
-    
-    if (!tag) {
-        container.innerHTML = "参数错误：未检测到标签";
-        return;
-    }
-    
+    const tag = new URLSearchParams(window.location.search).get('tag');
+    if (!tag) return;
     document.getElementById('target-tag-name').innerText = tag;
 
+    const container = document.getElementById('tag-results-container');
+
     try {
-        // 1. 抓取首页 HTML
-        const response = await fetch('/');
-        const htmlText = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
+        // 增加缓存清除参数，防止 fetch 拿到旧的空页面
+        const response = await fetch('/?t=' + Date.now());
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
         
-        // 2. 定位首页的卡片行
+        // 关键：Digital Garden 的渲染可能有延迟，尝试定位 table
         const allRows = doc.querySelectorAll('.grid-view table tbody tr');
         
-        const listTable = document.createElement('table');
+        if (allRows.length === 0) {
+            // 如果没抓到 tr，尝试直接从内容区域找
+            console.warn("未发现表格行，首页可能尚未渲染完成");
+            container.innerHTML = "正在同步画廊数据，请稍后...";
+            // 3秒后尝试重试一次
+            setTimeout(() => location.reload(), 3000);
+            return;
+        }
+
         const listBody = document.createElement('tbody');
+        let found = 0;
+
+        allRows.forEach(row => {
+            // 匹配隐藏的 .row-tags 或者行内文本
+            if (row.innerText.toLowerCase().includes(tag.toLowerCase())) {
+                const clonedRow = row.cloneNode(true);
+                clonedRow.style.display = 'flex'; 
+                listBody.appendChild(clonedRow);
+                found++;
+            }
+        });
+
+        if (found > 0) {
+            const table = document.createElement('table');
+            table.appendChild(listBody);
+            container.innerHTML = '';
+            container.appendChild(table);
+        } else {
+            container.innerHTML = `<div style="padding:100px;">未找到 #${tag} 相关的灵感</div>`;
+        }
+    } catch (e) {
+        container.innerHTML = "连接画廊实验室失败。";
+    }
+});
+</script>
