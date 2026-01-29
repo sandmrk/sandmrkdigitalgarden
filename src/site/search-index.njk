@@ -4,24 +4,28 @@ eleventyExcludeFromCollections: true
 ---
 [
 {%- for post in collections.note -%}
-  {# 排除 标签页、首页 和 自身 #}
-  {%- if post.url != '/tag/' and post.url != '/' and 'searchIndex' not in post.url -%}
-  {
-      "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
-      "date": "{{ post.date }}",
-      "url": "{{ post.url }}",
-      "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
-      "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
-      "content": {{ post.templateContent | striptags(true) | link | jsonify | safe }},
-      "tags": [
-          {{ post.templateContent | link | searchableTags | safe }}
-          {%- if post.data.tags -%}
-             {%- for tag in post.data.tags -%}
-               , "{{ tag | replace('"', '\\"') }}"
-             {%- endfor -%}
-          {%- endif -%}
-      ]
-  }{% if not loop.last %},{% endif %}
-  {%- endif -%}
+{
+    "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
+    "date": "{{ post.date }}",
+    "url": "{{ post.url }}",
+    "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
+    "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
+    "content": {{ post.templateContent | striptags(true) | link | jsonify | safe }},
+    "tags": [
+        {#- 第一部分：从正文提取的标签 -#}
+        {{ post.templateContent | link | searchableTags | safe }}
+        
+        {#- 连接符：如果两边都有标签，才加逗号 -#}
+        {%- set contentTags = post.templateContent | link | searchableTags -%}
+        {%- if contentTags and post.data.tags -%},{%- endif -%}
+
+        {#- 第二部分：Frontmatter 定义的标签 -#}
+        {%- if post.data.tags -%}
+            {%- for tag in post.data.tags -%}
+                "{{ tag | replace('"', '\\"') }}"{%- if not loop.last -%},{%- endif -%}
+            {%- endfor -%}
+        {%- endif -%}
+    ]
+}{% if not loop.last %},{% endif %}
 {%- endfor -%}
 ]
