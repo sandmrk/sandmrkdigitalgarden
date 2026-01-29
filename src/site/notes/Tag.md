@@ -4,19 +4,15 @@
 
 
 <style>
-  /* 使用 RGB 避开插件的 # 标签转换逻辑，并增加强制力 */
   :root {
     --cg-green: rgb(76, 175, 80) !important;
     --cg-text: rgb(45, 55, 72) !important;
     --cg-border: rgba(0, 0, 0, 0.1) !important;
   }
 
-  /* 隐藏所有多余的系统元素 */
   h1[data-note-icon], .header-meta, .header-tags { display: none !important; }
-  
   #cgfan-tag-page { max-width: 850px; margin: 0 auto; padding: 40px 20px; font-family: sans-serif; }
 
-  /* 头部设计 */
   .tag-header { text-align: center; margin-bottom: 50px; }
   .selection-badge { 
     display: inline-block; padding: 4px 14px; background: rgb(232, 245, 233) !important; 
@@ -25,35 +21,26 @@
   #tag-title { font-size: 3rem !important; font-weight: 900 !important; color: var(--cg-text) !important; margin: 15px 0 !important; }
   #tag-title span { color: var(--cg-green) !important; }
 
-  /* 核心：立体细边框卡片 */
+  /* 增强立体感细边框卡片 */
   .tag-card { 
-    display: flex !important; 
-    background: rgb(255, 255, 255) !important; 
+    display: flex !important; background: rgb(255, 255, 255) !important; 
     border: 1px solid var(--cg-border) !important; 
-    border-radius: 18px !important; 
-    overflow: hidden !important; 
-    margin-bottom: 25px !important; 
-    height: 180px !important; 
-    /* 极致立体感阴影 */
+    border-radius: 18px !important; overflow: hidden !important; 
+    margin-bottom: 25px !important; height: 180px !important; 
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 20px -5px rgba(0, 0, 0, 0.08) !important;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
   }
-
   .tag-card:hover { 
     transform: translateY(-6px) !important;
     border-color: var(--cg-green) !important;
     box-shadow: 0 20px 30px -10px rgba(76, 175, 80, 0.2) !important;
   }
 
-  /* 左侧图片区 */
   .tag-card-img { width: 260px; flex-shrink: 0; height: 100%; background: rgb(247, 250, 247); border-right: 1px solid var(--cg-border); overflow: hidden; }
-  .tag-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
-  .tag-card:hover .tag-card-img img { transform: scale(1.08); }
+  .tag-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  /* 右侧文字内容 */
   .tag-card-body { flex-grow: 1; padding: 22px 28px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
   .tag-card-title { font-size: 1.2rem !important; font-weight: 800 !important; color: var(--cg-text) !important; text-decoration: none !important; line-height: 1.4 !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  
   .tag-card-meta { font-size: 12px; color: rgb(113, 128, 150); display: flex; gap: 15px; }
   .tag-pill { font-size: 11px; padding: 2px 8px; background: rgb(241, 245, 241); border-radius: 4px; color: rgb(74, 85, 104); }
   .tag-pill.active { background: rgb(232, 245, 233); color: var(--cg-green); font-weight: bold; border: 1px solid rgba(76, 175, 80, 0.2); }
@@ -102,32 +89,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let html = "";
         filtered.forEach(item => {
-            // --- 终极图片提取引擎 ---
-            let imgUrl = item.cover || "";
-            
-            if (!imgUrl && item.content) {
-                // 暴力嗅探：匹配 http 且以图片后缀结尾的连续字符
-                // 增加对 Twitter 各种混乱格式的兼容
-                const sniffRegex = /(https?:\/\/[^\s"'<>]+?\.(?:jpg|jpeg|png|gif|webp|large|orig))/gi;
-                const matches = item.content.match(sniffRegex);
-                if (matches) imgUrl = matches[0];
+            // --- 【核心重写】反干扰提取逻辑 ---
+            let imgUrl = "";
+
+            // 1. 如果有 cover 字段，先处理 cover
+            if (item.cover && item.cover.trim() !== "") {
+                imgUrl = item.cover;
+            } 
+            // 2. 如果没有 cover，从内容中强制嗅探
+            else if (item.content) {
+                // 解决 Taggify 干扰：匹配所有包含 http 且以图片后缀结尾的连续文本，即使它在 <a> 标签里
+                // 这里用一个更宽松的正则：抓取所有符合 URL 格式且含图片后缀的部分
+                const matches = item.content.match(/https?:\/\/[^\s"'<>]+?\.(?:jpg|jpeg|png|gif|webp|large|orig)/gi);
+                if (matches && matches.length > 0) {
+                    imgUrl = matches[0];
+                }
             }
 
             let finalImg = "";
             if (imgUrl) {
-                // 清理插件可能附带的 HTML 字符
-                let cleanUrl = imgUrl.split(/[">]/)[0].trim();
+                // 剔除可能存在的 HTML 闭合标签干扰（如 ">）
+                let cleanUrl = imgUrl.replace(/[">].*$/, '').trim();
                 
+                // 处理 Twitter 链接
                 if (cleanUrl.includes('twimg.com')) {
-                    // 彻底去除 Twitter 原有的参数，强制 Weserv 处理高清大图
-                    let parts = cleanUrl.split('?')[0].split(':');
-                    let baseUrl = parts[0] + (parts[1] ? ':' + parts[1] : '');
-                    finalImg = `https://images.weserv.nl/?url=${encodeURIComponent(baseUrl)}&default=https://via.placeholder.com/600x400?text=CGFAN`;
+                    // 彻底砍掉后缀参数，Weserv 对纯净 URL 容错率最高
+                    let baseUrl = cleanUrl.split('?')[0].split(':')[0] + ':' + cleanUrl.split('?')[0].split(':')[1];
+                    // 拼接高清参数
+                    finalImg = `https://images.weserv.nl/?url=${encodeURIComponent(baseUrl)}&default=https://via.placeholder.com/600x400?text=Wait+for+Load...`;
                 } else {
                     finalImg = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}`;
                 }
             } else {
-                finalImg = "https://via.placeholder.com/600x400?text=CGFAN+Collection";
+                finalImg = "https://via.placeholder.com/600x400?text=CGFAN+No+Image";
             }
 
             let dateStr = '-';
@@ -145,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             html += `
             <div class="tag-card">
                 <a href="${item.url}" class="tag-card-img">
-                    <img src="${finalImg}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400?text=Wait+for+Load...'">
+                    <img src="${finalImg}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400?text=Image+404'">
                 </a>
                 <div class="tag-card-body">
                     <div>
@@ -163,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = filtered.length > 0 ? html : "未发现相关灵感";
 
     } catch (e) {
+        console.error("Tag Page Error:", e);
         container.innerHTML = "数据同步异常，请刷新重试";
     }
 });
