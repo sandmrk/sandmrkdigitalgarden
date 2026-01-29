@@ -93,9 +93,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/searchIndex.json?v=' + Date.now());
         const allData = await response.json();
         
+        // 1. 筛选逻辑
         const filtered = allData.filter(item => {
             if (item.url === '/' || item.url.includes('/tag/')) return false;
             return item.tags && item.tags.some(t => t.toLowerCase() === normalizedTarget);
+        });
+
+        // 2. 新增排序逻辑：新的在上面 (降序)
+        filtered.sort((a, b) => {
+            const dateA = new Date(a.date || 0);
+            const dateB = new Date(b.date || 0);
+            return dateB - dateA; // 比较毫秒数，大的在前
         });
 
         let html = "";
