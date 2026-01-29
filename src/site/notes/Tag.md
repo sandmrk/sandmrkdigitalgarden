@@ -18,6 +18,9 @@
 </div>
 
 <style>
+// 在 tag.md 的脚本开头加入这一行
+console.log("正在尝试读取标签：", targetTag);
+console.log("本地存储的所有数据：", localStorage.getItem('cgfan_gallery_data'));
   /* 强制垂直列表布局 */
   .vertical-mode { margin-top: 40px; }
   .vertical-mode table {
