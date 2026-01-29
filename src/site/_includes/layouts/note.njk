@@ -15,11 +15,13 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
   </head>
   <body class="theme-{{meta.baseTheme}} markdown-preview-view markdown-rendered markdown-preview-section {% if settings.dgShowFileTree !== true %}no-filetree{% endif %} {% if settings.dgHomeLink === true and settings.dgShowFileTree !== true %}has-navbar{% endif %} {{meta.bodyClasses}}">
     {%include "components/notegrowthhistory.njk"%}
+    
     {% if settings.dgShowFileTree !== true %}
       {%include "components/navbar.njk"%}
     {%else%}
       {%include "components/filetree.njk"%}
     {% endif %}
+
     {% if settings.dgEnableSearch === true %}
       {%include "components/searchContainer.njk"%}
     {% endif %}
@@ -34,62 +36,147 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
             <div class="header-tags">
               {% for tag in tags %}
                 {% if tag != 'gardenEntry' and tag !='note' %}
-                  <a class="tag" onclick="toggleTagSearch(this)">#{{tag}}</a>
+                  <a class="tag" onclick="toggleTagSearch(this)">
+                    #{{tag}}
+                  </a>
                 {% endif %}
               {% endfor %}
             </div>
           {% endif %}
+          {%- if meta.timestampSettings.showCreated or meta.timestampSettings.showUpdated -%}
+          <div class="timestamps">
+            {%- if meta.timestampSettings.showCreated and created -%}
+            <div><i data-lucide="calendar-plus"></i> <span class="human-date" data-date="{{created}}"></span></div>
+            {%- endif -%}
+            {%- if meta.timestampSettings.showUpdated and updated -%}
+            <div><i data-lucide="calendar-clock"></i> <span class="human-date" data-date="{{updated}}"></span></div>
+            {%- endif -%}
+          </div>
+          {%- endif -%}
         </div>
+      {% for imp in dynamics.common.header %}
+        {% include imp %}
+      {% endfor %}
+      {% for imp in dynamics.notes.header %}
+        {% include imp %}
+      {% endfor %}
       </header>
-      
-      <div id="note-content-wrapper">
-          {{ content | hideDataview | taggify | link | safe}}
-      </div>
+
+      {% for imp in dynamics.notes.beforeContent %}
+        {% include imp %}
+      {% endfor %}
+      {{ content | hideDataview | taggify | link | safe}}
 
       <button id="back-to-top" title="返回顶部">↑</button>
+
       <div id="cgfan-comments" style="margin-top: 50px;">
           <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
           <div id="waline"></div>
       </div>
-    </main>
-    
-    {%include "components/lucideIcons.njk"%}
-    
-    <script>
-    (function() {
-        const fixImages = () => {
-            document.querySelectorAll('img').forEach(img => {
-                const src = img.getAttribute('src');
-                if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
-                    img.setAttribute('src', `https://images.weserv.nl/?url=${encodeURIComponent(src)}&w=600`);
-                    img.onerror = () => img.style.display = 'none';
-                }
-            });
-        };
-        fixImages();
-        setInterval(fixImages, 2000); // 轮询以防动态加载
 
-        // Waline & BackToTop
-        import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
-            init({ el: '#waline', serverURL: 'https://comments.cgfan.com', lang: 'zh-CN', reaction: true, dark: 'auto' });
+      <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
+      <script type="module">
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+
+        // 初始化 Waline (已去掉登录禁用，恢复正常登录模式)
+        init({
+          el: '#waline',
+          serverURL: 'https://comments.cgfan.com',
+          lang: 'zh-CN',
+          reaction: true,
+          dark: 'auto',
+          placeholder: '请登录后发表你的评论...',
         });
+
+        // 返回顶部逻辑
         const btt = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => btt.style.display = window.scrollY > 500 ? 'flex' : 'none');
-        if(btt) btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-    })();
-    </script>
-    
-    <style>
-      #back-to-top {
-        position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
-        border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
-        border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px; transition: all 0.3s ease;
-      }
-      :root { --waline-theme-color: #4CAF50 !important; }
-    </style>
-    
-    {% for imp in dynamics.common.footer %}{% include imp %}{% endfor %}
-    {% for imp in dynamics.notes.footer %}{% include imp %}{% endfor %}
+        window.addEventListener('scroll', () => {
+          btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
+        });
+        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+      </script>
+
+      <style>
+        /* 统一绿色风格 */
+        #back-to-top {
+          position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
+          border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
+          border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
+          box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
+          transition: all 0.3s ease;
+        }
+        #back-to-top:hover { transform: translateY(-5px); background-color: #388E3C !important; }
+        :root { --waline-theme-color: #4CAF50 !important; }
+      </style>
+      {% for imp in dynamics.common.afterContent %}
+        {% include imp %}
+      {% endfor %}
+      {% for imp in dynamics.notes.afterContent %}
+        {% include imp %}
+      {% endfor %}
+<script>
+  (function() {
+    const fixImages = () => {
+      // 寻找所有图片标签
+      const imgs = document.querySelectorAll('.markdown-rendered img, .content img');
+      imgs.forEach(img => {
+        const src = img.getAttribute('src');
+        // 检查是否是 X 的图片链接且尚未被反代
+        if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
+          // 替换为反代链接，保持原始清晰度
+          const proxiedSrc = `https://images.weserv.nl/?url=${encodeURIComponent(src)}`;
+          img.setAttribute('src', proxiedSrc);
+          
+          // 处理加载失败的情况
+          img.onerror = function() {
+            this.style.display = 'none'; // 如果反代也挂了，隐藏坏图，保持页面整洁
+          };
+        }
+      });
+    };
+
+    // 初始执行
+    fixImages();
+
+    // 针对 Digital Garden 的动态渲染机制，每隔 1 秒复检一次（执行 5 次）
+    let checks = 0;
+    const interval = setInterval(() => {
+      fixImages();
+      if (++checks >= 5) clearInterval(interval);
+    }, 1000);
+  })();
+</script>
+
+    // 3. 解决单页应用不刷新的轮询补丁
+    render();
+    const timer = setInterval(() => {
+        if (document.getElementById('tag-results-list') && !document.querySelector('#tag-results-list div')) {
+            render();
+        }
+    }, 1000);
+    setTimeout(() => clearInterval(timer), 10000); // 10秒后停止轮询
+})();
+</script>
+    </main>
+
+    {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
+      {%include "components/sidebar.njk"%}
+    {% endif %}
+
+    {% if settings.dgLinkPreview === true %}
+      {%include "components/linkPreview.njk"%}
+    {% endif %}
+    {% include "components/references.njk" %}
+    {% include "components/timestamps.njk" %}
+    {% for imp in dynamics.common.footer %}
+      {% include imp %}
+    {% endfor %}
+    {% for imp in dynamics.notes.footer %}
+      {% include imp %}
+    {% endfor %}
+    {%include "components/lucideIcons.njk"%}
+    {% if contentClasses and "canvas-page" in contentClasses %}
+      {%include "components/canvasScript.njk"%}
+    {% endif %}
   </body>
 </html>
