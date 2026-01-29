@@ -1,10 +1,12 @@
 {% extends "layouts/base.njk" %}
 
 {% block content %}
-<main class="content">
+<main class="content cm-s-obsidian">
   <header class="tag-page-header">
     <div class="tag-badge">SELECTION</div>
-    <h1>#<span id="target-tag-name">加载中...</span></h1>
+    <h1 style="color: var(--cg-green-vivid) !important; font-size: 2.5rem !important;">
+        #<span id="target-tag-name">...</span>
+    </h1>
     <p class="tag-subtitle">正在为您聚合相关灵感与提示词</p>
     <a href="/" class="back-link">← 返回画廊主页</a>
   </header>
@@ -15,162 +17,156 @@
       <p>正在从星辰中汲取创意...</p>
     </div>
   </div>
+
+  <div id="cgfan-comments" style="margin-top:50px">
+    <hr style="border:none;border-top:1px dashed #e8f5e9;margin-bottom:30px">
+    <div id="waline"></div>
+  </div>
 </main>
 
 <style>
-  /* --- 1. 布局核心：强制垂直模式 --- */
+  /* --- 强制垂直模式样式 --- */
   .vertical-mode table {
     display: flex !important;
     flex-direction: column !important;
-    gap: 24px !important;
+    gap: 20px !important;
     max-width: 800px !important;
     margin: 0 auto !important;
     border: none !important;
-    padding-bottom: 100px !important;
   }
-
-  .vertical-mode table tbody { 
-    display: contents !important; 
-  }
-
-  /* --- 2. 卡片重组：左图右文 (App 级精致感) --- */
+  .vertical-mode table tbody { display: contents !important; }
+  
   .vertical-mode table tr {
     display: flex !important;
-    flex-direction: row !important; /* 横向排列 */
+    flex-direction: row !important; /* 图左文右 */
     height: 180px !important;
-    background: #ffffff !important;
+    background: #fff !important;
     border: 1px solid rgba(0,0,0,0.06) !important;
     border-radius: 16px !important;
     overflow: hidden !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+    margin-bottom: 10px !important;
+    transition: transform 0.2s ease !important;
   }
-
+  
   .vertical-mode table tr:hover {
-    transform: translateX(12px) !important; /* 侧滑位移感 */
+    transform: translateX(10px) !important;
     border-color: var(--cg-green-vivid) !important;
-    box-shadow: 0 12px 24px rgba(76, 175, 80, 0.1) !important;
   }
 
-  /* 图片区：强制固定比例 */
   .vertical-mode td:first-child {
     width: 280px !important;
     height: 180px !important;
     flex-shrink: 0;
-    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .vertical-mode td:first-child img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 
-  /* 文字区：纵向居中分布 */
   .vertical-mode td:nth-child(2) {
     padding: 24px !important;
-    flex-grow: 1;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
-    height: 180px !important;
     border: none !important;
   }
 
-  /* 隐藏不需要显示的元数据列，保持列表简洁 */
+  /* 隐藏不需要的元数据列 */
   .vertical-mode td:nth-child(3), 
   .vertical-mode td:nth-child(4), 
   .vertical-mode td:last-child {
     display: none !important;
   }
 
-  /* --- 3. 装饰性样式 --- */
-  .tag-page-header {
-    text-align: center;
-    padding: 60px 0 40px;
-  }
+  .tag-page-header { text-align: center; padding: 40px 0; }
   .tag-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background: var(--cg-green-light);
-    color: var(--cg-green-vivid);
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+    display: inline-block; padding: 4px 12px; background: #e8f5e9;
+    color: #4caf50; border-radius: 20px; font-size: 12px; font-weight: bold;
   }
-  .tag-page-header h1 {
-    font-size: 2.5rem !important;
-    color: var(--cg-text-black) !important;
-    margin: 0 !important;
-  }
-  .tag-subtitle { color: var(--text-muted); margin-top: 8px; }
-  .back-link {
-    display: inline-block;
-    margin-top: 20px;
-    color: var(--cg-green-vivid);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  /* 加载动画 */
-  #loading-spinner { text-align: center; padding: 100px 0; color: var(--text-muted); }
   .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid var(--cg-green-light);
-    border-top: 3px solid var(--cg-green-vivid);
-    border-radius: 50%;
-    margin: 0 auto 16px;
-    animation: spin 1s linear infinite;
+    width: 30px; height: 30px; border: 3px solid #e8f5e9;
+    border-top: 3px solid #4caf50; border-radius: 50%;
+    margin: 0 auto 10px; animation: spin 1s linear infinite;
   }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-  /* 移动端适配：垂直模式回归堆叠 */
+  
   @media (max-width: 600px) {
     .vertical-mode table tr { flex-direction: column !important; height: auto !important; }
     .vertical-mode td:first-child { width: 100% !important; height: 160px !important; }
-    .vertical-mode td:nth-child(2) { height: auto !important; padding: 16px !important; }
   }
 </style>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetTag = urlParams.get('tag');
-    const container = document.getElementById('tag-results-container');
-    
-    if (!targetTag) return;
-    document.getElementById('target-tag-name').innerText = targetTag;
 
-    // 1. 从储物箱取货
-    const rawData = localStorage.getItem('cgfan_gallery_data');
-    if (!rawData) {
-        container.innerHTML = `<div style="text-align:center;padding:100px;">
-            <p>由于是首次访问或缓存失效，请先返回<a href="/">首页</a>加载数据。</p>
-        </div>`;
-        return;
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const tag = new URLSearchParams(window.location.search).get('tag');
+    if (!tag) return;
+    document.getElementById('target-tag-name').innerText = tag;
+
+    const container = document.getElementById('tag-results-container');
+
+    // 优先尝试从 LocalStorage 读取（首页需已配置存入逻辑）
+    const cachedData = localStorage.getItem('cgfan_gallery_data');
+    
+    if (cachedData) {
+        renderFromCache(JSON.parse(cachedData), tag);
+    } else {
+        // 如果没缓存，尝试从首页 fetch
+        fetchAndRender(tag);
     }
 
-    const allPages = JSON.parse(rawData);
-    
-    // 2. 筛选并构建 HTML
-    let htmlRows = "";
-    const filtered = allPages.filter(p => p.tags.includes(targetTag));
+    function renderFromCache(data, targetTag) {
+        let html = "";
+        const filtered = data.filter(p => p.tags.includes(targetTag));
+        if (filtered.length > 0) {
+            filtered.forEach(p => {
+                const img = p.cover.includes('twimg.com') ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}` : p.cover;
+                html += `<tr style="display:flex !important">
+                    <td><img src="${img}"></td>
+                    <td>
+                        <a href="/notes/${p.path.split('/').pop().replace('.md','')}/" style="font-weight:bold;font-size:1.1rem;text-decoration:none;color:#2d3748;">${p.title}</a>
+                        <div style="font-size:0.8rem;color:#5e6c84;margin-top:8px;">👤 ${p.author} | 📅 ${p.created}</div>
+                    </td>
+                </tr>`;
+            });
+            container.innerHTML = `<table><tbody>${html}</tbody></table>`;
+        } else {
+            container.innerHTML = "未找到相关内容";
+        }
+    }
 
-    if (filtered.length > 0) {
-        filtered.forEach(p => {
-            // 处理图片反代
-            const proxiedCover = p.cover.includes('twimg.com') 
-                ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}` 
-                : p.cover;
+    async function fetchAndRender(targetTag) {
+        try {
+            const resp = await fetch('/');
+            const text = await resp.text();
+            const doc = new DOMParser().parseFromString(text, 'text/html');
+            const rows = doc.querySelectorAll('.grid-view table tbody tr');
+            const listBody = document.createElement('tbody');
+            let found = 0;
 
-            htmlRows += `
-            <tr style="display: flex !important;">
-                <td><img src="${proxiedCover}" style="width:100%;height:100%;object-fit:cover;"></td>
-                <td>
-                    <a href="/notes/${p.path.split('/').pop().replace('.md','')}/" style="font-weight:bold;font-size:1.1rem;text-decoration:none;color:var(--cg-text-black);">${p.title}</a>
-                    <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">👤 ${p.author} | 📅 ${p.created}</div>
-                </td>
-            </tr>`;
-        });
-        
-        container.innerHTML = `<table><tbody>${htmlRows}</tbody></table>`;
-    } else {
-        container.innerHTML = `<div style="text-align:center;padding:100px;">未发现标签 #${targetTag} 的内容。</div>`;
+            rows.forEach(row => {
+                if (row.innerText.includes('#' + targetTag)) {
+                    const clone = row.cloneNode(true);
+                    clone.style.display = 'flex';
+                    listBody.appendChild(clone);
+                    found++;
+                }
+            });
+
+            if (found > 0) {
+                const table = document.createElement('table');
+                table.appendChild(listBody);
+                container.innerHTML = '';
+                container.appendChild(table);
+            } else {
+                container.innerHTML = "未找到内容";
+            }
+        } catch (e) {
+            container.innerHTML = "加载失败";
+        }
     }
 });
 </script>
+{% endblock %}
