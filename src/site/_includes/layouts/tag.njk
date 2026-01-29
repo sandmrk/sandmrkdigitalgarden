@@ -1,48 +1,89 @@
----
-layout: base.njk
----
+{% extends "layouts/base.njk" %}
+
+{% block content %}
 <main class="content">
-  <header class="tag-header">
-    <h1>🏷️ 标签: <span id="current-tag">加载中...</span></h1>
-    <a href="/" class="back-home">← 返回全量画廊</a>
+  <header style="text-align: center; margin-bottom: 40px; padding-top: 20px;">
+    <h1 style="color: var(--cg-green-vivid); font-size: 2rem;">🏷️ #<span id="target-tag-name">...</span></h1>
+    <p style="color: var(--text-muted);">为您精选的专题灵感</p>
+    <a href="/" style="color: var(--cg-green-vivid); text-decoration: none; font-weight: 600;">← 返回全量画廊</a>
   </header>
 
-  <div class="grid-view vertical-mode" id="gallery-grid">
+  <div class="grid-view vertical-mode" id="tag-results-container">
+    <div id="loading-status" style="text-align: center; padding: 50px; color: var(--text-muted);">
+      正在搜寻相关灵感...
     </div>
+  </div>
 </main>
 
 <style>
-  /* 强制垂直排列逻辑 */
+  /* 强制垂直列表布局 */
   .vertical-mode table {
     display: flex !important;
     flex-direction: column !important;
-    gap: 24px !important;
-    max-width: 700px !important; /* 垂直阅读最舒适的宽度 */
+    gap: 20px !important;
+    max-width: 800px !important;
     margin: 0 auto !important;
+    border: none !important;
   }
+  .vertical-mode table tbody { display: contents !important; }
   .vertical-mode table tr {
     display: flex !important;
-    flex-direction: row !important; /* 左图右文模式 */
+    flex-direction: row !important; /* 横向排布：图左文右 */
     height: 180px !important;
-    width: 100% !important;
+    background: #fff !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    transition: transform 0.2s ease !important;
   }
-  .vertical-mode table td:first-child {
-    width: 240px !important; /* 缩略图固定宽度 */
-    height: 180px !important;
-  }
-  .tag-header { text-align: center; margin-bottom: 40px; }
-  .back-home { color: var(--cg-green-vivid); font-weight: 600; text-decoration: none; }
+  .vertical-mode table tr:hover { transform: translateX(10px); border-color: var(--cg-green-vivid) !important; }
+  .vertical-mode td:first-child { width: 280px !important; height: 180px !important; flex-shrink: 0; }
+  .vertical-mode td:nth-child(2) { padding: 20px !important; flex-grow: 1; }
+  /* 隐藏不需要的列 */
+  .vertical-mode td:nth-child(3), .vertical-mode td:nth-child(4) { display: none !important; }
 </style>
 
 <script>
-  // 核心逻辑：从 URL 获取标签并渲染
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const tag = urlParams.get('tag');
-    if (tag) {
-      document.getElementById('current-tag').innerText = tag;
-      // 这里可以复用 Dataview 生成的表格，或者通过脚本筛选
-      // 建议：直接在 INDEX 点击时将数据存入 localStorage 或重新请求数据
+    if (!tag) return;
+    document.getElementById('target-tag-name').innerText = tag;
+
+    // 逻辑：异步抓取首页数据并筛选
+    try {
+        const response = await fetch('/');
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // 找到首页的所有行
+        const allRows = doc.querySelectorAll('.grid-view table tbody tr');
+        const container = document.getElementById('tag-results-container');
+        const listBody = document.createElement('table');
+        const tbody = document.createElement('tbody');
+        
+        let found = 0;
+        allRows.forEach(row => {
+            // 检查该行是否包含目标标签
+            if (row.innerText.includes('#' + tag)) {
+                const clonedRow = row.cloneNode(true);
+                clonedRow.style.display = 'flex'; // 确保显示
+                tbody.appendChild(clonedRow);
+                found++;
+            }
+        });
+
+        if (found > 0) {
+            listBody.appendChild(tbody);
+            container.innerHTML = '';
+            container.appendChild(listBody);
+        } else {
+            document.getElementById('loading-status').innerText = "未找到相关标签的记录。";
+        }
+    } catch (e) {
+        document.getElementById('loading-status').innerText = "加载失败，请刷新重试。";
     }
-  });
+});
 </script>
+{% endblock %}
