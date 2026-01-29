@@ -50,7 +50,6 @@ h1[data-note-icon], .header-meta { display: none !important; }
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .tag-card:hover {
     transform: translateY(-4px);
     border-color: #4CAF50;
@@ -165,10 +164,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         const response = await fetch('/searchIndex.json?v=' + Date.now());
+        if (!response.ok) throw new Error("Network error");
+        
         const allData = await response.json();
         
-        // 筛选逻辑
+        // 筛选逻辑 (在这里过滤掉首页和标签页)
         const filtered = allData.filter(item => {
+            // 排除系统页面
+            if (item.url === '/' || item.url.includes('/tag/')) return false;
+            
             if (!item.tags) return false;
             const tags = Array.isArray(item.tags) ? item.tags : [item.tags];
             return tags.some(t => t.toLowerCase() === normalizedTarget);
@@ -196,13 +200,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(imgUrl)}&w=400`;
             }
 
-            // 日期格式化 (JS端处理)
+            // 日期格式化
             let dateStr = '-';
             if (item.date) {
                 try {
                     const d = new Date(item.date);
-                    dateStr = d.toISOString().split('T')[0]; // 输出 YYYY-MM-DD
-                } catch(e) { dateStr = item.date; }
+                    if (!isNaN(d)) dateStr = d.toISOString().split('T')[0];
+                } catch(e) {}
             }
 
             // 标签高亮
@@ -236,8 +240,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.innerHTML = html;
 
     } catch (e) {
-        console.error(e);
-        container.innerHTML = `<div class="loading-state" style="color:#ef5350;">索引加载失败，请刷新。</div>`;
+        console.error("Parse Error:", e);
+        container.innerHTML = `<div class="loading-state" style="color:#ef5350;">
+            索引加载失败 (JSON解析错误)，请检查控制台。
+        </div>`;
     }
 });
 </script>
