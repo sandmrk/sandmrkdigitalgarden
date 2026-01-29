@@ -491,7 +491,28 @@ span.cm-hashtag-end {
 .infinite-sentinel-marker:empty {
   display: none !important;
 }
+/* 建议加入 tag.njk 的局部样式 */
+.vertical-mode table tr {
+  display: flex !important;
+  flex-direction: row !important; /* 横向排布：图左文右 */
+  height: 180px !important;
+  margin-bottom: 20px !important;
+  background: #fff;
+  border-radius: 16px !important;
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
 
+.vertical-mode table tr:hover {
+  transform: translateX(8px); /* 侧滑微动效果 */
+  border-color: var(--cg-green-vivid);
+}
+
+.vertical-mode td:first-child {
+  width: 280px !important; /* 增大图片占比，突出视觉 */
+  height: 100% !important;
+  flex-shrink: 0;
+}
 /* 确保文字不会因为 4K 屏的宽度被挤到看不见的地方 */
 #gallery-grid {
   position: relative !important;
