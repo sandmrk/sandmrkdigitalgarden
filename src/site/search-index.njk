@@ -3,33 +3,27 @@ permalink: /searchIndex.json
 eleventyExcludeFromCollections: true
 ---
 [
+{%- set isFirst = true -%}
 {%- for post in collections.note -%}
-  {#- 1. 安全地收集所有标签 -#}
-  {%- set allTags = [] -%}
-  {%- if post.data.tags -%}
-    {%- for tag in post.data.tags -%}
-      {%- set allTags = (allTags.push(tag), allTags) -%}
-    {%- endfor -%}
-  {%- endif -%}
-
-  {#- 2. 排除掉不需要收录的系统页面 (如首页、标签页自身) -#}
+  {#- 排除掉首页、标签页和索引页自身 -#}
   {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
-  {
-      "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
-      "date": "{{ post.date }}",
-      "url": "{{ post.url }}",
-      "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
-      "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
-      
-      {#- 核心修改：移除 striptags，保留 HTML 标签以便提取图片 -#}
-      "content": {{ post.templateContent | jsonify | safe }},
-      
-      "tags": [
-          {%- for tag in allTags -%}
-              "{{ tag | replace('"', '\\"') }}"{%- if not loop.last -%},{%- endif -%}
-          {%- endfor -%}
-      ]
-  }{% if not loop.last %},{% endif %}
+    {%- if not isFirst -%},{%- endif -%}
+    {%- set isFirst = false -%}
+    {
+        "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
+        "date": "{{ post.date }}",
+        "url": "{{ post.url }}",
+        "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
+        "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
+        "content": {{ post.templateContent | jsonify | safe }},
+        "tags": [
+            {%- if post.data.tags -%}
+                {%- for tag in post.data.tags -%}
+                    "{{ tag | replace('"', '\\"') }}"{%- if not loop.last -%},{%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
+        ]
+    }
   {%- endif -%}
 {%- endfor -%}
 ]
