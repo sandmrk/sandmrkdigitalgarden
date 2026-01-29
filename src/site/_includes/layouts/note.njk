@@ -36,9 +36,7 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
             <div class="header-tags">
               {% for tag in tags %}
                 {% if tag != 'gardenEntry' and tag !='note' %}
-                  <a class="tag" onclick="toggleTagSearch(this)">
-                    #{{tag}}
-                  </a>
+                  <a class="tag" onclick="toggleTagSearch(this)">#{{tag}}</a>
                 {% endif %}
               {% endfor %}
             </div>
@@ -54,18 +52,15 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
           </div>
           {%- endif -%}
         </div>
-      {% for imp in dynamics.common.header %}
-        {% include imp %}
-      {% endfor %}
-      {% for imp in dynamics.notes.header %}
-        {% include imp %}
-      {% endfor %}
       </header>
 
       {% for imp in dynamics.notes.beforeContent %}
         {% include imp %}
       {% endfor %}
-      {{ content | hideDataview | taggify | link | safe}}
+
+      <div id="note-content-area">
+        {{ content | hideDataview | taggify | link | safe}}
+      </div>
 
       <button id="back-to-top" title="返回顶部">↑</button>
 
@@ -73,146 +68,6 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
           <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
           <div id="waline"></div>
       </div>
-
-      <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
-      <script type="module">
-        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-
-        // 初始化 Waline (已去掉登录禁用，恢复正常登录模式)
-        init({
-          el: '#waline',
-          serverURL: 'https://comments.cgfan.com',
-          lang: 'zh-CN',
-          reaction: true,
-          dark: 'auto',
-          placeholder: '请登录后发表你的评论...',
-        });
-
-        // 返回顶部逻辑
-        const btt = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-          btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
-        });
-        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-      </script>
-
-      <style>
-        /* 统一绿色风格 */
-        #back-to-top {
-          position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
-          border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
-          border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
-          box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
-          transition: all 0.3s ease;
-        }
-        #back-to-top:hover { transform: translateY(-5px); background-color: #388E3C !important; }
-        :root { --waline-theme-color: #4CAF50 !important; }
-      </style>
-      {% for imp in dynamics.common.afterContent %}
-        {% include imp %}
-      {% endfor %}
-      {% for imp in dynamics.notes.afterContent %}
-        {% include imp %}
-      {% endfor %}
-<script>
-  (function() {
-    const fixImages = () => {
-      // 寻找所有图片标签
-      const imgs = document.querySelectorAll('.markdown-rendered img, .content img');
-      imgs.forEach(img => {
-        const src = img.getAttribute('src');
-        // 检查是否是 X 的图片链接且尚未被反代
-        if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
-          // 替换为反代链接，保持原始清晰度
-          const proxiedSrc = `https://images.weserv.nl/?url=${encodeURIComponent(src)}`;
-          img.setAttribute('src', proxiedSrc);
-          
-          // 处理加载失败的情况
-          img.onerror = function() {
-            this.style.display = 'none'; // 如果反代也挂了，隐藏坏图，保持页面整洁
-          };
-        }
-      });
-    };
-
-    // 初始执行
-    fixImages();
-
-    // 针对 Digital Garden 的动态渲染机制，每隔 1 秒复检一次（执行 5 次）
-    let checks = 0;
-    const interval = setInterval(() => {
-      fixImages();
-      if (++checks >= 5) clearInterval(interval);
-    }, 1000);
-  })();
-</script>
-// 构建标签页
-<div id="tag-page-logic-container"></div>
-
-<script>
-(function() {
-    const isTagPage = window.location.pathname.includes('/tag/');
-    if (!isTagPage) return;
-
-    // 1. 构建标签页的视觉结构
-    const params = new URLSearchParams(window.location.search);
-    const targetTag = params.get('tag') || "未知标签";
-    
-    // 强制清理 note.njk 原有的内容，替换为我们的标签列表容器
-    const mainContent = document.querySelector('main.content') || document.body;
-    mainContent.innerHTML = `
-        <div style="text-align:center; padding: 40px 0;">
-            <div style="background:#e8f5e9; color:#4caf50; display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800;">SELECTION</div>
-            <h1 style="margin:10px 0 !important; color:var(--cg-text-black);">#<span id="target-tag-name">${targetTag}</span></h1>
-            <a href="/" style="color:#4caf50; text-decoration:none; font-weight:bold;">← 返回画廊首页</a>
-        </div>
-        <div id="tag-results-list" style="max-width:800px; margin:0 auto; padding:0 20px;">
-            <p style="text-align:center; color:#999;">正在从星辰中汲取创意...</p>
-        </div>
-    `;
-
-    // 2. 渲染数据
-    const render = () => {
-        const rawData = localStorage.getItem('cgfan_gallery_data');
-        const container = document.getElementById('tag-results-list');
-        if (!rawData) {
-            container.innerHTML = `<div style="text-align:center; padding:50px;">请先访问<a href="/">首页</a>同步数据。</div>`;
-            return;
-        }
-
-        const allPages = JSON.parse(rawData);
-        const filtered = allPages.filter(p => p.tags && p.tags.includes(targetTag));
-        
-        let htmlRows = "";
-        filtered.forEach(p => {
-            const img = p.cover.includes('twimg.com') ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}&w=400` : p.cover;
-            // 兼容性路径处理
-            const slug = p.path.split('/').pop().replace('.md','');
-            
-            htmlRows += `
-            <div style="display:flex; margin-bottom:20px; background:#fff; border:1px solid #eee; border-radius:16px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                <div style="width:140px; height:140px; flex-shrink:0;">
-                    <img src="${img}" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-                    <a href="/notes/${slug}/" style="font-weight:bold; color:#333; text-decoration:none; font-size:1.1rem; line-height:1.4;">${p.title}</a>
-                    <div style="font-size:12px; color:#999; margin-top:8px;">👤 ${p.author} | 📅 ${p.created}</div>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = filtered.length > 0 ? htmlRows : "尚未发现相关灵感。";
-    };
-
-    // 3. 解决单页应用不刷新的轮询补丁
-    render();
-    const timer = setInterval(() => {
-        if (document.getElementById('tag-results-list') && !document.querySelector('#tag-results-list div')) {
-            render();
-        }
-    }, 1000);
-    setTimeout(() => clearInterval(timer), 10000); // 10秒后停止轮询
-})();
-</script>
     </main>
 
     {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
@@ -224,15 +79,158 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
     {% endif %}
     {% include "components/references.njk" %}
     {% include "components/timestamps.njk" %}
+    
+    {%include "components/lucideIcons.njk"%}
+
+    <script>
+    (function() {
+        // 1. 图片反代自愈逻辑
+        const fixImages = () => {
+            const imgs = document.querySelectorAll('.markdown-rendered img, .content img, #tag-results-list img');
+            imgs.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
+                    img.setAttribute('src', `https://images.weserv.nl/?url=${encodeURIComponent(src)}`);
+                    img.onerror = function() { this.style.display = 'none'; };
+                }
+            });
+        };
+
+        // 2. 标签页渲染逻辑
+        const handleTagPage = () => {
+            const isTagPage = window.location.pathname.includes('/tag/');
+            if (!isTagPage) {
+                fixImages();
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const targetTag = params.get('tag');
+            if (!targetTag) return;
+
+            // 锁定内容区域并重组
+            const mainContent = document.querySelector('main.content');
+            if (mainContent && !document.getElementById('tag-results-list')) {
+                mainContent.innerHTML = `
+                    <div style="text-align:center; padding: 40px 0;">
+                        <div style="background:#e8f5e9; color:#4caf50; display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; letter-spacing:1px;">SELECTION</div>
+                        <h1 style="margin:10px 0 !important; font-size:2.2rem; color:var(--text-normal);">#<span id="target-tag-name">${targetTag}</span></h1>
+                        <a href="/" style="color:#4caf50; text-decoration:none; font-weight:bold; border-bottom:1.5px solid #4caf50; padding-bottom:2px;">← 返回画廊首页</a>
+                    </div>
+                    <div id="tag-results-list" style="max-width:800px; margin:0 auto; padding:0 20px 100px;">
+                        <p style="text-align:center; color:#999; padding:50px;">正在搜寻灵感缓存...</p>
+                    </div>
+                `;
+                // 隐藏侧边栏（如果存在）
+                const sidebars = document.querySelectorAll('.sidebar');
+                sidebars.forEach(s => s.style.display = 'none');
+            }
+
+            const rawData = localStorage.getItem('cgfan_gallery_data');
+            const container = document.getElementById('tag-results-list');
+            
+            if (!rawData) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:50px; border:1px dashed #eee; border-radius:16px;">
+                        <p style="color:#666; margin-bottom:15px;">未发现缓存数据，请先访问首页同步。</p>
+                        <a href="/" style="background:#4caf50; color:white; padding:8px 20px; border-radius:8px; text-decoration:none; display:inline-block;">点击前往首页</a>
+                    </div>`;
+                return;
+            }
+
+            try {
+                const allPages = JSON.parse(rawData);
+                const normalizedTarget = targetTag.replace('#', '').toLowerCase();
+                const filtered = allPages.filter(p => {
+                    return p.tags && p.tags.some(t => t.replace('#', '').toLowerCase() === normalizedTarget);
+                });
+
+                let htmlRows = "";
+                filtered.forEach(p => {
+                    const img = p.cover.includes('twimg.com') ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}&w=400` : p.cover;
+                    const slug = p.path.split('/').pop().replace('.md','');
+                    
+                    htmlRows += `
+                    <div class="tag-list-card" style="display:flex; margin-bottom:20px; background:#fff; border:1px solid rgba(0,0,0,0.06); border-radius:16px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.03); transition: transform 0.2s ease;">
+                        <div style="width:140px; height:140px; flex-shrink:0; background:#f5f5f5;">
+                            <img src="${img}" style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+                            <a href="/notes/${slug}/" style="font-weight:700; color:#333; text-decoration:none; font-size:1.15rem; line-height:1.4; margin-bottom:8px;">${p.title}</a>
+                            <div style="font-size:12px; color:#999; display:flex; gap:15px;">
+                                <span>👤 ${p.author}</span>
+                                <span>📅 ${p.created}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                
+                container.innerHTML = filtered.length > 0 ? htmlRows : `<div style="text-align:center;padding:50px;color:#999;">尚未发现 #${targetTag} 相关内容</div>`;
+                fixImages();
+            } catch (e) {
+                console.error("CGFAN Render Error:", e);
+                container.innerHTML = "渲染出错，请刷新。";
+            }
+        };
+
+        // 3. 运行逻辑
+        handleTagPage();
+        // 轮询补丁：确保 SPA 跳转后内容正确加载
+        let runCount = 0;
+        const interval = setInterval(() => {
+            if (window.location.pathname.includes('/tag/') && !document.querySelector('.tag-list-card')) {
+                handleTagPage();
+            }
+            if (++runCount > 10) clearInterval(interval);
+        }, 1000);
+
+        // 4. Waline & 返回顶部
+        const initWaline = () => {
+            if (document.getElementById('waline') && !window.location.pathname.includes('/tag/')) {
+                import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
+                    init({
+                        el: '#waline',
+                        serverURL: 'https://comments.cgfan.com',
+                        lang: 'zh-CN',
+                        reaction: true,
+                        dark: 'auto',
+                        placeholder: '请登录后发表你的评论...',
+                    });
+                });
+            }
+        };
+        initWaline();
+
+        const btt = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
+        });
+        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    })();
+    </script>
+
+    <style>
+      #back-to-top {
+        position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
+        border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
+        border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
+        transition: all 0.3s ease;
+      }
+      .tag-list-card:hover { transform: translateX(8px); border-color: #4CAF50 !important; }
+      :root { --waline-theme-color: #4CAF50 !important; }
+      /* 针对移动端隐藏侧边栏并调整卡片 */
+      @media (max-width: 600px) {
+        .tag-list-card { flex-direction: column !important; height: auto !important; }
+        .tag-list-card > div:first-child { width: 100% !important; height: 160px !important; }
+      }
+    </style>
+
     {% for imp in dynamics.common.footer %}
       {% include imp %}
     {% endfor %}
     {% for imp in dynamics.notes.footer %}
       {% include imp %}
     {% endfor %}
-    {%include "components/lucideIcons.njk"%}
-    {% if contentClasses and "canvas-page" in contentClasses %}
-      {%include "components/canvasScript.njk"%}
-    {% endif %}
   </body>
 </html>
