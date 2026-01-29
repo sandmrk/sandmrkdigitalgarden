@@ -8,14 +8,16 @@ eleventyExcludeFromCollections: true
     "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
     "date": "{{ post.date }}",
     "url": "{{ post.url }}",
-    "author": "{{ post.data.author if post.data.author else 'CGFan' }}",
-    "cover": "{{ post.data.cover if post.data.cover else '' }}",
+    "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
+    "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
     "content": {{ post.templateContent | striptags(true) | link | jsonify | safe }},
     "tags": [
-        {{ post.templateContent | link | searchableTags | safe }}
+        {%- set contentTags = post.templateContent | link | searchableTags -%}
+        {{ contentTags | safe }}
         {%- if post.data.tags -%}
+            {%- if contentTags and contentTags != "" -%},{%- endif -%}
             {%- for tag in post.data.tags -%}
-               , "{{ tag | validJson }}"
+                "{{ tag | validJson }}"{%- if not loop.last -%},{%- endif -%}
             {%- endfor -%}
         {%- endif -%}
     ]
