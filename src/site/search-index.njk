@@ -4,11 +4,11 @@ eleventyExcludeFromCollections: true
 ---
 [
 {%- for post in collections.note -%}
-  {# 核心修复：排除 标签页、首页 和 包含 'searchIndex' 的页面 #}
+  {# 排除 标签页、首页 和 自身 #}
   {%- if post.url != '/tag/' and post.url != '/' and 'searchIndex' not in post.url -%}
   {
       "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
-      "date": "{{ post.date | date('yyyy-MM-dd') }}",
+      "date": "{{ post.date }}",
       "url": "{{ post.url }}",
       "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
       "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
