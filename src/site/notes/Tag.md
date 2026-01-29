@@ -4,121 +4,77 @@
 
 
 <style>
-  /* 1. 基础配置：隐藏多余元素，对齐首页色调 */
+  /* 1. 核心视觉定义 */
   :root {
     --tag-primary: #4CAF50;
-    --tag-bg-sub: #f9fbf9;
-    --tag-text-main: #2d3748;
-    --tag-text-muted: #718096;
-    --tag-border: rgba(0,0,0,0.06);
+    --tag-bg-main: #fcfdfc;
+    --tag-shadow: rgba(0, 0, 0, 0.08);
+    --tag-shadow-hover: rgba(76, 175, 80, 0.15);
+    --tag-text-dark: #1a202c;
+    --tag-text-gray: #4a5568;
   }
 
   h1[data-note-icon], .header-meta { display: none !important; }
-  #cgfan-tag-page { max-width: 850px; margin: 0 auto; padding: 20px; font-family: inherit; }
+  body { background-color: var(--tag-bg-main); }
+  #cgfan-tag-page { max-width: 850px; margin: 0 auto; padding: 40px 20px; }
 
-  /* 2. 头部美化 */
-  .tag-header { text-align: center; padding: 60px 0 40px; }
+  /* 2. 头部立体感 */
+  .tag-header { text-align: center; margin-bottom: 60px; }
   .selection-badge { 
-    display: inline-block; padding: 4px 14px; background: #e8f5e9; 
+    display: inline-block; padding: 5px 16px; background: #e8f5e9; 
     color: var(--tag-primary); border-radius: 30px; font-size: 11px; 
-    font-weight: 800; letter-spacing: 2px; margin-bottom: 12px;
+    font-weight: 800; letter-spacing: 2px; margin-bottom: 15px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   }
-  #tag-title { font-size: 2.8rem !important; font-weight: 800 !important; color: var(--tag-text-main) !important; margin: 0 !important; }
+  #tag-title { font-size: 3rem !important; font-weight: 900 !important; color: var(--tag-text-dark) !important; margin: 0 !important; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
   #tag-title span { color: var(--tag-primary); }
-  .tag-subtitle { color: var(--tag-text-muted); margin-top: 10px; font-size: 0.95rem; }
-  .back-link { 
-    display: inline-block; margin-top: 25px; color: var(--tag-primary); 
-    text-decoration: none; font-weight: 700; font-size: 0.9rem;
-    transition: all 0.2s; border-bottom: 2px solid transparent;
-  }
-  .back-link:hover { border-bottom-color: var(--tag-primary); opacity: 0.8; }
+  .back-link { color: var(--tag-primary); text-decoration: none; font-weight: 700; border-bottom: 2px solid #e8f5e9; transition: all 0.3s; }
+  .back-link:hover { border-bottom-color: var(--tag-primary); background: #f0fdf4; padding: 2px 8px; border-radius: 4px; }
 
-  /* 3. 卡片列表布局 (仿首页美化) */
+  /* 3. 增强立体感卡片 */
   .tag-card { 
-    display: flex !important; background: #fff; border: 1px solid var(--tag-border); 
-    border-radius: 20px; overflow: hidden; margin-bottom: 28px; height: 190px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    display: flex !important; background: #ffffff; 
+    border: 1px solid rgba(0,0,0,0.04); border-radius: 22px; 
+    overflow: hidden; margin-bottom: 30px; height: 190px; 
+    /* 立体阴影效果 */
+    box-shadow: 0 10px 25px -5px var(--tag-shadow), 0 8px 10px -6px var(--tag-shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
+
   .tag-card:hover { 
-    transform: translateY(-5px) translateX(8px); 
-    border-color: var(--tag-primary); 
-    box-shadow: 0 15px 35px rgba(76, 175, 80, 0.12); 
+    transform: translateY(-8px) scale(1.01);
+    border-color: rgba(76, 175, 80, 0.3);
+    box-shadow: 0 20px 35px -10px var(--tag-shadow-hover), 0 12px 15px -8px var(--tag-shadow-hover);
   }
 
-  /* 左侧图片区 */
-  .tag-card-img { 
-    width: 280px; flex-shrink: 0; height: 100%; background: #f0f2f0; 
-    display: block; overflow: hidden;
-  }
-  .tag-card-img img { 
-    width: 100%; height: 100%; object-fit: cover; display: block; 
-    transition: transform 0.6s ease;
-  }
-  .tag-card:hover .tag-card-img img { transform: scale(1.08); }
+  /* 图片区 */
+  .tag-card-img { width: 260px; flex-shrink: 0; height: 100%; background: #f7faf7; overflow: hidden; }
+  .tag-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s; }
+  .tag-card:hover .tag-card-img img { transform: scale(1.1); }
 
-  /* 右侧文字内容 */
-  .tag-card-body { 
-    flex-grow: 1; padding: 28px 32px; display: flex; 
-    flex-direction: column; justify-content: space-between; min-width: 0; 
-  }
-  .tag-card-title { 
-    font-size: 1.3rem; font-weight: 700; color: var(--tag-text-main); 
-    text-decoration: none; line-height: 1.45; display: -webkit-box; 
-    -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; 
-    margin-bottom: 10px;
-  }
-  .tag-card-title:hover { color: var(--tag-primary); }
+  /* 内容区 */
+  .tag-card-body { flex-grow: 1; padding: 25px 30px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+  .tag-card-title { font-size: 1.25rem; font-weight: 800; color: var(--tag-text-dark); text-decoration: none; line-height: 1.5; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  
+  /* 元数据 */
+  .tag-card-meta { font-size: 13px; color: var(--tag-text-gray); display: flex; gap: 15px; margin-bottom: 12px; }
+  .tag-pill { font-size: 11px; padding: 3px 10px; background: #f1f5f1; color: #667085; border-radius: 6px; border: 1px solid transparent; }
+  .tag-pill.active { background: #e8f5e9; color: var(--tag-primary); border-color: #c8e6c9; font-weight: 800; box-shadow: 0 2px 4px rgba(76,175,80,0.1); }
 
-  /* 作者与日期信息 */
-  .tag-card-meta { 
-    font-size: 13px; color: var(--tag-text-muted); display: flex; gap: 20px; 
-    align-items: center; margin-bottom: 15px;
-  }
-  .tag-card-meta span { display: flex; align-items: center; gap: 6px; }
-
-  /* 标签云与高亮逻辑 */
-  .tag-card-tags { display: flex; flex-wrap: wrap; gap: 8px; height: 26px; overflow: hidden; }
-  .tag-pill { 
-    font-size: 11px; padding: 3px 10px; background: #f5f7f5; 
-    color: var(--tag-text-muted); border-radius: 6px; border: 1px solid #edf2f0;
-    transition: all 0.2s;
-  }
-  .tag-pill.active { 
-    background: #e8f5e9; color: var(--tag-primary); 
-    border-color: #c8e6c9; font-weight: 800; 
-  }
-
-  /* 4. 移动端适配：垂直堆叠 */
   @media (max-width: 650px) {
-    .tag-card { flex-direction: column !important; height: auto !important; margin: 0 10px 25px; }
+    .tag-card { flex-direction: column !important; height: auto !important; }
     .tag-card-img { width: 100% !important; height: 200px !important; }
-    .tag-card-body { padding: 20px !important; }
-    .tag-card-title { font-size: 1.15rem; }
-    .tag-card-tags { height: auto; } /* 移动端展开所有标签 */
   }
-
-  /* 加载动画 */
-  .loading-state { text-align: center; padding: 80px 0; color: var(--tag-text-muted); }
-  .spinner {
-    width: 35px; height: 35px; border: 3px solid #eee; border-top: 3px solid var(--tag-primary);
-    border-radius: 50%; margin: 0 auto 20px; animation: tag-spin 1s linear infinite;
-  }
-  @keyframes tag-spin { to { transform: rotate(360deg); } }
 </style>
 
 <div id="cgfan-tag-page">
     <div class="tag-header">
         <div class="selection-badge">SELECTION</div>
         <h1 id="tag-title">#<span>...</span></h1>
-        <p class="tag-subtitle">正在为您聚合灵感索引...</p>
         <a href="/" class="back-link">← 返回全量画廊</a>
     </div>
     <div id="tag-results">
-        <div class="loading-state">
-            <div class="spinner"></div>
-            <p>正在从画廊提取灵感...</p>
-        </div>
+        <div style="text-align:center; padding:80px; color:#999;">正在同步数据库...</div>
     </div>
 </div>
 
@@ -131,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!targetTag) {
         titleSpan.innerText = "全部";
-        container.innerHTML = `<div class="loading-state">请从首页选择感兴趣的标签。</div>`;
+        container.innerHTML = "请返回首页选择标签";
         return;
     }
 
@@ -142,55 +98,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/searchIndex.json?v=' + Date.now());
         const allData = await response.json();
         
-        // 过滤系统页面并匹配标签
         const filtered = allData.filter(item => {
             if (item.url === '/' || item.url.includes('/tag/')) return false;
             if (!item.tags) return false;
             return item.tags.some(t => t.toLowerCase() === normalizedTarget);
         });
 
-        if (filtered.length === 0) {
-            container.innerHTML = `<div class="loading-state">尚未收录关于 #${targetTag} 的内容。</div>`;
-            return;
-        }
-
         let html = "";
         filtered.forEach(item => {
-            // 封面图逻辑
+            // --- 关键：精准提取并编码图片链接 ---
             let imgUrl = item.cover;
             if (!imgUrl && item.content) {
-                const mdMatch = item.content.match(/!\[.*?\]\((.*?)\)/);
-                if (mdMatch) { imgUrl = mdMatch[1]; } 
-                else {
-                    const urlMatch = item.content.match(/https?:\/\/[^\s]+?\.(jpg|jpeg|png|gif|webp)/i);
-                    if (urlMatch) imgUrl = urlMatch[0];
+                const match = item.content.match(/!\[.*?\]\((.*?)\)/) || item.content.match(/https?:\/\/[^\s]+?\.(jpg|jpeg|png|gif|webp)/i);
+                if (match) imgUrl = match[1] || match[0];
+            }
+
+            // --- 强制符合要求的 Weserv 格式 ---
+            let finalImg = "https://via.placeholder.com/600x400?text=CGFAN";
+            if (imgUrl) {
+                // 如果是 X/Twitter 链接，进行双重编码处理
+                if (imgUrl.includes('twimg.com')) {
+                    // 先处理常见的缩略图后缀
+                    let cleanUrl = imgUrl.split('?')[0].split('&')[0]; 
+                    if (!cleanUrl.endsWith('.jpg') && !cleanUrl.endsWith('.png')) cleanUrl += '.jpg';
+                    finalImg = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}%3Alarge`;
+                } else {
+                    finalImg = `https://images.weserv.nl/?url=${encodeURIComponent(imgUrl)}`;
                 }
             }
-            if (!imgUrl) imgUrl = "https://via.placeholder.com/600x400?text=CGFAN+Collection";
 
-            // 反代处理
-            if (imgUrl.includes('twimg.com')) {
-                imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(imgUrl)}&w=600`;
-            }
-
-            // 日期美化
             let dateStr = '-';
             if (item.date) {
                 const d = new Date(item.date);
                 if (!isNaN(d)) dateStr = d.toISOString().split('T')[0];
             }
 
-            // 标签高亮：标记当前活跃标签
             const tagsHtml = item.tags.map(t => {
                 if (t === 'gardenEntry' || t === 'note') return '';
-                const isActive = t.toLowerCase() === normalizedTarget ? 'active' : '';
-                return `<span class="tag-pill ${isActive}">#${t}</span>`;
+                const active = t.toLowerCase() === normalizedTarget ? 'active' : '';
+                return `<span class="tag-pill ${active}">#${t}</span>`;
             }).join('');
 
             html += `
             <div class="tag-card">
                 <a href="${item.url}" class="tag-card-img">
-                    <img src="${imgUrl}" loading="lazy">
+                    <img src="${finalImg}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Load+Error'">
                 </a>
                 <div class="tag-card-body">
                     <div>
@@ -205,12 +157,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>`;
         });
 
-        container.innerHTML = html;
-        document.querySelector('.tag-subtitle').innerText = `已为您发现 ${filtered.length} 个相关灵感`;
+        container.innerHTML = filtered.length > 0 ? html : "未发现相关内容";
 
     } catch (e) {
-        console.error(e);
-        container.innerHTML = `<div class="loading-state">同步失败，请刷新首页重试。</div>`;
+        container.innerHTML = "加载异常，请刷新首页";
     }
 });
 </script>
