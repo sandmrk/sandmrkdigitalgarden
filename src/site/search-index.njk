@@ -12,13 +12,11 @@ eleventyExcludeFromCollections: true
     "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
     "content": {{ post.templateContent | striptags(true) | link | jsonify | safe }},
     "tags": [
-        {%- set contentTags = post.templateContent | link | searchableTags -%}
-        {{ contentTags | safe }}
+        {{ post.templateContent | link | searchableTags | safe }}
         {%- if post.data.tags -%}
-            {%- if contentTags and contentTags != "" -%},{%- endif -%}
-            {%- for tag in post.data.tags -%}
-                "{{ tag | validJson }}"{%- if not loop.last -%},{%- endif -%}
-            {%- endfor -%}
+           {%- for tag in post.data.tags -%}
+             , "{{ tag | replace('"', '\\"') }}"
+           {%- endfor -%}
         {%- endif -%}
     ]
 }{% if not loop.last %},{% endif %}
