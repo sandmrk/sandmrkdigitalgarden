@@ -27,77 +27,55 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
     {% endif %}
 
     <main class="content cm-s-obsidian {{contentClasses}}">
-      <header>
-        {% if settings.dgShowInlineTitle === true %}
-          <h1 data-note-icon="{% if noteIcon %}{{noteIcon}}{% else %}{{meta.noteIconsSettings.default}}{% endif %}">{% if title %}{{ title }}{% else %}{{ page.fileSlug }}{% endif %}</h1>
-        {% endif %}
-        <div class="header-meta">
-          {% if settings.dgShowTags === true and tags %}
-            <div class="header-tags">
-              {% for tag in tags %}
-                {% if tag != 'gardenEntry' and tag !='note' %}
-                  <a class="tag" onclick="toggleTagSearch(this)">#{{tag}}</a>
-                {% endif %}
-              {% endfor %}
-            </div>
+      <div id="cgfan-main-wrapper">
+        <header>
+          {% if settings.dgShowInlineTitle === true %}
+            <h1 data-note-icon="{% if noteIcon %}{{noteIcon}}{% else %}{{meta.noteIconsSettings.default}}{% endif %}">{% if title %}{{ title }}{% else %}{{ page.fileSlug }}{% endif %}</h1>
           {% endif %}
-          {%- if meta.timestampSettings.showCreated or meta.timestampSettings.showUpdated -%}
-          <div class="timestamps">
-            {%- if meta.timestampSettings.showCreated and created -%}
-            <div><i data-lucide="calendar-plus"></i> <span class="human-date" data-date="{{created}}"></span></div>
-            {%- endif -%}
-            {%- if meta.timestampSettings.showUpdated and updated -%}
-            <div><i data-lucide="calendar-clock"></i> <span class="human-date" data-date="{{updated}}"></span></div>
-            {%- endif -%}
+          <div class="header-meta">
+            {% if settings.dgShowTags === true and tags %}
+              <div class="header-tags">
+                {% for tag in tags %}
+                  {% if tag != 'gardenEntry' and tag !='note' %}
+                    <a class="tag" onclick="toggleTagSearch(this)">#{{tag}}</a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
-          {%- endif -%}
+        </header>
+
+        <div id="note-content-area">
+          {{ content | hideDataview | taggify | link | safe}}
         </div>
-      </header>
 
-      {% for imp in dynamics.notes.beforeContent %}
-        {% include imp %}
-      {% endfor %}
-
-      <div id="note-content-area">
-        {{ content | hideDataview | taggify | link | safe}}
+        <div id="cgfan-comments" style="margin-top: 50px;">
+            <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
+            <div id="waline"></div>
+        </div>
       </div>
 
       <button id="back-to-top" title="返回顶部">↑</button>
-
-      <div id="cgfan-comments" style="margin-top: 50px;">
-          <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
-          <div id="waline"></div>
-      </div>
     </main>
 
-    {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
-      {%include "components/sidebar.njk"%}
-    {% endif %}
-
-    {% if settings.dgLinkPreview === true %}
-      {%include "components/linkPreview.njk"%}
-    {% endif %}
-    {% include "components/references.njk" %}
-    {% include "components/timestamps.njk" %}
-    
     {%include "components/lucideIcons.njk"%}
 
     <script>
     (function() {
         // 1. 图片反代自愈逻辑
         const fixImages = () => {
-            const imgs = document.querySelectorAll('.markdown-rendered img, .content img, #tag-results-list img');
+            const imgs = document.querySelectorAll('img');
             imgs.forEach(img => {
                 const src = img.getAttribute('src');
                 if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
-                    img.setAttribute('src', `https://images.weserv.nl/?url=${encodeURIComponent(src)}`);
-                    img.onerror = function() { this.style.display = 'none'; };
+                    img.setAttribute('src', `https://images.weserv.nl/?url=${encodeURIComponent(src)}&w=600`);
+                    img.onerror = function() { this.closest('.tag-list-card')?.remove() || (this.style.display = 'none'); };
                 }
             });
         };
 
-        // 2. 标签页渲染逻辑
-        const handleTagPage = () => {
+        // 2. 核心渲染逻辑
+        const initCGFanEngine = async () => {
             const isTagPage = window.location.pathname.includes('/tag/');
             if (!isTagPage) {
                 fixImages();
@@ -106,131 +84,165 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
 
             const params = new URLSearchParams(window.location.search);
             const targetTag = params.get('tag');
-            if (!targetTag) return;
-
-            // 锁定内容区域并重组
-            const mainContent = document.querySelector('main.content');
-            if (mainContent && !document.getElementById('tag-results-list')) {
-                mainContent.innerHTML = `
-                    <div style="text-align:center; padding: 40px 0;">
-                        <div style="background:#e8f5e9; color:#4caf50; display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; letter-spacing:1px;">SELECTION</div>
-                        <h1 style="margin:10px 0 !important; font-size:2.2rem; color:var(--text-normal);">#<span id="target-tag-name">${targetTag}</span></h1>
-                        <a href="/" style="color:#4caf50; text-decoration:none; font-weight:bold; border-bottom:1.5px solid #4caf50; padding-bottom:2px;">← 返回画廊首页</a>
-                    </div>
-                    <div id="tag-results-list" style="max-width:800px; margin:0 auto; padding:0 20px 100px;">
-                        <p style="text-align:center; color:#999; padding:50px;">正在搜寻灵感缓存...</p>
-                    </div>
-                `;
-                // 隐藏侧边栏（如果存在）
-                const sidebars = document.querySelectorAll('.sidebar');
-                sidebars.forEach(s => s.style.display = 'none');
-            }
-
-            const rawData = localStorage.getItem('cgfan_gallery_data');
-            const container = document.getElementById('tag-results-list');
+            const wrapper = document.getElementById('cgfan-main-wrapper');
             
-            if (!rawData) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:50px; border:1px dashed #eee; border-radius:16px;">
-                        <p style="color:#666; margin-bottom:15px;">未发现缓存数据，请先访问首页同步。</p>
-                        <a href="/" style="background:#4caf50; color:white; padding:8px 20px; border-radius:8px; text-decoration:none; display:inline-block;">点击前往首页</a>
-                    </div>`;
-                return;
-            }
+            if (!targetTag || !wrapper) return;
+
+            // 初始占位排版
+            wrapper.innerHTML = `
+                <div class="selection-header">
+                    <div class="selection-badge">SELECTION</div>
+                    <h1 class="selection-title">#<span>${targetTag}</span></h1>
+                    <p class="selection-subtitle">正在从画廊总部抓取灵感数据...</p>
+                    <a href="/" class="selection-back">← 返回全量画廊</a>
+                </div>
+                <div id="tag-results-container" class="selection-list">
+                    <div class="selection-loading">
+                        <div class="selection-spinner"></div>
+                        <p>数据桥接中...</p>
+                    </div>
+                </div>
+            `;
 
             try {
-                const allPages = JSON.parse(rawData);
-                const normalizedTarget = targetTag.replace('#', '').toLowerCase();
-                const filtered = allPages.filter(p => {
-                    return p.tags && p.tags.some(t => t.replace('#', '').toLowerCase() === normalizedTarget);
-                });
+                // --- 物理抓取首页数据库 ---
+                const response = await fetch('/');
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const dbElement = doc.getElementById('cgfan-static-database');
 
-                let htmlRows = "";
+                if (!dbElement) throw new Error("Database not found");
+
+                const allPages = JSON.parse(dbElement.value);
+                const normalizedTarget = targetTag.replace('#', '').toLowerCase();
+                
+                // 筛选逻辑
+                const filtered = allPages.filter(p => 
+                    p.tags && p.tags.some(t => t.replace('#', '').toLowerCase() === normalizedTarget)
+                );
+
+                const listContainer = document.getElementById('tag-results-container');
+                if (filtered.length === 0) {
+                    listContainer.innerHTML = `<div class="selection-empty">尚未在库中发现关于 #${targetTag} 的内容。</div>`;
+                    return;
+                }
+
+                // 渲染垂直卡片
+                let htmlContent = "";
                 filtered.forEach(p => {
                     const img = p.cover.includes('twimg.com') ? `https://images.weserv.nl/?url=${encodeURIComponent(p.cover)}&w=400` : p.cover;
                     const slug = p.path.split('/').pop().replace('.md','');
                     
-                    htmlRows += `
-                    <div class="tag-list-card" style="display:flex; margin-bottom:20px; background:#fff; border:1px solid rgba(0,0,0,0.06); border-radius:16px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.03); transition: transform 0.2s ease;">
-                        <div style="width:140px; height:140px; flex-shrink:0; background:#f5f5f5;">
-                            <img src="${img}" style="width:100%; height:100%; object-fit:cover;">
-                        </div>
-                        <div style="padding:20px; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-                            <a href="/notes/${slug}/" style="font-weight:700; color:#333; text-decoration:none; font-size:1.15rem; line-height:1.4; margin-bottom:8px;">${p.title}</a>
-                            <div style="font-size:12px; color:#999; display:flex; gap:15px;">
-                                <span>👤 ${p.author}</span>
-                                <span>📅 ${p.created}</span>
+                    htmlContent += `
+                        <div class="tag-list-card">
+                            <div class="card-thumb">
+                                <img src="${img}" loading="lazy">
+                            </div>
+                            <div class="card-body">
+                                <a href="/notes/${slug}/" class="card-title">${p.title}</a>
+                                <div class="card-meta">
+                                    <span><i data-lucide="user"></i> ${p.author}</span>
+                                    <span><i data-lucide="calendar"></i> ${p.created}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>`;
+                    `;
                 });
+
+                listContainer.innerHTML = htmlContent;
+                document.querySelector('.selection-subtitle').innerText = `已为您聚合 ${filtered.length} 个相关灵感`;
                 
-                container.innerHTML = filtered.length > 0 ? htmlRows : `<div style="text-align:center;padding:50px;color:#999;">尚未发现 #${targetTag} 相关内容</div>`;
+                // 重新触发图标和图片修复
+                if (window.lucide) lucide.createIcons();
                 fixImages();
+
             } catch (e) {
-                console.error("CGFAN Render Error:", e);
-                container.innerHTML = "渲染出错，请刷新。";
+                console.error("CGFAN Engine Error:", e);
+                document.getElementById('tag-results-container').innerHTML = `<div class="selection-empty">同步失败，请刷新首页后重试。</div>`;
             }
         };
 
-        // 3. 运行逻辑
-        handleTagPage();
-        // 轮询补丁：确保 SPA 跳转后内容正确加载
-        let runCount = 0;
-        const interval = setInterval(() => {
-            if (window.location.pathname.includes('/tag/') && !document.querySelector('.tag-list-card')) {
-                handleTagPage();
-            }
-            if (++runCount > 10) clearInterval(interval);
-        }, 1000);
-
-        // 4. Waline & 返回顶部
-        const initWaline = () => {
-            if (document.getElementById('waline') && !window.location.pathname.includes('/tag/')) {
-                import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
-                    init({
-                        el: '#waline',
-                        serverURL: 'https://comments.cgfan.com',
-                        lang: 'zh-CN',
-                        reaction: true,
-                        dark: 'auto',
-                        placeholder: '请登录后发表你的评论...',
-                    });
-                });
-            }
-        };
-        initWaline();
-
+        // 启动执行
+        initCGFanEngine();
+        
+        // 返回顶部
         const btt = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-            btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
-        });
-        btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (btt) {
+            window.addEventListener('scroll', () => btt.style.display = window.scrollY > 500 ? 'flex' : 'none');
+            btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     })();
     </script>
 
     <style>
-      #back-to-top {
-        position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
-        border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
-        border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
-        transition: all 0.3s ease;
+      :root {
+        --cg-primary: #4CAF50;
+        --cg-primary-dark: #388E3C;
+        --cg-bg-soft: #f9fbf9;
+        --cg-text-main: #2d3748;
+        --cg-text-muted: #718096;
       }
-      .tag-list-card:hover { transform: translateX(8px); border-color: #4CAF50 !important; }
-      :root { --waline-theme-color: #4CAF50 !important; }
-      /* 针对移动端隐藏侧边栏并调整卡片 */
-      @media (max-width: 600px) {
-        .tag-list-card { flex-direction: column !important; height: auto !important; }
-        .tag-list-card > div:first-child { width: 100% !important; height: 160px !important; }
+
+      /* 头部美化 */
+      .selection-header { text-align: center; padding: 60px 20px 40px; }
+      .selection-badge {
+        display: inline-block; padding: 4px 16px; background: #e8f5e9;
+        color: var(--cg-primary); border-radius: 30px; font-size: 11px;
+        font-weight: 800; letter-spacing: 2px; margin-bottom: 16px;
+      }
+      .selection-title { font-size: 2.8rem !important; font-weight: 800 !important; color: var(--cg-text-main) !important; margin: 0 !important; }
+      .selection-title span { color: var(--cg-primary); }
+      .selection-subtitle { color: var(--cg-text-muted); margin: 12px 0 24px; font-size: 0.95rem; }
+      .selection-back { color: var(--cg-primary); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: opacity 0.2s; }
+      .selection-back:hover { opacity: 0.7; }
+
+      /* 垂直卡片列表 */
+      .selection-list { max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
+      .tag-list-card {
+        display: flex; background: #fff; border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 20px; overflow: hidden; margin-bottom: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .tag-list-card:hover {
+        transform: translateY(-4px) translateX(8px);
+        border-color: var(--cg-primary);
+        box-shadow: 0 12px 30px rgba(76, 175, 80, 0.08);
+      }
+
+      .card-thumb { width: 180px; height: 180px; flex-shrink: 0; background: #f0f2f0; }
+      .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+      
+      .card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+      .card-title {
+        font-size: 1.3rem; font-weight: 700; color: var(--cg-text-main);
+        text-decoration: none; line-height: 1.4; margin-bottom: 12px;
+      }
+      .card-meta { display: flex; gap: 20px; font-size: 13px; color: var(--cg-text-muted); }
+      .card-meta span { display: flex; align-items: center; gap: 6px; }
+
+      /* 加载中与空状态 */
+      .selection-loading { text-align: center; padding: 100px 0; color: var(--cg-text-muted); }
+      .selection-spinner {
+        width: 32px; height: 32px; border: 3px solid #eee;
+        border-top: 3px solid var(--cg-primary); border-radius: 50%;
+        margin: 0 auto 16px; animation: cg-spin 1s linear infinite;
+      }
+      @keyframes cg-spin { to { transform: rotate(360deg); } }
+      .selection-empty { text-align: center; padding: 100px 20px; color: var(--cg-text-muted); border: 2px dashed #eee; border-radius: 20px; }
+
+      /* 移动端适配 */
+      @media (max-width: 650px) {
+        .tag-list-card { flex-direction: column; height: auto; border-radius: 16px; margin: 0 15px 20px; }
+        .card-thumb { width: 100%; height: 200px; }
+        .card-body { padding: 20px; }
+        .selection-title { font-size: 2rem !important; }
       }
     </style>
 
     {% for imp in dynamics.common.footer %}
       {% include imp %}
     {% endfor %}
-    {% for imp in dynamics.notes.footer %}
-      {% include imp %}
-    {% endfor %}
+    {%include "components/lucideIcons.njk"%}
   </body>
 </html>
