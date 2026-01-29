@@ -15,13 +15,11 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
   </head>
   <body class="theme-{{meta.baseTheme}} markdown-preview-view markdown-rendered markdown-preview-section {% if settings.dgShowFileTree !== true %}no-filetree{% endif %} {% if settings.dgHomeLink === true and settings.dgShowFileTree !== true %}has-navbar{% endif %} {{meta.bodyClasses}}">
     {%include "components/notegrowthhistory.njk"%}
-    
     {% if settings.dgShowFileTree !== true %}
       {%include "components/navbar.njk"%}
     {%else%}
       {%include "components/filetree.njk"%}
     {% endif %}
-
     {% if settings.dgEnableSearch === true %}
       {%include "components/searchContainer.njk"%}
     {% endif %}
@@ -43,68 +41,40 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
           {% endif %}
         </div>
       </header>
-
-      {% for imp in dynamics.notes.beforeContent %}
-        {% include imp %}
-      {% endfor %}
-
-      <div id="note-content-area">
-        {{ content | hideDataview | taggify | link | safe}}
+      
+      <div id="note-content-wrapper">
+          {{ content | hideDataview | taggify | link | safe}}
       </div>
 
       <button id="back-to-top" title="返回顶部">↑</button>
-
       <div id="cgfan-comments" style="margin-top: 50px;">
           <hr style="border:none; border-top:1px dashed #e8f5e9; margin-bottom: 30px;">
           <div id="waline"></div>
       </div>
     </main>
-
-    {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
-      {%include "components/sidebar.njk"%}
-    {% endif %}
-
-    {% if settings.dgLinkPreview === true %}
-      {%include "components/linkPreview.njk"%}
-    {% endif %}
-    {% include "components/references.njk" %}
-    {% include "components/timestamps.njk" %}
+    
     {%include "components/lucideIcons.njk"%}
-
+    
     <script>
     (function() {
-        // 图片反代
         const fixImages = () => {
-            const imgs = document.querySelectorAll('img');
-            imgs.forEach(img => {
+            document.querySelectorAll('img').forEach(img => {
                 const src = img.getAttribute('src');
                 if (src && src.includes('twimg.com') && !src.includes('images.weserv.nl')) {
                     img.setAttribute('src', `https://images.weserv.nl/?url=${encodeURIComponent(src)}&w=600`);
-                    img.onerror = function() { this.style.display = 'none'; };
+                    img.onerror = () => img.style.display = 'none';
                 }
             });
         };
         fixImages();
-        // 轮询修复（针对动态加载内容）
-        setInterval(fixImages, 2000);
+        setInterval(fixImages, 2000); // 轮询以防动态加载
 
-        // Waline 评论
+        // Waline & BackToTop
         import('https://unpkg.com/@waline/client@v3/dist/waline.js').then(({ init }) => {
-            init({
-                el: '#waline',
-                serverURL: 'https://comments.cgfan.com',
-                lang: 'zh-CN',
-                reaction: true,
-                dark: 'auto',
-                placeholder: '请登录后发表你的评论...',
-            });
+            init({ el: '#waline', serverURL: 'https://comments.cgfan.com', lang: 'zh-CN', reaction: true, dark: 'auto' });
         });
-
-        // 返回顶部
         const btt = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-             if(btt) btt.style.display = window.scrollY > 500 ? 'flex' : 'none';
-        });
+        window.addEventListener('scroll', () => btt.style.display = window.scrollY > 500 ? 'flex' : 'none');
         if(btt) btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     })();
     </script>
@@ -114,18 +84,12 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
         position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px;
         border-radius: 50%; background-color: #4CAF50 !important; color: white !important;
         border: none; cursor: pointer; display: none; align-items: center; justify-content: center;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px;
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); z-index: 9999; font-size: 20px; transition: all 0.3s ease;
       }
-      #back-to-top:hover { transform: translateY(-5px); background-color: #388E3C !important; }
       :root { --waline-theme-color: #4CAF50 !important; }
     </style>
-
-    {% for imp in dynamics.common.footer %}
-      {% include imp %}
-    {% endfor %}
-    {% for imp in dynamics.notes.footer %}
-      {% include imp %}
-    {% endfor %}
+    
+    {% for imp in dynamics.common.footer %}{% include imp %}{% endfor %}
+    {% for imp in dynamics.notes.footer %}{% include imp %}{% endfor %}
   </body>
 </html>
