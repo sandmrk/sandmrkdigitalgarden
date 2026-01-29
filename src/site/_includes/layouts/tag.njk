@@ -1,48 +1,155 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<main class="content">
+  <header class="tag-page-header">
+    <div class="tag-badge">SELECTION</div>
+    <h1>#<span id="target-tag-name">加载中...</span></h1>
+    <p class="tag-subtitle">正在为您聚合相关灵感与提示词</p>
+    <a href="/" class="back-link">← 返回画廊主页</a>
+  </header>
+
+  <div class="grid-view vertical-mode" id="tag-results-container">
+    <div id="loading-spinner">
+      <div class="spinner"></div>
+      <p>正在从星辰中汲取创意...</p>
+    </div>
+  </div>
+</main>
+
+<style>
+  /* --- 1. 布局核心：强制垂直模式 --- */
+  .vertical-mode table {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    border: none !important;
+    padding-bottom: 100px !important;
+  }
+
+  .vertical-mode table tbody { 
+    display: contents !important; 
+  }
+
+  /* --- 2. 卡片重组：左图右文 (App 级精致感) --- */
+  .vertical-mode table tr {
+    display: flex !important;
+    flex-direction: row !important; /* 横向排列 */
+    height: 180px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+  }
+
+  .vertical-mode table tr:hover {
+    transform: translateX(12px) !important; /* 侧滑位移感 */
+    border-color: var(--cg-green-vivid) !important;
+    box-shadow: 0 12px 24px rgba(76, 175, 80, 0.1) !important;
+  }
+
+  /* 图片区：强制固定比例 */
+  .vertical-mode td:first-child {
+    width: 280px !important;
+    height: 180px !important;
+    flex-shrink: 0;
+    border-radius: 0 !important;
+  }
+
+  /* 文字区：纵向居中分布 */
+  .vertical-mode td:nth-child(2) {
+    padding: 24px !important;
+    flex-grow: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    height: 180px !important;
+    border: none !important;
+  }
+
+  /* 隐藏不需要显示的元数据列，保持列表简洁 */
+  .vertical-mode td:nth-child(3), 
+  .vertical-mode td:nth-child(4), 
+  .vertical-mode td:last-child {
+    display: none !important;
+  }
+
+  /* --- 3. 装饰性样式 --- */
+  .tag-page-header {
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+  .tag-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--cg-green-light);
+    color: var(--cg-green-vivid);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  .tag-page-header h1 {
+    font-size: 2.5rem !important;
+    color: var(--cg-text-black) !important;
+    margin: 0 !important;
+  }
+  .tag-subtitle { color: var(--text-muted); margin-top: 8px; }
+  .back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--cg-green-vivid);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* 加载动画 */
+  #loading-spinner { text-align: center; padding: 100px 0; color: var(--text-muted); }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--cg-green-light);
+    border-top: 3px solid var(--cg-green-vivid);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  /* 移动端适配：垂直模式回归堆叠 */
+  @media (max-width: 600px) {
+    .vertical-mode table tr { flex-direction: column !important; height: auto !important; }
+    .vertical-mode td:first-child { width: 100% !important; height: 160px !important; }
+    .vertical-mode td:nth-child(2) { height: auto !important; padding: 16px !important; }
+  }
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
-    const tag = new URLSearchParams(window.location.search).get('tag');
-    if (!tag) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = urlParams.get('tag');
+    const container = document.getElementById('tag-results-container');
+    
+    if (!tag) {
+        container.innerHTML = "参数错误：未检测到标签";
+        return;
+    }
+    
     document.getElementById('target-tag-name').innerText = tag;
 
     try {
-        // 1. 抓取首页数据
+        // 1. 抓取首页 HTML
         const response = await fetch('/');
-        const text = await response.text();
-        const doc = new DOMParser().parseFromString(text, 'text/html');
+        const htmlText = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
         
-        // 2. [关键修复] 使用多重选择器定位，防止 ID 冲突
-        const allRows = doc.querySelectorAll('.grid-view table tbody tr, #gallery-grid table tbody tr');
-        const container = document.getElementById('tag-results-container');
+        // 2. 定位首页的卡片行
+        const allRows = doc.querySelectorAll('.grid-view table tbody tr');
         
-        if (allRows.length === 0) {
-            console.error("未在首页找到任何卡片行");
-            return;
-        }
-
         const listTable = document.createElement('table');
         const listBody = document.createElement('tbody');
-        let found = 0;
-
-        allRows.forEach(row => {
-            // 3. 增强筛选逻辑：不区分大小写，且只匹配完整的标签
-            if (row.innerText.includes('#' + tag)) {
-                const clonedRow = row.cloneNode(true);
-                // 强制重置样式，防止继承首页的 4 列网格样式
-                clonedRow.style.setProperty('display', 'flex', 'important');
-                listBody.appendChild(clonedRow);
-                found++;
-            }
-        });
-
-        if (found > 0) {
-            listTable.appendChild(listBody);
-            container.innerHTML = ''; 
-            container.appendChild(listTable);
-        } else {
-            container.innerHTML = `<div style="text-align:center;padding:50px;">未找到关于 #${tag} 的内容</div>`;
-        }
-    } catch (e) {
-        console.error("抓取失败:", e);
-    }
-});
-</script>
