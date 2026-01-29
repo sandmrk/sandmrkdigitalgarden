@@ -1,0 +1,48 @@
+---
+layout: base.njk
+---
+<main class="content">
+  <header class="tag-header">
+    <h1>🏷️ 标签: <span id="current-tag">加载中...</span></h1>
+    <a href="/" class="back-home">← 返回全量画廊</a>
+  </header>
+
+  <div class="grid-view vertical-mode" id="gallery-grid">
+    </div>
+</main>
+
+<style>
+  /* 强制垂直排列逻辑 */
+  .vertical-mode table {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    max-width: 700px !important; /* 垂直阅读最舒适的宽度 */
+    margin: 0 auto !important;
+  }
+  .vertical-mode table tr {
+    display: flex !important;
+    flex-direction: row !important; /* 左图右文模式 */
+    height: 180px !important;
+    width: 100% !important;
+  }
+  .vertical-mode table td:first-child {
+    width: 240px !important; /* 缩略图固定宽度 */
+    height: 180px !important;
+  }
+  .tag-header { text-align: center; margin-bottom: 40px; }
+  .back-home { color: var(--cg-green-vivid); font-weight: 600; text-decoration: none; }
+</style>
+
+<script>
+  // 核心逻辑：从 URL 获取标签并渲染
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = urlParams.get('tag');
+    if (tag) {
+      document.getElementById('current-tag').innerText = tag;
+      // 这里可以复用 Dataview 生成的表格，或者通过脚本筛选
+      // 建议：直接在 INDEX 点击时将数据存入 localStorage 或重新请求数据
+    }
+  });
+</script>
