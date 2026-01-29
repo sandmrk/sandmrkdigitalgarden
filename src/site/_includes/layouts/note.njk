@@ -146,17 +146,6 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
     }, 1000);
   })();
 </script>
-
-    // 3. 解决单页应用不刷新的轮询补丁
-    render();
-    const timer = setInterval(() => {
-        if (document.getElementById('tag-results-list') && !document.querySelector('#tag-results-list div')) {
-            render();
-        }
-    }, 1000);
-    setTimeout(() => clearInterval(timer), 10000); // 10秒后停止轮询
-})();
-</script>
     </main>
 
     {% if settings.dgShowBacklinks === true or settings.dgShowLocalGraph === true or settings.dgShowToc === true%}
