@@ -40,13 +40,13 @@ h1[data-note-icon], .header-meta { display: none !important; }
 
 /* 卡片样式核心 */
 .tag-card {
-    display: flex !important; /* 强制横向排列 */
+    display: flex !important;
     background: #fff;
     border: 1px solid rgba(0,0,0,0.06);
     border-radius: 16px;
     overflow: hidden;
     margin-bottom: 24px;
-    height: 180px; /* 固定高度 */
+    height: 180px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -57,13 +57,14 @@ h1[data-note-icon], .header-meta { display: none !important; }
     box-shadow: 0 12px 25px rgba(76, 175, 80, 0.1);
 }
 
-/* 左侧图片区 (固定宽度) */
+/* 左侧图片区 */
 .tag-card-img {
     width: 240px; 
     flex-shrink: 0;
     height: 100%;
     background: #f5f5f5;
     position: relative;
+    display: block;
 }
 .tag-card-img img {
     width: 100%;
@@ -79,7 +80,7 @@ h1[data-note-icon], .header-meta { display: none !important; }
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 0; /* 防止文字溢出 */
+    min-width: 0;
 }
 
 /* 标题 */
@@ -96,7 +97,7 @@ h1[data-note-icon], .header-meta { display: none !important; }
     overflow: hidden;
 }
 
-/* 元数据 (作者/时间) */
+/* 元数据 */
 .tag-card-meta {
     font-size: 13px;
     color: #718096;
@@ -128,14 +129,6 @@ h1[data-note-icon], .header-meta { display: none !important; }
     font-weight: bold;
 }
 
-/* 加载动画 */
-.spinner {
-    width: 30px; height: 30px; border: 3px solid #eee;
-    border-top: 3px solid #4CAF50; border-radius: 50%;
-    margin: 0 auto 15px; animation: spin 1s linear infinite;
-}
-@keyframes spin { 100% { transform: rotate(360deg); } }
-
 /* 移动端适配 */
 @media (max-width: 650px) {
     .tag-card { flex-direction: column !important; height: auto !important; }
@@ -143,6 +136,15 @@ h1[data-note-icon], .header-meta { display: none !important; }
     .tag-card-body { padding: 16px !important; }
     .tag-card-tags { height: auto !important; }
 }
+
+/* 加载动画 */
+.loading-state { text-align: center; padding: 60px; color: #999; }
+.spinner {
+    width: 30px; height: 30px; border: 3px solid #eee;
+    border-top: 3px solid #4CAF50; border-radius: 50%;
+    margin: 0 auto 15px; animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
 </style>
 
 <script>
@@ -154,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!targetTag) {
         titleSpan.innerText = "全部";
-        container.innerHTML = `<div style="text-align:center;padding:50px;color:#999;">请从首页点击标签进入。</div>`;
+        container.innerHTML = `<div class="loading-state">请从首页点击标签进入。</div>`;
         return;
     }
 
@@ -173,13 +175,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (filtered.length === 0) {
-            container.innerHTML = `<div style="text-align:center;padding:80px;color:#999;border:2px dashed #eee;border-radius:16px;">尚未收录 #${targetTag} 相关内容</div>`;
+            container.innerHTML = `<div class="loading-state" style="border:2px dashed #eee; border-radius:16px;">
+                尚未收录 #${targetTag} 相关内容
+            </div>`;
             return;
         }
 
         let html = "";
         filtered.forEach(item => {
-            // 图片提取
+            // 图片处理
             let imgUrl = item.cover;
             if (!imgUrl && item.content) {
                 const match = item.content.match(/src=["'](.*?)["']/) || item.content.match(/!\[.*?\]\((.*?)\)/);
@@ -190,6 +194,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Weserv 反代
             if (imgUrl.includes('twimg.com')) {
                 imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(imgUrl)}&w=400`;
+            }
+
+            // 日期格式化 (JS端处理)
+            let dateStr = '-';
+            if (item.date) {
+                try {
+                    const d = new Date(item.date);
+                    dateStr = d.toISOString().split('T')[0]; // 输出 YYYY-MM-DD
+                } catch(e) { dateStr = item.date; }
             }
 
             // 标签高亮
@@ -204,15 +217,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             html += `
             <div class="tag-card">
-                <div class="tag-card-img">
-                    <img src="${imgUrl}" loading="lazy">
-                </div>
+                <a href="${item.url}" class="tag-card-img">
+                    <img src="${imgUrl}" loading="lazy" alt="${item.title}">
+                </a>
                 <div class="tag-card-body">
                     <div>
                         <a href="${item.url}" class="tag-card-title">${item.title}</a>
                         <div class="tag-card-meta">
                             <span>👤 ${item.author || 'CGFan'}</span>
-                            <span>📅 ${item.date || '-'}</span>
+                            <span>📅 ${dateStr}</span>
                         </div>
                     </div>
                     <div class="tag-card-tags">${tagsHtml}</div>
@@ -224,7 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (e) {
         console.error(e);
-        container.innerHTML = `<div style="text-align:center;padding:50px;color:red;">索引加载失败，请刷新。</div>`;
+        container.innerHTML = `<div class="loading-state" style="color:#ef5350;">索引加载失败，请刷新。</div>`;
     }
 });
 </script>
