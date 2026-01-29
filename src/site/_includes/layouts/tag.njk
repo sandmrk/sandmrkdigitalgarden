@@ -85,5 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('loading-status').innerText = "加载失败，请刷新重试。";
     }
 });
+const html = await response.text();
+console.log("抓取到的首页内容：", html); // 看这里输出的内容里有没有 tr 标签
 </script>
 {% endblock %}
