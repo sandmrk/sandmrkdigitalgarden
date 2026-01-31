@@ -15,7 +15,7 @@ eleventyExcludeFromCollections: true
         "url": "{{ post.url }}",
         "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
         "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
-        "content": {{ post.templateContent | jsonify | safe }},
+        "content": {{ post.templateContent | striptags | jsonify | safe }},
         "tags": [
     {%- if post.data.tags -%}
         {%- set tagsArray = post.data.tags if post.data.tags | is_array else [post.data.tags] -%}
