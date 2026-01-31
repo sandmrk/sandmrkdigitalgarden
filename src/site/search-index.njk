@@ -2,28 +2,12 @@
 permalink: /searchIndex.json
 eleventyExcludeFromCollections: true
 ---
-[
-{%- set isFirst = true -%}
-{%- for post in collections.note -%}
-  {#- 排除掉首页、标签页和索引页自身 -#}
-  {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
-    {%- if not isFirst -%},{%- endif -%}
-    {%- set isFirst = false -%}
-    {
-        "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
-        "date": "{{ post.date }}",
-        "url": "{{ post.url }}",
-        "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
-        "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
-        "content": {{ post.templateContent | jsonify | safe }},
-        "tags": [
-            {%- if post.data.tags -%}
-                {%- for tag in post.data.tags -%}
-                    "{{ tag | replace('"', '\\"') }}"{%- if not loop.last -%},{%- endif -%}
-                {%- endfor -%}
-            {%- endif -%}
-        ]
-    }
-  {%- endif -%}
-{%- endfor -%}
-]
+[{% for post in collections.note %}
+{
+		"title": {% if post.data.title %}{{post.data.title | jsonify | safe }}{% else %}{{post.fileSlug | jsonify | safe }}{% endif %},
+		"date":"{{ post.date }}",
+		"url":"{{ post.url }}",
+		"content": {{ post.templateContent | striptags(true) | link | jsonify | safe  }},
+		"tags": [{{post.templateContent | link | searchableTags | safe }} {% if post.data.tags %}{% for tag in post.data.tags %}"{{tag|validJson}}"{% if not loop.last %},{% endif %}{% endfor %}{% endif %}]
+}{% if not loop.last %},{% endif %}
+{% endfor %}]
