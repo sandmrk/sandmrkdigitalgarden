@@ -5,7 +5,6 @@ eleventyExcludeFromCollections: true
 [
 {%- set isFirst = true -%}
 {%- for post in collections.note -%}
-  {#- 排除首页、标签页和索引页自身，确保只索引笔记 -#}
   {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
     {%- if not isFirst -%},{%- endif -%}
     {%- set isFirst = false -%}
@@ -18,8 +17,8 @@ eleventyExcludeFromCollections: true
         "content": {{ post.templateContent | striptags | jsonify | safe }},
         "tags": [
             {%- if post.data.tags -%}
-                {%- set tagsArray = post.data.tags if post.data.tags | is_array else [post.data.tags] -%}
-                {%- for tag in tagsArray -%}
+                {#- 这里的 loop 是 Nunjucks 遍历 tags 的标准写法，会自动处理单条或多条数据 -#}
+                {%- for tag in post.data.tags -%}
                     {{ tag | replace('#', '') | jsonify | safe }}{%- if not loop.last -%},{%- endif -%}
                 {%- endfor -%}
             {%- endif -%}
