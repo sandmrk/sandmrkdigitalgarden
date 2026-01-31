@@ -8,14 +8,28 @@ eleventyExcludeFromCollections: true
   {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
     {%- if not isFirst -%},{%- endif -%}
     {%- set isFirst = false -%}
+
+    {# --- 核心自动化补图逻辑 --- #}
+    {%- set finalCover = post.data.cover -%}
+    {%- if not finalCover -%}
+        {# 如果没有 cover，尝试从 HTML 中通过截取 pbs.twimg.com 关键字来定位图片 #}
+        {%- if "pbs.twimg.com/media/" in post.templateContent -%}
+            {%- set part1 = post.templateContent.split('src="')[1] or post.templateContent.split('https://pbs.twimg.com/media/')[1] -%}
+            {%- set imgUrl = part1.split('"')[0].split(' ')[0] -%}
+            {%- if "pbs.twimg.com" in imgUrl -%}
+                {%- set finalCover = imgUrl -%}
+            {%- elif "media/" in imgUrl -%}
+                {%- set finalCover = "https://pbs.twimg.com/" + imgUrl -%}
+            {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+
     {
         "title": {{ (post.data.title or post.fileSlug) | jsonify | safe }},
         "date": "{{ post.date }}",
         "url": "{{ post.url }}",
         "author": {{ (post.data.author or "CGfan") | jsonify | safe }},
-        "cover": {{ (post.data.cover or "") | jsonify | safe }},
-        {#- 关键修复：剥离 HTML 以确保搜索 100% 成功。
-            图片显示问题：我们将通过 V9.2 脚本把图片填入 YAML 的 cover 字段来解决。 -#}
+        "cover": {{ (finalCover or "") | jsonify | safe }},
         "content": {{ post.templateContent | replace("[object Object]", "") | striptags | jsonify | safe }},
         "tags": [
             {%- if post.data.tags -%}
