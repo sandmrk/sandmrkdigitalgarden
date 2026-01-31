@@ -8,20 +8,15 @@ eleventyExcludeFromCollections: true
   {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
     {%- if not isFirst -%},{%- endif -%}
     {%- set isFirst = false -%}
-    
-    {#- 核心逻辑：从正文中提取第一张推特图片的链接 -#}
-    {%- set contentHtml = post.templateContent -%}
-    {%- set imgMatch = contentHtml | match("https://pbs.twimg.com/media/[a-zA-Z0-9_-]+(?:\\.[a-z]+|\\?format=[a-z]+)(?::large)?") -%}
-    
     {
         "title": {{ (post.data.title or post.fileSlug) | jsonify | safe }},
         "date": "{{ post.date }}",
         "url": "{{ post.url }}",
         "author": {{ (post.data.author or "CGfan") | jsonify | safe }},
-        {#- 如果 YAML 里有封面就用 YAML 的，没有就用刚才抓取的，再没有就留空 -#}
-        "cover": {{ (post.data.cover or imgMatch or "") | jsonify | safe }},
-        {#- 保持 content 纯净，100% 解决搜索同步异常 -#}
-        "content": {{ contentHtml | replace("[object Object]", "") | striptags | jsonify | safe }},
+        "cover": {{ (post.data.cover or "") | jsonify | safe }},
+        {#- 关键修复：剥离 HTML 以确保搜索 100% 成功。
+            图片显示问题：我们将通过 V9.2 脚本把图片填入 YAML 的 cover 字段来解决。 -#}
+        "content": {{ post.templateContent | replace("[object Object]", "") | striptags | jsonify | safe }},
         "tags": [
             {%- if post.data.tags -%}
                 {%- for tag in post.data.tags -%}
