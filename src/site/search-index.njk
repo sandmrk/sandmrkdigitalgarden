@@ -14,10 +14,10 @@ eleventyExcludeFromCollections: true
         "url": "{{ post.url }}",
         "author": {{ (post.data.author or "CGfan") | jsonify | safe }},
         "cover": {{ (post.data.cover or "") | jsonify | safe }},
-        {#- 核心：源头干净了，就不需要 striptags 了，图片自然回来了 -#}
-        "content": {{ post.templateContent | jsonify | safe }},
+        "content": {{ post.templateContent | striptags | jsonify | safe }},
         "tags": [
             {%- if post.data.tags -%}
+                {#- 这里的 loop 是 Nunjucks 遍历 tags 的标准写法，会自动处理单条或多条数据 -#}
                 {%- for tag in post.data.tags -%}
                     {{ tag | replace('#', '') | jsonify | safe }}{%- if not loop.last -%},{%- endif -%}
                 {%- endfor -%}
