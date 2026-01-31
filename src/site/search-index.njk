@@ -5,25 +5,25 @@ eleventyExcludeFromCollections: true
 [
 {%- set isFirst = true -%}
 {%- for post in collections.note -%}
-  {#- 排除掉首页、标签页和索引页自身 -#}
+  {#- 排除首页、标签页和索引页自身，确保只索引笔记 -#}
   {%- if post.url != '/' and '/tag/' not in post.url and 'searchIndex' not in post.url -%}
     {%- if not isFirst -%},{%- endif -%}
     {%- set isFirst = false -%}
     {
-        "title": {% if post.data.title %}{{ post.data.title | jsonify | safe }}{% else %}{{ post.fileSlug | jsonify | safe }}{% endif %},
+        "title": {{ (post.data.title or post.fileSlug) | jsonify | safe }},
         "date": "{{ post.date }}",
         "url": "{{ post.url }}",
-        "author": {% if post.data.author %}{{ post.data.author | jsonify | safe }}{% else %}"CGFan"{% endif %},
-        "cover": {% if post.data.cover %}{{ post.data.cover | jsonify | safe }}{% else %}""{% endif %},
+        "author": {{ (post.data.author or "CGfan") | jsonify | safe }},
+        "cover": {{ (post.data.cover or "") | jsonify | safe }},
         "content": {{ post.templateContent | striptags | jsonify | safe }},
         "tags": [
-    {%- if post.data.tags -%}
-        {%- set tagsArray = post.data.tags if post.data.tags | is_array else [post.data.tags] -%}
-        {%- for tag in tagsArray -%}
-            {{ tag | jsonify | safe }}{%- if not loop.last -%},{%- endif -%}
-        {%- endfor -%}
-    {%- endif -%}
-]
+            {%- if post.data.tags -%}
+                {%- set tagsArray = post.data.tags if post.data.tags | is_array else [post.data.tags] -%}
+                {%- for tag in tagsArray -%}
+                    {{ tag | replace('#', '') | jsonify | safe }}{%- if not loop.last -%},{%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
+        ]
     }
   {%- endif -%}
 {%- endfor -%}
